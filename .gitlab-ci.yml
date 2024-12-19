@@ -50,13 +50,6 @@ lint-commit:
     - .do-lint-commit
     - .on-merge-request
 
-template-check:
-  stage: test
-  needs: []
-  extends:
-    - .do-template-check
-    - .on-merge-request
-
 spell-check:
   stage: test
   needs: []
