@@ -1,0 +1,175 @@
+# Gitlab-ci templates
+# They include definitions of base jobs and rules.
+include:
+  - project: "makerstreet-public/ci-cd-library"
+    ref: main
+    file: "common/jobs.yml"
+  - project: "makerstreet-public/ci-cd-library"
+    ref: main
+    file: "common/rules.yml"
+  - project: "makerstreet-public/ci-cd-library"
+    ref: main
+    file: "python/jobs.yml"
+
+image: python:3.12-slim
+
+variables:
+  VERSION: $CI_COMMIT_SHORT_SHA
+  POETRY_VERSION: "1.4.2"
+  JUST_VERSION: "1.2.0"
+
+stages:
+  - test
+  - bump-version
+  - pages
+  - publish
+
+# Assings a step to the test stage, that runs on MR and on version bumps
+# ensuring that it runs just as the pipeline starts.
+.mixin-test:
+  stage: test
+  needs: []
+  extends:
+    - .on-merge-request-or-version-bump
+
+# Same as `.mixin-test` but it installs just and poetry
+.mixin-venv-deps:
+  extends:
+    - .mixin-test
+  before_script:
+    - pip install poetry==${POETRY_VERSION}
+    - apt update && apt install -y curl
+    - curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag ${JUST_VERSION} --to /usr/local/bin
+
+## test stage
+
+lint-commit:
+  stage: test
+  needs: []
+  extends:
+    - .do-lint-commit
+    - .on-merge-request
+
+template-check:
+  stage: test
+  needs: []
+  extends:
+    - .do-template-check
+    - .on-merge-request
+
+spell-check:
+  stage: test
+  needs: []
+  extends:
+    - .do-spell-check
+    - .on-merge-request
+
+dependency-security:
+  extends:
+    - .do-dependency-security
+    - .mixin-test
+  variables:
+    ARGS: "--config pyproject.toml"
+
+dependency-check:
+  extends:
+    - .do-dependency-check
+    - .mixin-test
+
+dependency-typosquatting-security:
+  extends:
+    - .do-dependency-typosquatting-security
+    - .mixin-test
+
+code-security:
+  extends:
+    - semgrep-sast
+    - .on-merge-request-or-version-bump
+  needs: []
+
+secret-detection:
+  extends:
+    - secret_detection
+    - .on-merge-request-or-version-bump
+  needs: []
+
+lint:
+  extends:
+    - .mixin-venv-deps
+  script:
+    - just lint true
+  artifacts:
+    when: always
+    reports:
+      codequality: tests/gl-code-quality-report.json
+    expire_in: 1 week
+
+test:
+  image: $PYTHON_VERSION-slim
+  extends:
+    - .mixin-venv-deps
+  script:
+    - just python_version=python test-all
+  artifacts:
+    when: always
+    paths:
+      - tests/junit.xml
+    reports:
+      junit: tests/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: tests/coverage.xml
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["python:3.12"]
+
+## bump-version stage
+
+bump-version:
+  stage: bump-version
+  extends:
+    - .do-bump-version
+    - .on-main-and-not-version-bump
+
+## publish stage
+
+publish:
+  stage: publish
+  extends: .on-version-bump
+  before_script:
+    - pip install poetry
+    - poetry config repositories.gitlab-registry https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/pypi
+  script:
+    - poetry publish --build --repository gitlab-registry
+    - PUB_VERSION=v$(poetry version -s)
+    - echo "PUB_VERSION=${PUB_VERSION}" >> variables.env
+  artifacts:
+    when: on_success
+    expire_in: "1 days"
+    reports:
+      dotenv: variables.env
+
+release:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  stage: publish
+  needs:
+    - job: publish
+  extends: .on-version-bump
+  script:
+    - echo "Releasing"
+  release:
+    name: "Release $PUB_VERSION"
+    description: "Release $PUB_VERSION"
+    tag_name: "$PUB_VERSION"
+    ref: "$VERSION"
+
+# pages stage
+
+pages:
+  stage: pages
+  extends:
+    - .do-docs
+    - .on-version-bump
+  variables:
+    PLUGINS: "mkdocs-awesome-pages-plugin"
