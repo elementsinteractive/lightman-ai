@@ -1,12 +1,11 @@
 [tool.poetry]
 name = "hackerman_ai"
-version = "0.0.0"
+version = "0.1.0"
 description = "The greatest project ever created."
 authors = ["John Doe <john.doe@group.nl>"]
 
 [tool.poetry.dependencies]
 python = ">=3.12,<4"
-openai = "^1.55.0"
 httpx = "^0.27.2"
 python-dotenv = "^1.0.1"
 pydantic-ai = {version = "^0.0.12", extras = ["logfire"]}
@@ -129,7 +128,7 @@ exclude_lines = [
 [tool.commitizen]
 version_files = ["pyproject.toml:^version"]
 name = "cz_customize"
-version = "0.0.0"
+version = "0.1.0"
 tag_format = "v$version"
 
 [tool.commitizen.customize]
