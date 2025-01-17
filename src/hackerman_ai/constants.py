@@ -1,3 +1,1 @@
-GPT_MODEL = "gpt-4o-mini"
-OPENAI_ROLE = "user"
-API_KEY = "API_KEY"
+API_KEY_ENV_KEY = "HACKERMAN_API_KEY"
