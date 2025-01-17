@@ -1,9 +1,21 @@
+import os
 import pathlib
 from typing import Any
 
 import pytest
+from dotenv import load_dotenv
+from hackerman_ai.constants import API_KEY_ENV_KEY
 
-RECORD_MODE = False
+RECORD_MODE = True
+
+
+def pytest_configure() -> None:
+    load_dotenv()
+
+
+@pytest.fixture(scope="session")
+def api_key() -> str:
+    return str(os.getenv(API_KEY_ENV_KEY))
 
 
 @pytest.fixture(scope="module")

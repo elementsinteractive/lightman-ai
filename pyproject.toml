@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hackerman_ai"
-version = "0.1.0"
+version = "0.1.1"
 description = "The greatest project ever created."
 authors = ["John Doe <john.doe@group.nl>"]
 
@@ -23,6 +23,7 @@ codespell = "^2.2.4"
 pre-commit = "^3.2.2"
 pytest-recording = "^0.13.2"
 pytest-asyncio = "^0.25.0"
+freezegun = "^1.5.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -128,7 +129,7 @@ exclude_lines = [
 [tool.commitizen]
 version_files = ["pyproject.toml:^version"]
 name = "cz_customize"
-version = "0.1.0"
+version = "0.1.1"
 tag_format = "v$version"
 
 [tool.commitizen.customize]
