@@ -1,15 +1,18 @@
 import logging
 
 from hackerman_ai.ai.agent import AIAgent
-from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
+from hackerman_ai.ai.utils import get_prompt
+from hackerman_ai.sources.news import get_thn_news
 
 logger = logging.getLogger("hackerman")
 
 
 async def hackerman(api_key: str) -> int:
-    news_xml = await TheHackerNewsSource.get_news()
+    thn_news = await get_thn_news()
     agent = AIAgent(api_key)
-    result = await agent.run_prompt(news_xml)
+
+    prompt = get_prompt(thn_news)
+    result = await agent.run_prompt(prompt)
 
     logger.debug(result)
 
