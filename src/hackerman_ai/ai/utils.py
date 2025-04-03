@@ -7,8 +7,7 @@ def get_prompt(news: str) -> str:
             I want also news related to technologies or software that we may use in our day to day work, like operating system-related news, browser news and so on.
 
             Show me, in a json format, the links you found to be relevant, how relevant they are, and their title.
-            The json must follow this format:
-            {"results": [{'title': str, 'description': str, 'priority': int, 'link': str}]}"""
+            """
         f"""
             Retrieve all news from today. This is the xml containing the news: {news}
             """

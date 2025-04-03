@@ -17,4 +17,4 @@ class New:
 
 @dataclass
 class News:
-    news = list[New]
+    news: list[New]
