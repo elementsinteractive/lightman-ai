@@ -11,7 +11,7 @@ include:
     ref: main
     file: "python/jobs.yml"
 
-image: python:3.12-slim
+image: python:3.13-slim
 
 variables:
   VERSION: $CI_COMMIT_SHORT_SHA
@@ -115,7 +115,7 @@ test:
   coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   parallel:
     matrix:
-      - PYTHON_VERSION: ["python:3.12"]
+      - PYTHON_VERSION: ["python:3.13"]
 
 ## bump-version stage
 

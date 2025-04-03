@@ -10,7 +10,7 @@ RECORD_MODE = False
 
 def pytest_configure() -> None:
     os.environ["OPENAI_API_KEY"] = "dummy"
-    load_dotenv()  # TODO improve this
+    load_dotenv()
 
 
 @pytest.fixture(scope="module")
