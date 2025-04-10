@@ -13,6 +13,8 @@ class New:
     title: str
     priority: Priority
     description: str
+    why_is_relevant: str
+    link: str
 
 
 @dataclass
