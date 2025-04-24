@@ -62,7 +62,7 @@ dependency-security:
     - .do-dependency-security
     - .mixin-test
   variables:
-    ARGS: "--config pyproject.toml"
+    ARGS: "--config .osv-scanner.toml"
 
 dependency-check:
   extends:
