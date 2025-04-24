@@ -1,18 +1,15 @@
-import os
 import pathlib
 from typing import Any
 
 import pytest
-from dotenv import load_dotenv
+from hackerman_ai.core.settings import settings
 
 RECORD_MODE = False
 
 
 def pytest_configure() -> None:
     if not RECORD_MODE:
-        os.environ["OPENAI_API_KEY"] = "dummy"
-    else:
-        load_dotenv()
+        settings.OPENAI_RATE_LIMIT_TIMEOUT = 0
 
 
 @pytest.fixture(scope="module")

@@ -1,7 +1,6 @@
 import asyncio
 
 import click
-from dotenv import load_dotenv
 from hackerman_ai.main import hackerman
 
 
@@ -17,6 +16,4 @@ def run() -> int:
 
     Holds no logic. Just calls the methods and return an exit code.
     """
-    load_dotenv()
-
     return int(asyncio.run(hackerman()))
