@@ -1,10 +1,11 @@
+import os
 import pathlib
 from typing import Any
 
 import pytest
 from hackerman_ai.core.settings import settings
 
-RECORD_MODE = False
+RECORD_MODE = os.environ.get("RECORD") or False
 
 
 def pytest_configure() -> None:
