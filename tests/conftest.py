@@ -1,16 +1,21 @@
 import os
 import pathlib
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 from typing import Any
+from unittest.mock import patch
 
 import pytest
+from hackerman_ai.ai.prompts import Prompts, add_articles_to_prompt
+from hackerman_ai.article.models import ArticlesList, SelectedArticlesList
 from hackerman_ai.core.settings import settings
+from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
 
 RECORD_MODE = os.environ.get("RECORD") or False
 
 
 def pytest_configure() -> None:
-    if not RECORD_MODE:
-        settings.OPENAI_RATE_LIMIT_TIMEOUT = 0
+    settings.OPENAI_RATE_LIMIT_TIMEOUT = 0
 
 
 @pytest.fixture(scope="module")
@@ -31,7 +36,7 @@ def vcr_config() -> dict[str, Any]:
 
 
 @pytest.fixture()
-def thn_news() -> str:
+def thn_xml() -> str:
     return """<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><rss xmlns:atom=\"http://www.w3.org/2005/Atom\"
         xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/group/1.1/\"
         xmlns:itunes=\"http://www.itunes.com/dtds/podcast-1.0.dtd\" xmlns:media=\"http://search.yahoo.com/mrss/\"
@@ -521,3 +526,23 @@ def thn_news() -> str:
         isPermaLink=\"false\">https://thehackernews.com/2025/03/netapp-snapcenter-flaw-could-let-users.html</guid><pubDate>Thu,
         27 Mar 2025 11:36:00 +0530</pubDate><author>info@thehackernews.com (The Hacker
         News)</author><enclosure length=\"12216320\" type=\"image/jpeg\" url=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgKMKtzk02rkDZJlwJU6wTHXvkEYmy2hjopedjEVjzyB34vbWcRd-mp1k0hsJlLm6fQbwqCyo0OQwVRG7ydWqIDCzti69gBup87_Hu4Y4IgMuTfTqbWaMFQTKyZ4ErgAUxK3ywLmQ_jC2pKFASP7_Vkf27-JBE6TBM5OCSwtIaqTI0oBxxRkpJtcKZwK14-/s1600/hacker.png\"/></item></channel></rss>"""
+
+
+@pytest.fixture()
+def thn_news(thn_xml: str) -> ArticlesList:
+    articles = TheHackerNewsSource()._xml_to_list_of_articles(thn_xml)
+    return ArticlesList(articles=articles)
+
+
+@pytest.fixture()
+def short_prompt(thn_news: ArticlesList) -> str:
+    return add_articles_to_prompt(Prompts.SHORT_PROMPT, thn_news)
+
+
+@asynccontextmanager
+async def patch_run_prompt(results: SelectedArticlesList | None = None) -> AsyncGenerator[Any, None]:
+    run_prompt_result = results if results else SelectedArticlesList(articles=[])
+
+    with patch("hackerman_ai.ai.openai_agent.OpenAIAgent._run_prompt") as mock:
+        mock.return_value = run_prompt_result
+        yield mock
