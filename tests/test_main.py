@@ -12,4 +12,4 @@ class TestHackerman:
             result = await hackerman()
 
         assert result == 0
-        assert "Found these news: " in caplog.text
+        assert "Found these articles: " in caplog.text

@@ -1,8 +1,10 @@
-import json
+from typing import override
 from xml.etree import ElementTree
 
 import httpx
 import stamina
+from hackerman_ai.article.models import Article, ArticlesList
+from hackerman_ai.sources.base import BaseSource
 from httpx import AsyncClient
 
 _RETRY_ON = httpx.TransportError
@@ -13,16 +15,13 @@ _TIMEOUT = 5
 THN_URL = "https://feeds.feedburner.com/TheHackersNews"
 
 
-class TheHackerNewsSource:
-    async def get_news(self) -> str:
-        """
-        Return a stringified list with the news.
-
-        The format is:
-            [{"title": title, "description": description, "link": link, "date": pub_date}...]
-        """
+class TheHackerNewsSource(BaseSource):
+    @override
+    async def get_articles(self) -> ArticlesList:
+        """Return the articles that are present in THN feed."""
         feed = await self.get_feed()
-        return self._clean(self._xml_to_str(feed))
+        articles = self._xml_to_list_of_articles(feed)
+        return ArticlesList(articles=articles)
 
     async def get_feed(self) -> str:
         """Retrieve the TheHackerNews' RSS Feed."""
@@ -37,10 +36,8 @@ class TheHackerNewsSource:
                     hacker_news_feed.raise_for_status()
         return hacker_news_feed.text
 
-    @staticmethod
-    def _xml_to_str(xml_string: str) -> str:
-        """Transform an xml into a string that contains all the group of the xml, specifying their fields."""
-        root = ElementTree.fromstring(xml_string)
+    def _xml_to_list_of_articles(self, xml: str) -> list[Article]:
+        root = ElementTree.fromstring(xml)
         channel = root.find("channel")
         assert channel
         items = channel.findall("item")
@@ -49,12 +46,11 @@ class TheHackerNewsSource:
 
         for item in items:
             title = item.findtext("title", default="").strip()
-            description = item.findtext("description", default="").strip()
+            description = self._clean(item.findtext("description", default="").strip())
             link = item.findtext("link", default="").strip()
-            pub_date = item.findtext("pubDate", default="").strip()
 
-            parsed.append({"title": title, "description": description, "link": link, "date": pub_date})
-        return json.dumps(parsed)
+            parsed.append(Article(title=title, description=description, link=link))
+        return parsed
 
     @staticmethod
     def _clean(text: str) -> str:
