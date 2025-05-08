@@ -6,7 +6,7 @@ from hackerman_ai.main import hackerman
 
 
 class TestHackerman:
-    @pytest.mark.vcr()
+    @pytest.mark.vcr
     async def test_hackerman(self, caplog: Any) -> None:
         with caplog.at_level(logging.WARNING):
             result = await hackerman()

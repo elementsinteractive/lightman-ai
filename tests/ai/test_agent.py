@@ -5,7 +5,7 @@ from tests.conftest import patch_run_prompt
 
 
 class TestAgent:
-    @pytest.mark.vcr()
+    @pytest.mark.vcr
     async def test_run_prompt(self, short_prompt: str) -> None:
         agent = OpenAIAgent()
         result = await agent._run_prompt(short_prompt)

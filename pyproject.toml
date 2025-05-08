@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hackerman_ai"
-version = "0.3.10"
+version = "0.3.11"
 description = "Cybersecurity news aggregator."
 authors = ["Daniel Sanz <daniel.sanz@groupinteractive.es>"]
 
@@ -19,7 +19,7 @@ pydantic-settings = {extras = ["dotenv"], version = "^2.9.1"}
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
 mypy = "^1.1.1"
-ruff = "^0.4.0"
+ruff = "^0.11.0"
 pytest-cov = "^5.0.0"
 ipdb = "^0.13.13"
 commitizen = "^3.0.0"
@@ -80,8 +80,6 @@ ignore = [
   "E501",    # line-length (enforced by black instead)
   'D1',      # pydocstyle enforces docstrings everywhere
   'TRY003',  # tryceratops rule not useful
-  "PT004",   # naming conventions for pytest fixtures is strange
-  "PT005",   # naming conventions for pytest fixtures is strange
   "PLR0913", # pylint rule not useful
   "B008",    # checks for function calls in default function arguments.
   'D206',    # conflicts with formatter
@@ -137,7 +135,7 @@ exclude_lines = [
 [tool.commitizen]
 version_files = ["pyproject.toml:^version"]
 name = "cz_customize"
-version = "0.3.10"
+version = "0.3.11"
 tag_format = "v$version"
 
 [tool.commitizen.customize]

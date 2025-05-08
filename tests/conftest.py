@@ -38,7 +38,7 @@ def vcr_config() -> dict[str, Any]:
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def thn_xml() -> str:
     return """<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><rss xmlns:atom=\"http://www.w3.org/2005/Atom\"
         xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" xmlns:dc=\"http://purl.org/dc/group/1.1/\"
@@ -531,13 +531,13 @@ def thn_xml() -> str:
         News)</author><enclosure length=\"12216320\" type=\"image/jpeg\" url=\"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgKMKtzk02rkDZJlwJU6wTHXvkEYmy2hjopedjEVjzyB34vbWcRd-mp1k0hsJlLm6fQbwqCyo0OQwVRG7ydWqIDCzti69gBup87_Hu4Y4IgMuTfTqbWaMFQTKyZ4ErgAUxK3ywLmQ_jC2pKFASP7_Vkf27-JBE6TBM5OCSwtIaqTI0oBxxRkpJtcKZwK14-/s1600/hacker.png\"/></item></channel></rss>"""
 
 
-@pytest.fixture()
+@pytest.fixture
 def thn_news(thn_xml: str) -> ArticlesList:
     articles = TheHackerNewsSource()._xml_to_list_of_articles(thn_xml)
     return ArticlesList(articles=articles)
 
 
-@pytest.fixture()
+@pytest.fixture
 def short_prompt(thn_news: ArticlesList) -> str:
     return add_articles_to_prompt(Prompts.SHORT_PROMPT, thn_news)
 
