@@ -1,7 +1,6 @@
 import pytest
 from hackerman_ai.ai.openai_agent import OpenAIAgent
 from hackerman_ai.article.models import SelectedArticle, SelectedArticlesList
-from hackerman_ai.core.settings import settings
 from tests.conftest import patch_run_prompt
 
 
@@ -16,9 +15,7 @@ class TestAgent:
         """Test that we run the prompt as many times as we specify, and we receive back a LIST of `SelectedArticlesList`."""
         agent = OpenAIAgent()
         async with patch_run_prompt() as mock:
-            result = await agent._run_prompt_multiple_times(
-                short_prompt, iterations=3, rate_limit_timeout=settings.OPENAI_RATE_LIMIT_TIMEOUT
-            )
+            result = await agent._run_prompt_multiple_times(short_prompt, iterations=3)
         assert mock.call_count == 3
         assert isinstance(result, list)
         assert len(result) == 3
@@ -28,9 +25,7 @@ class TestAgent:
         """Test that we run the prompt as many times as we specify, and we receive back an INSTANCE of `SelectedArticlesList`."""
         agent = OpenAIAgent()
         async with patch_run_prompt() as mock:
-            result = await agent.get_prompt_result(
-                short_prompt, iterations=3, rate_limit_timeout=settings.OPENAI_RATE_LIMIT_TIMEOUT
-            )
+            result = await agent.get_prompt_result(short_prompt, iterations=3)
         assert mock.call_count == 3
         assert isinstance(result, SelectedArticlesList)
 

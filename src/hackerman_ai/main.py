@@ -13,7 +13,7 @@ async def hackerman() -> int:
     thn_news = await TheHackerNewsSource().get_articles()
     agent = OpenAIAgent()
     prompt = add_articles_to_prompt(Prompts.SHORT_PROMPT, thn_news)
-    results = await agent.get_prompt_result(prompt, settings.PROMPT_ITERATIONS, settings.OPENAI_RATE_LIMIT_TIMEOUT)
+    results = await agent.get_prompt_result(prompt, settings.PROMPT_ITERATIONS)
     processed_articles = Processor(original_articles=thn_news, selected_articles=results).process()
 
     logger.warning("Found these articles: %s", processed_articles.titles)
