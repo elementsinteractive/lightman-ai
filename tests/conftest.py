@@ -6,11 +6,19 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
+from dotenv import load_dotenv
 from hackerman_ai.ai.prompts import Prompts, add_articles_to_prompt
 from hackerman_ai.article.models import ArticlesList, SelectedArticlesList
 from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
 
 RECORD_MODE = os.environ.get("RECORD") or False
+
+
+def pytest_configure() -> None:
+    if RECORD_MODE:
+        load_dotenv()
+    else:
+        os.environ["OPENAI_API_KEY"] = "dummy"
 
 
 @pytest.fixture(scope="module")
