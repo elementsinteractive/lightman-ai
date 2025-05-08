@@ -1,10 +1,12 @@
 import asyncio
 from typing import Never
 
+from hackerman_ai.ai.exceptions import LimitTokensExceededError, map_exceptions
 from hackerman_ai.article.models import SelectedArticlesList
 from hackerman_ai.core.settings import settings
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.result import RunResult
 
 
 class OpenAIAgent:
@@ -14,26 +16,30 @@ class OpenAIAgent:
         ai_model = OpenAIModel("gpt-4o", api_key=settings.OPENAI_API_KEY)
         self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, result_type=SelectedArticlesList)
 
-    async def get_prompt_result(self, prompt: str, iterations: int, rate_limit_timeout: int) -> SelectedArticlesList:
-        assert iterations >= 0, "Number of iterations cannot be a negative number."
-        assert rate_limit_timeout >= 0, "Rate limit timeout cannot be a negative number."
+    async def get_prompt_result(self, prompt: str, iterations: int = 1) -> SelectedArticlesList:
+        assert iterations > 0, "Number of iterations must be > 0."
 
-        articles = await self._run_prompt_multiple_times(prompt, iterations, rate_limit_timeout)
+        articles = await self._run_prompt_multiple_times(prompt, iterations)
         return self._merge_results(articles)
 
-    async def _run_prompt_multiple_times(
-        self, prompt: str, iterations: int, rate_limit_timeout: int
-    ) -> list[SelectedArticlesList]:
-        tasks = [self._run_prompt_with_delay(prompt, n * rate_limit_timeout) for n in range(iterations)]
-        return await asyncio.gather(*tasks)
+    async def _run_prompt_multiple_times(self, prompt: str, iterations: int) -> list[SelectedArticlesList]:
+        results = []
+        for _ in range(iterations):
+            results.append(await self._run_prompt(prompt))
+        return results
+
+    async def _execute_agent(self, prompt: str) -> RunResult[SelectedArticlesList]:
+        async with map_exceptions():
+            return await self.agent.run(prompt)
 
     async def _run_prompt(self, prompt: str) -> SelectedArticlesList:
-        result = await self.agent.run(prompt)
-        return result.data
+        try:
+            result = await self._execute_agent(prompt)
+        except LimitTokensExceededError as err:
+            await asyncio.sleep(err.wait_time)
+            result = await self._execute_agent(prompt)
 
-    async def _run_prompt_with_delay(self, prompt: str, delay: int) -> SelectedArticlesList:
-        await asyncio.sleep(delay)
-        return await self._run_prompt(prompt)
+        return result.data
 
     def _merge_results(self, articles_list_of_lists: list[SelectedArticlesList]) -> SelectedArticlesList:
         """Merge all the news, removing repeated ones."""
