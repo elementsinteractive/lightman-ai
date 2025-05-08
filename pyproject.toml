@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hackerman_ai"
-version = "0.3.8"
+version = "0.3.10"
 description = "Cybersecurity news aggregator."
 authors = ["Daniel Sanz <daniel.sanz@groupinteractive.es>"]
 
@@ -11,7 +11,7 @@ hackerman = "hackerman_ai.cli:entry_point"
 python = ">=3.13,<4"
 httpx = "^0.28.0"
 python-dotenv = "^1.0.1"
-pydantic-ai = {version = "^0.0.12", extras = ["logfire"]}
+pydantic-ai = {version = "^0.1.0", extras = ["logfire"]}
 click = "^8.1.7"
 stamina = "^25.1.0"
 pydantic-settings = {extras = ["dotenv"], version = "^2.9.1"}
@@ -137,7 +137,7 @@ exclude_lines = [
 [tool.commitizen]
 version_files = ["pyproject.toml:^version"]
 name = "cz_customize"
-version = "0.3.8"
+version = "0.3.10"
 tag_format = "v$version"
 
 [tool.commitizen.customize]

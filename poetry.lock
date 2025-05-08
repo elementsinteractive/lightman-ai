@@ -13,6 +13,31 @@ files = [
 ]
 
 [[package]]
+name = "anthropic"
+version = "0.51.0"
+description = "The official Python library for the anthropic API"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "anthropic-0.51.0-py3-none-any.whl", hash = "sha256:b8b47d482c9aa1f81b923555cebb687c2730309a20d01be554730c8302e0f62a"},
+    {file = "anthropic-0.51.0.tar.gz", hash = "sha256:6f824451277992af079554430d5b2c8ff5bc059cc2c968cdc3f06824437da201"},
+]
+
+[package.dependencies]
+anyio = ">=3.5.0,<5"
+distro = ">=1.7.0,<2"
+httpx = ">=0.25.0,<1"
+jiter = ">=0.4.0,<1"
+pydantic = ">=1.9.0,<3"
+sniffio = "*"
+typing-extensions = ">=4.10,<5"
+
+[package.extras]
+bedrock = ["boto3 (>=1.28.57)", "botocore (>=1.31.57)"]
+vertex = ["google-auth[requests] (>=2,<3)"]
+
+[[package]]
 name = "anyio"
 version = "4.9.0"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -39,7 +64,7 @@ version = "3.5.3"
 description = "Bash tab completion for argparse"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "argcomplete-3.5.3-py3-none-any.whl", hash = "sha256:2ab2c4a215c59fd6caaff41a869480a23e8f6a5f910b266c1808037f4e375b61"},
     {file = "argcomplete-3.5.3.tar.gz", hash = "sha256:c12bf50eded8aebb298c7b7da7a5ff3ee24dffd9f5281867dfe1424b58c55392"},
@@ -97,6 +122,46 @@ files = [
 
 [package.extras]
 extras = ["regex"]
+
+[[package]]
+name = "boto3"
+version = "1.38.11"
+description = "The AWS SDK for Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "boto3-1.38.11-py3-none-any.whl", hash = "sha256:dc3ff3a382d33d1e7e4141a5c63d084faf90657d6008ef917a3e64cfcbbb47e0"},
+    {file = "boto3-1.38.11.tar.gz", hash = "sha256:ecf141395b8ede64dbc975c62a55fbb2231fc3e50904d65c088bc83ae98595cf"},
+]
+
+[package.dependencies]
+botocore = ">=1.38.11,<1.39.0"
+jmespath = ">=0.7.1,<2.0.0"
+s3transfer = ">=0.12.0,<0.13.0"
+
+[package.extras]
+crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
+
+[[package]]
+name = "botocore"
+version = "1.38.11"
+description = "Low-level, data-driven core of boto 3."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "botocore-1.38.11-py3-none-any.whl", hash = "sha256:f5cb7a292774d4a212347475d95668bb96c1fe322e71c19bf871fb06503597a5"},
+    {file = "botocore-1.38.11.tar.gz", hash = "sha256:44c5cb042fefedbe0b0ae4c3f96aed03f4cab6973d4317410c8d7c6d32807aef"},
+]
+
+[package.dependencies]
+jmespath = ">=0.7.1,<2.0.0"
+python-dateutil = ">=2.1,<3.0.0"
+urllib3 = {version = ">=1.25.4,<2.2.0 || >2.2.0,<3", markers = "python_version >= \"3.10\""}
+
+[package.extras]
+crt = ["awscrt (==0.23.8)"]
 
 [[package]]
 name = "cachetools"
@@ -268,6 +333,30 @@ dev = ["Pygments", "build", "chardet", "pre-commit", "pytest", "pytest-cov", "py
 hard-encoding-detection = ["chardet"]
 toml = ["tomli"]
 types = ["chardet (>=5.1.0)", "mypy", "pytest", "pytest-cov", "pytest-dependency"]
+
+[[package]]
+name = "cohere"
+version = "5.15.0"
+description = ""
+optional = false
+python-versions = "<4.0,>=3.9"
+groups = ["main"]
+markers = "platform_system != \"Emscripten\""
+files = [
+    {file = "cohere-5.15.0-py3-none-any.whl", hash = "sha256:22ff867c2a6f2fc2b585360c6072f584f11f275ef6d9242bac24e0fa2df1dfb5"},
+    {file = "cohere-5.15.0.tar.gz", hash = "sha256:e802d4718ddb0bb655654382ebbce002756a3800faac30296cde7f1bdc6ff2cc"},
+]
+
+[package.dependencies]
+fastavro = ">=1.9.4,<2.0.0"
+httpx = ">=0.21.2"
+httpx-sse = "0.4.0"
+pydantic = ">=1.9.2"
+pydantic-core = ">=2.18.2,<3.0.0"
+requests = ">=2.0.0,<3.0.0"
+tokenizers = ">=0.15,<1"
+types-requests = ">=2.0.0,<3.0.0"
+typing_extensions = ">=4.0.0"
 
 [[package]]
 name = "colorama"
@@ -497,21 +586,111 @@ dev = ["fancycompleter[tests]", "mypy", "ruff (==0.11.2)"]
 tests = ["pytest", "pytest-cov"]
 
 [[package]]
+name = "fastavro"
+version = "1.10.0"
+description = "Fast read/write of AVRO files"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "platform_system != \"Emscripten\""
+files = [
+    {file = "fastavro-1.10.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:1a9fe0672d2caf0fe54e3be659b13de3cad25a267f2073d6f4b9f8862acc31eb"},
+    {file = "fastavro-1.10.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:86dd0410770e0c99363788f0584523709d85e57bb457372ec5c285a482c17fe6"},
+    {file = "fastavro-1.10.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:190e80dc7d77d03a6a8597a026146b32a0bbe45e3487ab4904dc8c1bebecb26d"},
+    {file = "fastavro-1.10.0-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:bf570d63be9155c3fdc415f60a49c171548334b70fff0679a184b69c29b6bc61"},
+    {file = "fastavro-1.10.0-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:e07abb6798e95dccecaec316265e35a018b523d1f3944ad396d0a93cb95e0a08"},
+    {file = "fastavro-1.10.0-cp310-cp310-win_amd64.whl", hash = "sha256:37203097ed11d0b8fd3c004904748777d730cafd26e278167ea602eebdef8eb2"},
+    {file = "fastavro-1.10.0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:d183c075f527ab695a27ae75f210d4a86bce660cda2f85ae84d5606efc15ef50"},
+    {file = "fastavro-1.10.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:d7a95a2c0639bffd7c079b59e9a796bfc3a9acd78acff7088f7c54ade24e4a77"},
+    {file = "fastavro-1.10.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0a678153b5da1b024a32ec3f611b2e7afd24deac588cb51dd1b0019935191a6d"},
+    {file = "fastavro-1.10.0-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:67a597a5cfea4dddcf8b49eaf8c2b5ffee7fda15b578849185bc690ec0cd0d8f"},
+    {file = "fastavro-1.10.0-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:1fd689724760b17f69565d8a4e7785ed79becd451d1c99263c40cb2d6491f1d4"},
+    {file = "fastavro-1.10.0-cp311-cp311-win_amd64.whl", hash = "sha256:4f949d463f9ac4221128a51e4e34e2562f401e5925adcadfd28637a73df6c2d8"},
+    {file = "fastavro-1.10.0-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:cfe57cb0d72f304bd0dcc5a3208ca6a7363a9ae76f3073307d095c9d053b29d4"},
+    {file = "fastavro-1.10.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:74e517440c824cb65fb29d3e3903a9406f4d7c75490cef47e55c4c82cdc66270"},
+    {file = "fastavro-1.10.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:203c17d44cadde76e8eecb30f2d1b4f33eb478877552d71f049265dc6f2ecd10"},
+    {file = "fastavro-1.10.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:6575be7f2b5f94023b5a4e766b0251924945ad55e9a96672dc523656d17fe251"},
+    {file = "fastavro-1.10.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:fe471deb675ed2f01ee2aac958fbf8ebb13ea00fa4ce7f87e57710a0bc592208"},
+    {file = "fastavro-1.10.0-cp312-cp312-win_amd64.whl", hash = "sha256:567ff515f2a5d26d9674b31c95477f3e6022ec206124c62169bc2ffaf0889089"},
+    {file = "fastavro-1.10.0-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:82263af0adfddb39c85f9517d736e1e940fe506dfcc35bc9ab9f85e0fa9236d8"},
+    {file = "fastavro-1.10.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:566c193109ff0ff84f1072a165b7106c4f96050078a4e6ac7391f81ca1ef3efa"},
+    {file = "fastavro-1.10.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e400d2e55d068404d9fea7c5021f8b999c6f9d9afa1d1f3652ec92c105ffcbdd"},
+    {file = "fastavro-1.10.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:9b8227497f71565270f9249fc9af32a93644ca683a0167cfe66d203845c3a038"},
+    {file = "fastavro-1.10.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:8e62d04c65461b30ac6d314e4197ad666371e97ae8cb2c16f971d802f6c7f514"},
+    {file = "fastavro-1.10.0-cp313-cp313-win_amd64.whl", hash = "sha256:86baf8c9740ab570d0d4d18517da71626fe9be4d1142bea684db52bd5adb078f"},
+    {file = "fastavro-1.10.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:5bccbb6f8e9e5b834cca964f0e6ebc27ebe65319d3940b0b397751a470f45612"},
+    {file = "fastavro-1.10.0-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b0132f6b0b53f61a0a508a577f64beb5de1a5e068a9b4c0e1df6e3b66568eec4"},
+    {file = "fastavro-1.10.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ca37a363b711202c6071a6d4787e68e15fa3ab108261058c4aae853c582339af"},
+    {file = "fastavro-1.10.0-cp39-cp39-musllinux_1_2_aarch64.whl", hash = "sha256:cf38cecdd67ca9bd92e6e9ba34a30db6343e7a3bedf171753ee78f8bd9f8a670"},
+    {file = "fastavro-1.10.0-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:f4dd10e0ed42982122d20cdf1a88aa50ee09e5a9cd9b39abdffb1aa4f5b76435"},
+    {file = "fastavro-1.10.0-cp39-cp39-win_amd64.whl", hash = "sha256:aaef147dc14dd2d7823246178fd06fc5e477460e070dc6d9e07dd8193a6bc93c"},
+    {file = "fastavro-1.10.0.tar.gz", hash = "sha256:47bf41ac6d52cdfe4a3da88c75a802321321b37b663a900d12765101a5d6886f"},
+]
+
+[package.extras]
+codecs = ["cramjam", "lz4", "zstandard"]
+lz4 = ["lz4"]
+snappy = ["cramjam"]
+zstandard = ["zstandard"]
+
+[[package]]
 name = "filelock"
 version = "3.18.0"
 description = "A platform independent file lock."
 optional = false
 python-versions = ">=3.9"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "filelock-3.18.0-py3-none-any.whl", hash = "sha256:c401f4f8377c4464e6db25fff06205fd89bdd83b65eb0488ed1b160f780e21de"},
     {file = "filelock-3.18.0.tar.gz", hash = "sha256:adbc88eabb99d2fec8c9c1b229b171f18afa655400173ddc653d5d01501fb9f2"},
 ]
+markers = {main = "platform_system != \"Emscripten\""}
 
 [package.extras]
 docs = ["furo (>=2024.8.6)", "sphinx (>=8.1.3)", "sphinx-autodoc-typehints (>=3)"]
 testing = ["covdefaults (>=2.3)", "coverage (>=7.6.10)", "diff-cover (>=9.2.1)", "pytest (>=8.3.4)", "pytest-asyncio (>=0.25.2)", "pytest-cov (>=6)", "pytest-mock (>=3.14)", "pytest-timeout (>=2.3.1)", "virtualenv (>=20.28.1)"]
 typing = ["typing-extensions (>=4.12.2)"]
+
+[[package]]
+name = "fsspec"
+version = "2025.3.2"
+description = "File-system specification"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "platform_system != \"Emscripten\""
+files = [
+    {file = "fsspec-2025.3.2-py3-none-any.whl", hash = "sha256:2daf8dc3d1dfa65b6aa37748d112773a7a08416f6c70d96b264c96476ecaf711"},
+    {file = "fsspec-2025.3.2.tar.gz", hash = "sha256:e52c77ef398680bbd6a98c0e628fbc469491282981209907bbc8aea76a04fdc6"},
+]
+
+[package.extras]
+abfs = ["adlfs"]
+adl = ["adlfs"]
+arrow = ["pyarrow (>=1)"]
+dask = ["dask", "distributed"]
+dev = ["pre-commit", "ruff"]
+doc = ["numpydoc", "sphinx", "sphinx-design", "sphinx-rtd-theme", "yarl"]
+dropbox = ["dropbox", "dropboxdrivefs", "requests"]
+full = ["adlfs", "aiohttp (!=4.0.0a0,!=4.0.0a1)", "dask", "distributed", "dropbox", "dropboxdrivefs", "fusepy", "gcsfs", "libarchive-c", "ocifs", "panel", "paramiko", "pyarrow (>=1)", "pygit2", "requests", "s3fs", "smbprotocol", "tqdm"]
+fuse = ["fusepy"]
+gcs = ["gcsfs"]
+git = ["pygit2"]
+github = ["requests"]
+gs = ["gcsfs"]
+gui = ["panel"]
+hdfs = ["pyarrow (>=1)"]
+http = ["aiohttp (!=4.0.0a0,!=4.0.0a1)"]
+libarchive = ["libarchive-c"]
+oci = ["ocifs"]
+s3 = ["s3fs"]
+sftp = ["paramiko"]
+smb = ["smbprotocol"]
+ssh = ["paramiko"]
+test = ["aiohttp (!=4.0.0a0,!=4.0.0a1)", "numpy", "pytest", "pytest-asyncio (!=0.22.0)", "pytest-benchmark", "pytest-cov", "pytest-mock", "pytest-recording", "pytest-rerunfailures", "requests"]
+test-downstream = ["aiobotocore (>=2.5.4,<3.0.0)", "dask[dataframe,test]", "moto[server] (>4,<5)", "pytest-timeout", "xarray"]
+test-full = ["adlfs", "aiohttp (!=4.0.0a0,!=4.0.0a1)", "cloudpickle", "dask", "distributed", "dropbox", "dropboxdrivefs", "fastparquet", "fusepy", "gcsfs", "jinja2", "kerchunk", "libarchive-c", "lz4", "notebook", "numpy", "ocifs", "pandas", "panel", "paramiko", "pyarrow", "pyarrow (>=1)", "pyftpdlib", "pygit2", "pytest", "pytest-asyncio (!=0.22.0)", "pytest-benchmark", "pytest-cov", "pytest-mock", "pytest-recording", "pytest-rerunfailures", "python-snappy", "requests", "smbprotocol", "tqdm", "urllib3", "zarr", "zstandard"]
+tqdm = ["tqdm"]
 
 [[package]]
 name = "ghp-import"
@@ -622,6 +801,28 @@ files = [
 ]
 
 [[package]]
+name = "hf-xet"
+version = "1.1.0"
+description = ""
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+markers = "platform_system != \"Emscripten\" and (platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"arm64\" or platform_machine == \"aarch64\")"
+files = [
+    {file = "hf_xet-1.1.0-cp37-abi3-macosx_10_12_x86_64.whl", hash = "sha256:0322c42551e275fcb7949c083a54a81b2898e50787c9aa74284fcb8d2c58c12c"},
+    {file = "hf_xet-1.1.0-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:667153a0304ac2debf2af95a8ff7687186f885b493f4cd16344869af270cd110"},
+    {file = "hf_xet-1.1.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:995eeffb119636ea617b96c7d7bf3c3f5ea8727fa57974574e25d700b8532d48"},
+    {file = "hf_xet-1.1.0-cp37-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:3aee847da362393331f515c4010d0aaa1c2669acfcca1f4b28946d6949cc0086"},
+    {file = "hf_xet-1.1.0-cp37-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:68c5813a6074aa36e12ef5983230e3b03148cce61e0fcdd294096493795565b4"},
+    {file = "hf_xet-1.1.0-cp37-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:4ee9222bf9274b1c198b88a929de0b5a49349c4962d89c5b3b2f0f7f47d9761c"},
+    {file = "hf_xet-1.1.0-cp37-abi3-win_amd64.whl", hash = "sha256:73153eab9abf3d6973b21e94a67ccba5d595c3e12feb8c0bf50be02964e7f126"},
+    {file = "hf_xet-1.1.0.tar.gz", hash = "sha256:a7c2a4c2b6eee9ce0a1a367a82b60d95ba634420ef1c250addad7aa4af419cf4"},
+]
+
+[package.extras]
+tests = ["pytest"]
+
+[[package]]
 name = "httpcore"
 version = "1.0.9"
 description = "A minimal low-level HTTP client."
@@ -667,6 +868,56 @@ cli = ["click (==8.*)", "pygments (==2.*)", "rich (>=10,<14)"]
 http2 = ["h2 (>=3,<5)"]
 socks = ["socksio (==1.*)"]
 zstd = ["zstandard (>=0.18.0)"]
+
+[[package]]
+name = "httpx-sse"
+version = "0.4.0"
+description = "Consume Server-Sent Event (SSE) messages with HTTPX."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "httpx-sse-0.4.0.tar.gz", hash = "sha256:1e81a3a3070ce322add1d3529ed42eb5f70817f45ed6ec915ab753f961139721"},
+    {file = "httpx_sse-0.4.0-py3-none-any.whl", hash = "sha256:f329af6eae57eaa2bdfd962b42524764af68075ea87370a2de920af5341e318f"},
+]
+
+[[package]]
+name = "huggingface-hub"
+version = "0.31.1"
+description = "Client library to download and publish models, datasets and other repos on the huggingface.co hub"
+optional = false
+python-versions = ">=3.8.0"
+groups = ["main"]
+markers = "platform_system != \"Emscripten\""
+files = [
+    {file = "huggingface_hub-0.31.1-py3-none-any.whl", hash = "sha256:43f73124819b48b42d140cbc0d7a2e6bd15b2853b1b9d728d4d55ad1750cac5b"},
+    {file = "huggingface_hub-0.31.1.tar.gz", hash = "sha256:492bb5f545337aa9e2f59b75ef4c5f535a371e8958a6ce90af056387e67f1180"},
+]
+
+[package.dependencies]
+filelock = "*"
+fsspec = ">=2023.5.0"
+hf-xet = {version = ">=1.1.0,<2.0.0", markers = "platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"arm64\" or platform_machine == \"aarch64\""}
+packaging = ">=20.9"
+pyyaml = ">=5.1"
+requests = "*"
+tqdm = ">=4.42.1"
+typing-extensions = ">=3.7.4.3"
+
+[package.extras]
+all = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "fastapi", "gradio (>=4.0.0)", "jedi", "libcst (==1.4.0)", "mypy (==1.5.1)", "numpy", "pytest (>=8.1.1,<8.2.2)", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-mock", "pytest-rerunfailures", "pytest-vcr", "pytest-xdist", "ruff (>=0.9.0)", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "typing-extensions (>=4.8.0)", "urllib3 (<2.0)"]
+cli = ["InquirerPy (==0.3.4)"]
+dev = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "fastapi", "gradio (>=4.0.0)", "jedi", "libcst (==1.4.0)", "mypy (==1.5.1)", "numpy", "pytest (>=8.1.1,<8.2.2)", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-mock", "pytest-rerunfailures", "pytest-vcr", "pytest-xdist", "ruff (>=0.9.0)", "soundfile", "types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "typing-extensions (>=4.8.0)", "urllib3 (<2.0)"]
+fastai = ["fastai (>=2.4)", "fastcore (>=1.3.27)", "toml"]
+hf-transfer = ["hf-transfer (>=0.1.4)"]
+hf-xet = ["hf-xet (>=1.1.0,<2.0.0)"]
+inference = ["aiohttp"]
+quality = ["libcst (==1.4.0)", "mypy (==1.5.1)", "ruff (>=0.9.0)"]
+tensorflow = ["graphviz", "pydot", "tensorflow"]
+tensorflow-testing = ["keras (<3.0)", "tensorflow"]
+testing = ["InquirerPy (==0.3.4)", "Jinja2", "Pillow", "aiohttp", "fastapi", "gradio (>=4.0.0)", "jedi", "numpy", "pytest (>=8.1.1,<8.2.2)", "pytest-asyncio", "pytest-cov", "pytest-env", "pytest-mock", "pytest-rerunfailures", "pytest-vcr", "pytest-xdist", "soundfile", "urllib3 (<2.0)"]
+torch = ["safetensors[torch]", "torch"]
+typing = ["types-PyYAML", "types-requests", "types-simplejson", "types-toml", "types-tqdm", "types-urllib3", "typing-extensions (>=4.8.0)"]
 
 [[package]]
 name = "identify"
@@ -922,6 +1173,18 @@ files = [
 ]
 
 [[package]]
+name = "jmespath"
+version = "1.0.1"
+description = "JSON Matching Expressions"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
+    {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
+]
+
+[[package]]
 name = "logfire"
 version = "3.12.0"
 description = "The best Python observability tool! 🪵🔥"
@@ -1104,6 +1367,34 @@ files = [
 traitlets = "*"
 
 [[package]]
+name = "mcp"
+version = "1.7.1"
+description = "Model Context Protocol SDK"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "mcp-1.7.1-py3-none-any.whl", hash = "sha256:f7e6108977db6d03418495426c7ace085ba2341b75197f8727f96f9cfd30057a"},
+    {file = "mcp-1.7.1.tar.gz", hash = "sha256:eb4f1f53bd717f75dda8a1416e00804b831a8f3c331e23447a03b78f04b43a6e"},
+]
+
+[package.dependencies]
+anyio = ">=4.5"
+httpx = ">=0.27"
+httpx-sse = ">=0.4"
+pydantic = ">=2.7.2,<3.0.0"
+pydantic-settings = ">=2.5.2"
+python-multipart = ">=0.0.9"
+sse-starlette = ">=1.6.1"
+starlette = ">=0.27"
+uvicorn = {version = ">=0.23.1", markers = "sys_platform != \"emscripten\""}
+
+[package.extras]
+cli = ["python-dotenv (>=1.0.0)", "typer (>=0.12.4)"]
+rich = ["rich (>=13.9.4)"]
+ws = ["websockets (>=15.0.1)"]
+
+[[package]]
 name = "mdurl"
 version = "0.1.2"
 description = "Markdown URL utilities"
@@ -1126,6 +1417,28 @@ files = [
     {file = "mergedeep-1.3.4-py3-none-any.whl", hash = "sha256:70775750742b25c0d8f36c55aed03d24c3384d17c951b3175d898bd778ef0307"},
     {file = "mergedeep-1.3.4.tar.gz", hash = "sha256:0096d52e9dad9939c3d975a774666af186eda617e6ca84df4c94dec30004f2a8"},
 ]
+
+[[package]]
+name = "mistralai"
+version = "1.7.0"
+description = "Python Client SDK for the Mistral AI API."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "mistralai-1.7.0-py3-none-any.whl", hash = "sha256:e0e75ab8508598d69ae19b14d9d7e905db6259a2de3cf9204946a27e9bf81c5d"},
+    {file = "mistralai-1.7.0.tar.gz", hash = "sha256:94e3eb23c1d3ed398a95352062fd8c92993cc3754ed18e9a35b60aa3db0bd103"},
+]
+
+[package.dependencies]
+eval-type-backport = ">=0.2.0"
+httpx = ">=0.28.1"
+pydantic = ">=2.10.3"
+python-dateutil = ">=2.8.2"
+typing-inspection = ">=0.4.0"
+
+[package.extras]
+gcp = ["google-auth (>=2.27.0)", "requests (>=2.32.3)"]
 
 [[package]]
 name = "mkdocs"
@@ -1398,14 +1711,14 @@ files = [
 
 [[package]]
 name = "openai"
-version = "1.70.0"
+version = "1.77.0"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "openai-1.70.0-py3-none-any.whl", hash = "sha256:f6438d053fd8b2e05fd6bef70871e832d9bbdf55e119d0ac5b92726f1ae6f614"},
-    {file = "openai-1.70.0.tar.gz", hash = "sha256:e52a8d54c3efeb08cf58539b5b21a5abef25368b5432965e4de88cdf4e091b2b"},
+    {file = "openai-1.77.0-py3-none-any.whl", hash = "sha256:07706e91eb71631234996989a8ea991d5ee56f0744ef694c961e0824d4f39218"},
+    {file = "openai-1.77.0.tar.gz", hash = "sha256:897969f927f0068b8091b4b041d1f8175bcf124f7ea31bab418bf720971223bc"},
 ]
 
 [package.dependencies]
@@ -1420,7 +1733,7 @@ typing-extensions = ">=4.11,<5"
 
 [package.extras]
 datalib = ["numpy (>=1)", "pandas (>=1.2.3)", "pandas-stubs (>=1.1.0.11)"]
-realtime = ["websockets (>=13,<15)"]
+realtime = ["websockets (>=13,<16)"]
 voice-helpers = ["numpy (>=2.0.2)", "sounddevice (>=0.5.1)"]
 
 [[package]]
@@ -1690,7 +2003,7 @@ version = "3.0.50"
 description = "Library for building powerful interactive command lines in Python"
 optional = false
 python-versions = ">=3.8.0"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "prompt_toolkit-3.0.50-py3-none-any.whl", hash = "sha256:9b6427eb19e479d98acff65196a307c555eb567989e6d88ebbb1b509d9779198"},
     {file = "prompt_toolkit-3.0.50.tar.gz", hash = "sha256:544748f3860a2623ca5cd6d2795e7a14f3d0e1c3c9728359013f79877fc89bab"},
@@ -1907,52 +2220,72 @@ timezone = ["tzdata"]
 
 [[package]]
 name = "pydantic-ai"
-version = "0.0.12"
+version = "0.1.10"
 description = "Agent Framework / shim to use Pydantic with LLMs"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "pydantic_ai-0.0.12-py3-none-any.whl", hash = "sha256:0dbfec39744a4ed87467bb0ce34c736cf6b3cade0256a7530e8b4a7c7c916afb"},
-    {file = "pydantic_ai-0.0.12.tar.gz", hash = "sha256:e86ff5e5137be64c247a9ea1cf39867a96a92de28ed60440ec46fcc32ca8916c"},
+    {file = "pydantic_ai-0.1.10-py3-none-any.whl", hash = "sha256:5441cb5e2d80239737d1990f789626d55fa7da2e0d103c3d99bc9e1152209d9c"},
+    {file = "pydantic_ai-0.1.10.tar.gz", hash = "sha256:393c27cd3d86c6c505ac7d78ba740f4a27419d737938640775929deab1c8ccf8"},
 ]
 
 [package.dependencies]
-logfire = {version = ">=2.3", optional = true, markers = "extra == \"logfire\""}
-pydantic-ai-slim = {version = "0.0.12", extras = ["groq", "openai", "vertexai"]}
+logfire = {version = ">=3.11.0", optional = true, markers = "extra == \"logfire\""}
+pydantic-ai-slim = {version = "0.1.10", extras = ["anthropic", "bedrock", "cli", "cohere", "evals", "groq", "mcp", "mistral", "openai", "vertexai"]}
 
 [package.extras]
-examples = ["pydantic-ai-examples (==0.0.12)"]
-logfire = ["logfire (>=2.3)"]
+examples = ["pydantic-ai-examples (==0.1.10)"]
+logfire = ["logfire (>=3.11.0)"]
 
 [[package]]
 name = "pydantic-ai-slim"
-version = "0.0.12"
+version = "0.1.10"
 description = "Agent Framework / shim to use Pydantic with LLMs, slim package"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "pydantic_ai_slim-0.0.12-py3-none-any.whl", hash = "sha256:8b3054229b15f99dc5d85a70ad8e2a70933b0eb7ee0dc8d649b9bc0269863f0c"},
-    {file = "pydantic_ai_slim-0.0.12.tar.gz", hash = "sha256:d4db0daa87cf232b4142cdb831902ddab814239bc5bf4894d01232b1bb37e646"},
+    {file = "pydantic_ai_slim-0.1.10-py3-none-any.whl", hash = "sha256:d979492640bb43debefa842728c019eb8159302fe0e9fc423c9f4c1480906f4e"},
+    {file = "pydantic_ai_slim-0.1.10.tar.gz", hash = "sha256:c8ce4e04d014a0061d1a4cf9a76006cfacf6ee7214c572458550b05e878f832d"},
 ]
 
 [package.dependencies]
+anthropic = {version = ">=0.49.0", optional = true, markers = "extra == \"anthropic\""}
+argcomplete = {version = ">=3.5.0", optional = true, markers = "extra == \"cli\""}
+boto3 = {version = ">=1.35.74", optional = true, markers = "extra == \"bedrock\""}
+cohere = {version = ">=5.13.11", optional = true, markers = "platform_system != \"Emscripten\" and extra == \"cohere\""}
 eval-type-backport = ">=0.2.0"
 google-auth = {version = ">=2.36.0", optional = true, markers = "extra == \"vertexai\""}
 griffe = ">=1.3.2"
-groq = {version = ">=0.12.0", optional = true, markers = "extra == \"groq\""}
-httpx = ">=0.27.2"
-logfire-api = ">=1.2.0"
-openai = {version = ">=1.54.3", optional = true, markers = "extra == \"openai\""}
+groq = {version = ">=0.15.0", optional = true, markers = "extra == \"groq\""}
+httpx = ">=0.27"
+mcp = {version = ">=1.6.0", optional = true, markers = "python_version >= \"3.10\" and extra == \"mcp\""}
+mistralai = {version = ">=1.2.5", optional = true, markers = "extra == \"mistral\""}
+openai = {version = ">=1.75.0", optional = true, markers = "extra == \"openai\""}
+opentelemetry-api = ">=1.28.0"
+prompt-toolkit = {version = ">=3", optional = true, markers = "extra == \"cli\""}
 pydantic = ">=2.10"
-requests = {version = ">=2.32.3", optional = true, markers = "extra == \"vertexai\""}
+pydantic-evals = {version = "0.1.10", optional = true, markers = "extra == \"evals\""}
+pydantic-graph = "0.1.10"
+requests = {version = ">=2.32.2", optional = true, markers = "extra == \"vertexai\""}
+rich = {version = ">=13", optional = true, markers = "extra == \"cli\""}
+typing-inspection = ">=0.4.0"
 
 [package.extras]
-groq = ["groq (>=0.12.0)"]
-logfire = ["logfire (>=2.3)"]
-openai = ["openai (>=1.54.3)"]
-vertexai = ["google-auth (>=2.36.0)", "requests (>=2.32.3)"]
+anthropic = ["anthropic (>=0.49.0)"]
+bedrock = ["boto3 (>=1.35.74)"]
+cli = ["argcomplete (>=3.5.0)", "prompt-toolkit (>=3)", "rich (>=13)"]
+cohere = ["cohere (>=5.13.11)"]
+duckduckgo = ["duckduckgo-search (>=7.0.0)"]
+evals = ["pydantic-evals (==0.1.10)"]
+groq = ["groq (>=0.15.0)"]
+logfire = ["logfire (>=3.11.0)"]
+mcp = ["mcp (>=1.6.0)"]
+mistral = ["mistralai (>=1.2.5)"]
+openai = ["openai (>=1.75.0)"]
+tavily = ["tavily-python (>=0.5.0)"]
+vertexai = ["google-auth (>=2.36.0)", "requests (>=2.32.2)"]
 
 [[package]]
 name = "pydantic-core"
@@ -2065,6 +2398,47 @@ files = [
 
 [package.dependencies]
 typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
+
+[[package]]
+name = "pydantic-evals"
+version = "0.1.10"
+description = "Framework for evaluating stochastic code execution, especially code making use of LLMs"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pydantic_evals-0.1.10-py3-none-any.whl", hash = "sha256:4a2739010120f44daa9c96117aa72ae4649584040764c34f3ecdb1065b50306e"},
+    {file = "pydantic_evals-0.1.10.tar.gz", hash = "sha256:8303242bce0f56b587126dcd60624333ca0ba18401f68935217466627fba1831"},
+]
+
+[package.dependencies]
+anyio = ">=0"
+logfire-api = ">=1.2.0"
+pydantic = ">=2.10"
+pydantic-ai-slim = "0.1.10"
+pyyaml = ">=6.0.2"
+rich = ">=13.9.4"
+
+[package.extras]
+logfire = ["logfire (>=2.3)"]
+
+[[package]]
+name = "pydantic-graph"
+version = "0.1.10"
+description = "Graph and state machine library"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pydantic_graph-0.1.10-py3-none-any.whl", hash = "sha256:56ba6bebe86e7e61cdc0e0ab36e07fe0a43931d949b89ec16c81cc70e2e6473c"},
+    {file = "pydantic_graph-0.1.10.tar.gz", hash = "sha256:dd7725f6a7c967d0dda8da72baba187cf4d85f1fc59f262b422591db20d738bd"},
+]
+
+[package.dependencies]
+httpx = ">=0.27"
+logfire-api = ">=1.2.0"
+pydantic = ">=2.10"
+typing-inspection = ">=0.4.0"
 
 [[package]]
 name = "pydantic-settings"
@@ -2225,7 +2599,7 @@ version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
     {file = "python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
@@ -2250,12 +2624,24 @@ files = [
 cli = ["click (>=5.0)"]
 
 [[package]]
+name = "python-multipart"
+version = "0.0.20"
+description = "A streaming multipart parser for Python"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "python_multipart-0.0.20-py3-none-any.whl", hash = "sha256:8a62d3a8335e06589fe01f2a3e178cdcc632f3fbe0d492ad9ee0ec35aab1f104"},
+    {file = "python_multipart-0.0.20.tar.gz", hash = "sha256:8dd0cab45b8e23064ae09147625994d090fa46f5b0d1e13af944c331a7fa9d13"},
+]
+
+[[package]]
 name = "pyyaml"
 version = "6.0.2"
 description = "YAML parser and emitter for Python"
 optional = false
 python-versions = ">=3.8"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "PyYAML-6.0.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:0a9a2848a5b7feac301353437eb7d5957887edbf81d56e903999a75a3d743086"},
     {file = "PyYAML-6.0.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:29717114e51c84ddfba879543fb232a6ed60086602313ca38cce623c1d62cfbf"},
@@ -2426,12 +2812,30 @@ files = [
 ]
 
 [[package]]
+name = "s3transfer"
+version = "0.12.0"
+description = "An Amazon S3 Transfer Manager"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "s3transfer-0.12.0-py3-none-any.whl", hash = "sha256:35b314d7d82865756edab59f7baebc6b477189e6ab4c53050e28c1de4d9cce18"},
+    {file = "s3transfer-0.12.0.tar.gz", hash = "sha256:8ac58bc1989a3fdb7c7f3ee0918a66b160d038a147c7b5db1500930a607e9a1c"},
+]
+
+[package.dependencies]
+botocore = ">=1.37.4,<2.0a.0"
+
+[package.extras]
+crt = ["botocore[crt] (>=1.37.4,<2.0a.0)"]
+
+[[package]]
 name = "six"
 version = "1.17.0"
 description = "Python 2 and 3 compatibility utilities"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
     {file = "six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"},
@@ -2448,6 +2852,26 @@ files = [
     {file = "sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2"},
     {file = "sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc"},
 ]
+
+[[package]]
+name = "sse-starlette"
+version = "2.3.4"
+description = "SSE plugin for Starlette"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "sse_starlette-2.3.4-py3-none-any.whl", hash = "sha256:b8100694f3f892b133d0f7483acb7aacfcf6ed60f863b31947664b6dc74e529f"},
+    {file = "sse_starlette-2.3.4.tar.gz", hash = "sha256:0ffd6bed217cdbb74a84816437c609278003998b4991cd2e6872d0b35130e4d5"},
+]
+
+[package.dependencies]
+anyio = ">=4.7.0"
+starlette = ">=0.41.3"
+
+[package.extras]
+examples = ["fastapi"]
+uvicorn = ["uvicorn (>=0.34.0)"]
 
 [[package]]
 name = "stack-data"
@@ -2491,6 +2915,24 @@ tests = ["anyio", "dirty-equals", "pytest"]
 typing = ["mypy (>=1.4)"]
 
 [[package]]
+name = "starlette"
+version = "0.46.2"
+description = "The little ASGI library that shines."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "starlette-0.46.2-py3-none-any.whl", hash = "sha256:595633ce89f8ffa71a015caed34a5b2dc1c0cdb3f0f1fbd1e69339cf2abeec35"},
+    {file = "starlette-0.46.2.tar.gz", hash = "sha256:7f7361f34eed179294600af672f565727419830b54b7b084efe44bb82d2fccd5"},
+]
+
+[package.dependencies]
+anyio = ">=3.6.2,<5"
+
+[package.extras]
+full = ["httpx (>=0.27.0,<0.29.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.18)", "pyyaml"]
+
+[[package]]
 name = "tenacity"
 version = "9.1.2"
 description = "Retry code until it succeeds"
@@ -2520,6 +2962,40 @@ files = [
 
 [package.extras]
 tests = ["pytest", "pytest-cov"]
+
+[[package]]
+name = "tokenizers"
+version = "0.21.1"
+description = ""
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "platform_system != \"Emscripten\""
+files = [
+    {file = "tokenizers-0.21.1-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:e78e413e9e668ad790a29456e677d9d3aa50a9ad311a40905d6861ba7692cf41"},
+    {file = "tokenizers-0.21.1-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:cd51cd0a91ecc801633829fcd1fda9cf8682ed3477c6243b9a095539de4aecf3"},
+    {file = "tokenizers-0.21.1-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:28da6b72d4fb14ee200a1bd386ff74ade8992d7f725f2bde2c495a9a98cf4d9f"},
+    {file = "tokenizers-0.21.1-cp39-abi3-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:34d8cfde551c9916cb92014e040806122295a6800914bab5865deb85623931cf"},
+    {file = "tokenizers-0.21.1-cp39-abi3-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:aaa852d23e125b73d283c98f007e06d4595732104b65402f46e8ef24b588d9f8"},
+    {file = "tokenizers-0.21.1-cp39-abi3-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:a21a15d5c8e603331b8a59548bbe113564136dc0f5ad8306dd5033459a226da0"},
+    {file = "tokenizers-0.21.1-cp39-abi3-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:2fdbd4c067c60a0ac7eca14b6bd18a5bebace54eb757c706b47ea93204f7a37c"},
+    {file = "tokenizers-0.21.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2dd9a0061e403546f7377df940e866c3e678d7d4e9643d0461ea442b4f89e61a"},
+    {file = "tokenizers-0.21.1-cp39-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:db9484aeb2e200c43b915a1a0150ea885e35f357a5a8fabf7373af333dcc8dbf"},
+    {file = "tokenizers-0.21.1-cp39-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:ed248ab5279e601a30a4d67bdb897ecbe955a50f1e7bb62bd99f07dd11c2f5b6"},
+    {file = "tokenizers-0.21.1-cp39-abi3-musllinux_1_2_i686.whl", hash = "sha256:9ac78b12e541d4ce67b4dfd970e44c060a2147b9b2a21f509566d556a509c67d"},
+    {file = "tokenizers-0.21.1-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:e5a69c1a4496b81a5ee5d2c1f3f7fbdf95e90a0196101b0ee89ed9956b8a168f"},
+    {file = "tokenizers-0.21.1-cp39-abi3-win32.whl", hash = "sha256:1039a3a5734944e09de1d48761ade94e00d0fa760c0e0551151d4dd851ba63e3"},
+    {file = "tokenizers-0.21.1-cp39-abi3-win_amd64.whl", hash = "sha256:0f0dcbcc9f6e13e675a66d7a5f2f225a736745ce484c1a4e07476a89ccdad382"},
+    {file = "tokenizers-0.21.1.tar.gz", hash = "sha256:a1bb04dc5b448985f86ecd4b05407f5a8d97cb2c0532199b2a302a604a0165ab"},
+]
+
+[package.dependencies]
+huggingface-hub = ">=0.16.4,<1.0"
+
+[package.extras]
+dev = ["tokenizers[testing]"]
+docs = ["setuptools-rust", "sphinx", "sphinx-rtd-theme"]
+testing = ["black (==22.3)", "datasets", "numpy", "pytest", "requests", "ruff"]
 
 [[package]]
 name = "tomlkit"
@@ -2570,6 +3046,51 @@ files = [
 [package.extras]
 docs = ["myst-parser", "pydata-sphinx-theme", "sphinx"]
 test = ["argcomplete (>=3.0.3)", "mypy (>=1.7.0)", "pre-commit", "pytest (>=7.0,<8.2)", "pytest-mock", "pytest-mypy-testing"]
+
+[[package]]
+name = "types-requests"
+version = "2.31.0.6"
+description = "Typing stubs for requests"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+markers = "platform_python_implementation == \"PyPy\" and platform_system != \"Emscripten\""
+files = [
+    {file = "types-requests-2.31.0.6.tar.gz", hash = "sha256:cd74ce3b53c461f1228a9b783929ac73a666658f223e28ed29753771477b3bd0"},
+    {file = "types_requests-2.31.0.6-py3-none-any.whl", hash = "sha256:a2db9cb228a81da8348b49ad6db3f5519452dd20a9c1e1a868c83c5fe88fd1a9"},
+]
+
+[package.dependencies]
+types-urllib3 = "*"
+
+[[package]]
+name = "types-requests"
+version = "2.32.0.20250328"
+description = "Typing stubs for requests"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "platform_python_implementation != \"PyPy\" and platform_system != \"Emscripten\""
+files = [
+    {file = "types_requests-2.32.0.20250328-py3-none-any.whl", hash = "sha256:72ff80f84b15eb3aa7a8e2625fffb6a93f2ad5a0c20215fc1dcfa61117bcb2a2"},
+    {file = "types_requests-2.32.0.20250328.tar.gz", hash = "sha256:c9e67228ea103bd811c96984fac36ed2ae8da87a36a633964a21f199d60baf32"},
+]
+
+[package.dependencies]
+urllib3 = ">=2"
+
+[[package]]
+name = "types-urllib3"
+version = "1.26.25.14"
+description = "Typing stubs for urllib3"
+optional = false
+python-versions = "*"
+groups = ["main"]
+markers = "platform_python_implementation == \"PyPy\" and platform_system != \"Emscripten\""
+files = [
+    {file = "types-urllib3-1.26.25.14.tar.gz", hash = "sha256:229b7f577c951b8c1b92c1bc2b2fdb0b49847bd2af6d1cc2a2e3dd340f3bda8f"},
+    {file = "types_urllib3-1.26.25.14-py3-none-any.whl", hash = "sha256:9683bbb7fb72e32bfe9d2be6e04875fbe1b3eeec3cbb4ea231435aa7fd6b4f0e"},
+]
 
 [[package]]
 name = "typing-extensions"
@@ -2634,6 +3155,26 @@ brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
 h2 = ["h2 (>=4,<5)"]
 socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["zstandard (>=0.18.0)"]
+
+[[package]]
+name = "uvicorn"
+version = "0.34.2"
+description = "The lightning-fast ASGI server."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+markers = "sys_platform != \"emscripten\""
+files = [
+    {file = "uvicorn-0.34.2-py3-none-any.whl", hash = "sha256:deb49af569084536d269fe0a6d67e3754f104cf03aba7c11c40f01aadf33c403"},
+    {file = "uvicorn-0.34.2.tar.gz", hash = "sha256:0e929828f6186353a80b58ea719861d2629d766293b6d19baf086ba31d4f3328"},
+]
+
+[package.dependencies]
+click = ">=7.0"
+h11 = ">=0.8"
+
+[package.extras]
+standard = ["colorama (>=0.4)", "httptools (>=0.6.3)", "python-dotenv (>=0.13)", "pyyaml (>=5.1)", "uvloop (>=0.14.0,!=0.15.0,!=0.15.1)", "watchfiles (>=0.13)", "websockets (>=10.4)"]
 
 [[package]]
 name = "vcrpy"
@@ -2729,7 +3270,7 @@ version = "0.2.13"
 description = "Measures the displayed width of unicode strings in a terminal"
 optional = false
 python-versions = "*"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "wcwidth-0.2.13-py2.py3-none-any.whl", hash = "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"},
     {file = "wcwidth-0.2.13.tar.gz", hash = "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"},
@@ -2944,4 +3485,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<4"
-content-hash = "fd066418cafe1fb8ee7ae19f86d45708bf2094c4a7e13df3ba7576b7c3a5c08c"
+content-hash = "2074ef819abe681cfed59a400be90477b90e80511812ea2422effad7382e71e2"
