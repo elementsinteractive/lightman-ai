@@ -9,7 +9,7 @@ class TestTheHackerNewsSource:
         result = TheHackerNewsSource()._clean(string_to_clean)
         assert result == "a"
 
-    @pytest.mark.vcr()
+    @pytest.mark.vcr
     async def test_get_articles(self) -> None:
         articles = await TheHackerNewsSource().get_articles()
 
