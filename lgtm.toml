@@ -1,6 +1,6 @@
 technologies = ["Python"]
 categories = ["Correctness", "Quality"]
-exclude = ["*.md"]
+exclude = ["*.md", "poetry.lock"]
 model = "gpt-4o"
 silent = false
 publish = true
