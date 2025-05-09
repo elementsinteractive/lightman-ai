@@ -1,0 +1,6 @@
+technologies = ["Python"]
+categories = ["Correctness", "Quality"]
+exclude = ["*.md"]
+model = "gpt-4o"
+silent = false
+publish = true
