@@ -20,6 +20,7 @@ variables:
 
 stages:
   - test
+  - ai-review
   - bump-version
   - pages
   - publish
@@ -41,8 +42,16 @@ stages:
     - apt update && apt install -y curl
     - curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag ${JUST_VERSION} --to /usr/local/bin
 
-## test stage
+## ai-review stage
+lgtm-review:
+  stage: ai-review
+  needs: []
+  extends:
+    - .do-lgtm-review
+    - .on-merge-request
+  when: manual
 
+## test stage
 lint-commit:
   stage: test
   needs: []
