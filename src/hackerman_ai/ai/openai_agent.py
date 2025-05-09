@@ -3,6 +3,7 @@ from typing import Never
 
 from hackerman_ai.ai.exceptions import LimitTokensExceededError, map_exceptions
 from hackerman_ai.article.models import SelectedArticlesList
+from hackerman_ai.core.settings import settings
 from pydantic_ai import Agent
 from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.models.openai import OpenAIModel
@@ -12,7 +13,7 @@ class OpenAIAgent:
     """Class that provides an interface to operate with the OpenAI model."""
 
     def __init__(self) -> None:
-        ai_model = OpenAIModel("gpt-4o")
+        ai_model = OpenAIModel(settings.OPENAI_MODEL)
         self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, output_type=SelectedArticlesList)
 
     async def get_prompt_result(self, prompt: str, iterations: int = 1) -> SelectedArticlesList:

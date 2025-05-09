@@ -1,10 +1,16 @@
+from abc import ABC, abstractmethod
 from typing import override
 
+import tiktoken
+from hackerman_ai.core.settings import settings
 from pydantic import BaseModel
 
 
-class BaseArticle(BaseModel):
+class BaseArticle(BaseModel, ABC):
+    """Base abstract class for all Articles."""
+
     link: str
+    _encoding: tiktoken.Encoding = tiktoken.encoding_for_model(settings.OPENAI_MODEL)
 
     @override
     def __eq__(self, value: object) -> bool:
@@ -17,13 +23,44 @@ class BaseArticle(BaseModel):
     def __hash__(self) -> int:
         return hash(self.link.encode())
 
+    @property
+    @abstractmethod
+    def number_of_tokens(self) -> int: ...
 
-class SelectedArticle(BaseArticle): ...
+
+class SelectedArticle(BaseArticle):
+    @override
+    @property
+    def number_of_tokens(self) -> int:
+        """
+        Number of tokens that this Article has.
+
+        Worth taking into account that this is not the final number of tokens to be sent,
+        as pydantic-ai adds some extra characters.
+
+        It is a rough estimation of the total tokens to be sent for this Article.
+        """
+        tokens = self._encoding.encode(f"{self.link}")
+        return len(tokens)
 
 
 class Article(BaseArticle):
     title: str
     description: str
+
+    @override
+    @property
+    def number_of_tokens(self) -> int:
+        """
+        Number of tokens that this Article has.
+
+        Worth taking into account that this is not the final number of tokens to be sent,
+        as pydantic-ai adds some extra characters.
+
+        It is a rough estimation of the total tokens to be sent for this Article.
+        """
+        tokens = self._encoding.encode(f"{self.title}{self.description}{self.link}")
+        return len(tokens)
 
 
 class BaseArticlesList[TArticle: BaseArticle](BaseModel):
@@ -32,6 +69,10 @@ class BaseArticlesList[TArticle: BaseArticle](BaseModel):
     @property
     def links(self) -> list[str]:
         return [new.link for new in self.articles]
+
+    @property
+    def total_number_of_tokens(self) -> int:
+        return sum(article.number_of_tokens for article in self.articles)
 
 
 class SelectedArticlesList(BaseArticlesList[SelectedArticle]):
