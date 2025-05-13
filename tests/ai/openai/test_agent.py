@@ -1,5 +1,5 @@
 import pytest
-from hackerman_ai.ai.openai_agent import OpenAIAgent
+from hackerman_ai.ai.openai.agent import OpenAIAgent
 from hackerman_ai.article.models import SelectedArticle, SelectedArticlesList
 from tests.conftest import patch_run_prompt
 

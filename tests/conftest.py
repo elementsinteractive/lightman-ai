@@ -546,6 +546,6 @@ def short_prompt(thn_news: ArticlesList) -> str:
 async def patch_run_prompt(results: SelectedArticlesList | None = None) -> AsyncGenerator[Any, None]:
     run_prompt_result = results if results else SelectedArticlesList(articles=[])
 
-    with patch("hackerman_ai.ai.openai_agent.OpenAIAgent._run_prompt") as mock:
+    with patch("hackerman_ai.ai.openai.agent.OpenAIAgent._run_prompt") as mock:
         mock.return_value = run_prompt_result
         yield mock
