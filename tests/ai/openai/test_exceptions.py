@@ -1,7 +1,12 @@
 from unittest.mock import Mock
 
 import pytest
-from hackerman_ai.ai.exceptions import InputTooLargeError, LimitTokensExceededError, UnknownOpenAIError, map_exceptions
+from hackerman_ai.ai.openai.exceptions import (
+    InputTooLargeError,
+    LimitTokensExceededError,
+    UnknownOpenAIError,
+    map_exceptions,
+)
 from openai import RateLimitError
 
 
