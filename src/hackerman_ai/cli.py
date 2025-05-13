@@ -1,6 +1,7 @@
 import asyncio
 
 import click
+from hackerman_ai.ai.utils import MODEL_CHOICES
 from hackerman_ai.main import hackerman
 
 
@@ -10,10 +11,11 @@ def entry_point() -> None:
 
 
 @entry_point.command()
-def run() -> int:
+@click.option("--model", type=click.Choice(MODEL_CHOICES), help=("Which model to use."), default="openai")
+def run(model: str) -> int:
     """
     Entrypoint of the application.
 
     Holds no logic. Just calls the methods and return an exit code.
     """
-    return int(asyncio.run(hackerman()))
+    return int(asyncio.run(hackerman(model)))
