@@ -1,6 +1,6 @@
 technologies = ["Python"]
-categories = ["Correctness", "Quality"]
+categories = ["Correctness", "Quality", "Testing", "Security"]
 exclude = ["*.md", "poetry.lock"]
-model = "gpt-4o"
+model = "gemini-2.0-pro-exp-02-05"
 silent = false
 publish = true
