@@ -5,10 +5,9 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
 
+from hackerman_ai.ai.base.exceptions import BaseHackermanError
+
 from openai import RateLimitError
-
-
-class BaseHackermanError(Exception): ...
 
 
 class BaseOpenAIError(BaseHackermanError): ...

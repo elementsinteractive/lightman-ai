@@ -1,6 +1,7 @@
 import asyncio
-from typing import Never
+from typing import Never, override
 
+from hackerman_ai.ai.base.agent import BaseAgent
 from hackerman_ai.ai.openai.exceptions import LimitTokensExceededError, map_exceptions
 from hackerman_ai.article.models import SelectedArticlesList
 from hackerman_ai.core.settings import settings
@@ -9,13 +10,14 @@ from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.models.openai import OpenAIModel
 
 
-class OpenAIAgent:
+class OpenAIAgent(BaseAgent):
     """Class that provides an interface to operate with the OpenAI model."""
 
     def __init__(self) -> None:
         ai_model = OpenAIModel(settings.OPENAI_MODEL)
         self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, output_type=SelectedArticlesList)
 
+    @override
     async def get_prompt_result(self, prompt: str, iterations: int = 1) -> SelectedArticlesList:
         assert iterations > 0, "Number of iterations must be > 0."
 
@@ -39,7 +41,7 @@ class OpenAIAgent:
             await asyncio.sleep(err.wait_time)
             result = await self._execute_agent(prompt)
 
-        return result.data
+        return result.output
 
     def _merge_results(self, articles_list_of_lists: list[SelectedArticlesList]) -> SelectedArticlesList:
         """Merge all the news, removing repeated ones."""
