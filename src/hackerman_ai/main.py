@@ -1,6 +1,6 @@
 import logging
 
-from hackerman_ai.ai.openai_agent import OpenAIAgent
+from hackerman_ai.ai.openai.agent import OpenAIAgent
 from hackerman_ai.ai.prompts import Prompts, add_articles_to_prompt
 from hackerman_ai.article.processor import Processor
 from hackerman_ai.core.settings import settings

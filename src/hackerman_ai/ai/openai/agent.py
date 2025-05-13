@@ -1,7 +1,7 @@
 import asyncio
 from typing import Never
 
-from hackerman_ai.ai.exceptions import LimitTokensExceededError, map_exceptions
+from hackerman_ai.ai.openai.exceptions import LimitTokensExceededError, map_exceptions
 from hackerman_ai.article.models import SelectedArticlesList
 from hackerman_ai.core.settings import settings
 from pydantic_ai import Agent
