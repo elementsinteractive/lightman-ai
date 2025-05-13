@@ -9,7 +9,7 @@ class TestHackerman:
     @pytest.mark.vcr
     async def test_hackerman(self, caplog: Any) -> None:
         with caplog.at_level(logging.WARNING):
-            result = await hackerman()
+            result = await hackerman("openai")
 
         assert result == 0
         assert "Found these articles: " in caplog.text
