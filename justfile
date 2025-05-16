@@ -4,8 +4,8 @@ venv := ".venv"
 bin := venv + "/bin"
 python_version := "python3.13"
 run := "poetry run"
-target_dirs := "src tests"
-
+target_dirs := "src tests eval"
+eval_path := "eval/evaluator.py"
 # SENTINELS
 venv-exists := path_exists(venv)
 
@@ -27,6 +27,10 @@ venv:
 clean:
     @rm -f .coverage*
     @rm -rf {{ venv }}
+
+# Runs the evaluation script
+eval *tag: venv
+    PYTHONPATH=. {{ run }} python {{ eval_path }} --tag {{ tag }}
 
 alias t := test
 # Runs the tests with the specified arguments (any path or pytest argument).
