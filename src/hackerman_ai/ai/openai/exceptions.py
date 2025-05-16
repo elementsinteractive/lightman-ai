@@ -1,11 +1,11 @@
 import math
 import re
-from abc import ABC
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Any
+from typing import Any, override
 
 from hackerman_ai.ai.base.exceptions import BaseHackermanError
+from pydantic_ai.exceptions import ModelHTTPError
 
 from openai import RateLimitError
 
@@ -16,13 +16,17 @@ class BaseOpenAIError(BaseHackermanError): ...
 class UnknownOpenAIError(BaseOpenAIError): ...
 
 
-class OpenAIRateLimitError(BaseOpenAIError, ABC):
+class OpenAIRateLimitError(BaseOpenAIError):
     regex: str
 
     @classmethod
-    def get_match(cls, message: str) -> tuple[str, ...]:
+    def get_matches(cls, message: str) -> tuple[str, ...]:
         match = re.search(cls.regex, message)
         return match.groups() if match else ()
+
+    @classmethod
+    def is_match(cls, message: str) -> bool:
+        return bool(re.search(cls.regex, message))
 
 
 class InputTooLargeError(OpenAIRateLimitError):
@@ -53,6 +57,16 @@ class LimitTokensExceededError(OpenAIRateLimitError):
         self.wait_time = math.ceil(float(values[3]))
 
 
+class QuotaExceededError(OpenAIRateLimitError):
+    regex = r"You exceeded your current quota"
+
+    @override
+    @classmethod
+    def get_matches(cls, message: str) -> tuple[str, ...]:
+        match = re.search(cls.regex, message)
+        return match.groups() if match else ()
+
+
 type TRateLimitErr = type[InputTooLargeError | LimitTokensExceededError]
 RATE_LIMIT_ERRORS: list[TRateLimitErr] = [LimitTokensExceededError, InputTooLargeError]
 
@@ -63,6 +77,9 @@ async def map_exceptions() -> AsyncGenerator[Any, Any]:
         yield
     except RateLimitError as err:
         for error in RATE_LIMIT_ERRORS:
-            if matches := error.get_match(err.message):
+            if matches := error.get_matches(err.message):
                 raise error(matches) from err
         raise UnknownOpenAIError from err
+    except ModelHTTPError as err:
+        if QuotaExceededError.is_match(err.message):
+            raise QuotaExceededError() from err
