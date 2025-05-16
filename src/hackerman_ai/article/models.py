@@ -10,7 +10,7 @@ class BaseArticle(BaseModel, ABC):
     """Base abstract class for all Articles."""
 
     link: str
-    _encoding: tiktoken.Encoding = tiktoken.encoding_for_model(settings.OPENAI_MODEL)
+    _encoding: tiktoken.Encoding = tiktoken.get_encoding(settings.OPENAI_ENCODING)
 
     @override
     def __eq__(self, value: object) -> bool:
