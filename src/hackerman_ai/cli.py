@@ -18,4 +18,6 @@ def run(model: str) -> int:
 
     Holds no logic. Just calls the methods and return an exit code.
     """
-    return int(asyncio.run(hackerman(model)))
+    asyncio.run(hackerman(model))
+
+    return 0
