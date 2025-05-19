@@ -11,7 +11,7 @@ def entry_point() -> None:
 
 
 @entry_point.command()
-@click.option("--model", type=click.Choice(MODEL_CHOICES), help=("Which model to use."), default="openai")
+@click.option("--model", type=click.Choice(MODEL_CHOICES), help=("Which model to use."), default="gpt-4.1")
 def run(model: str) -> int:
     """
     Entrypoint of the application.

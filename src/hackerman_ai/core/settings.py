@@ -7,7 +7,6 @@ class Settings(BaseSettings):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 
-    OPENAI_MODEL: str = "gpt-4.1"
     OPENAI_ENCODING: str = "cl100k_base"
     PROMPT_ITERATIONS: int = 3
 
