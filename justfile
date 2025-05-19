@@ -29,8 +29,8 @@ clean:
     @rm -rf {{ venv }}
 
 # Runs the evaluation script
-eval *tag: venv
-    PYTHONPATH=. {{ run }} python {{ eval_path }} --tag {{ tag }}
+eval *args: venv
+    PYTHONPATH=. {{ run }} python {{ eval_path }} {{ args }}
 
 alias t := test
 # Runs the tests with the specified arguments (any path or pytest argument).
