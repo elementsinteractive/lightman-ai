@@ -5,6 +5,7 @@ from pathlib import Path
 
 import click
 from dotenv import load_dotenv
+from hackerman_ai.ai.utils import MODEL_CHOICES, get_agent_instance_from_model_name
 from hackerman_ai.article.models import Article, ArticlesList
 from hackerman_ai.main import _classify_articles
 
@@ -24,7 +25,6 @@ def get_results_template(
     false_positives: set[Article],
     false_negatives: set[Article],
     relevant_articles: set[Article],
-    non_relevant_articles: set[Article],
 ) -> str:
     def titles_to_bullet_list(titles: list[str]) -> str:
         return "- " + "\n- ".join(titles)
@@ -67,9 +67,13 @@ Precision: {total_correctly_found_articles / (total_correctly_found_articles + t
 
 @click.command()
 @click.option("--tag", type=str, help=("Tag that identifies the evaluation run"), required=True)
-def eval(tag: str) -> None:
+@click.option(
+    "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default="gpt-4.1"
+)
+def eval(tag: str, model: str) -> None:
     articles = ArticlesList(articles=list(RELEVANT_ARTICLES) + list(NON_RELEVANT_ARTICLES))
-    results = asyncio.run(_classify_articles(articles, "openai"))
+    agent = get_agent_instance_from_model_name(model)
+    results = asyncio.run(_classify_articles(articles, agent))
 
     correctly_found_articles = set()
     false_positives = set()
@@ -84,7 +88,7 @@ def eval(tag: str) -> None:
 
     false_negatives = RELEVANT_ARTICLES - correctly_found_articles
     results_template = get_results_template(
-        results, correctly_found_articles, false_positives, false_negatives, RELEVANT_ARTICLES, NON_RELEVANT_ARTICLES
+        results, correctly_found_articles, false_positives, false_negatives, RELEVANT_ARTICLES
     )
     logger.warning(results_template)
     with open(get_results_fname(tag), "w") as fp:
