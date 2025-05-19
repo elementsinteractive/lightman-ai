@@ -4,7 +4,6 @@ from typing import Never, override
 from hackerman_ai.ai.base.agent import BaseAgent
 from hackerman_ai.ai.openai.exceptions import LimitTokensExceededError, map_exceptions
 from hackerman_ai.article.models import SelectedArticlesList
-from hackerman_ai.core.settings import settings
 from pydantic_ai import Agent
 from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.models.openai import OpenAIModel
@@ -13,8 +12,8 @@ from pydantic_ai.models.openai import OpenAIModel
 class OpenAIAgent(BaseAgent):
     """Class that provides an interface to operate with the OpenAI model."""
 
-    def __init__(self) -> None:
-        ai_model = OpenAIModel(settings.OPENAI_MODEL)
+    def __init__(self, model: str) -> None:
+        ai_model = OpenAIModel(model)
         self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, output_type=SelectedArticlesList)
 
     @override

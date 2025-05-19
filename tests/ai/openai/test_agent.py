@@ -5,15 +5,17 @@ from tests.conftest import patch_run_prompt
 
 
 class TestAgent:
+    OPENAI_MODEL = "gpt-4.1"
+
     @pytest.mark.vcr
     async def test_run_prompt(self, short_prompt: str) -> None:
-        agent = OpenAIAgent()
+        agent = OpenAIAgent(self.OPENAI_MODEL)
         result = await agent._run_prompt(short_prompt)
         assert isinstance(result, SelectedArticlesList)
 
     async def test_run_prompt_multiple_times(self, short_prompt: str) -> None:
         """Test that we run the prompt as many times as we specify, and we receive back a LIST of `SelectedArticlesList`."""
-        agent = OpenAIAgent()
+        agent = OpenAIAgent(self.OPENAI_MODEL)
         async with patch_run_prompt() as mock:
             result = await agent._run_prompt_multiple_times(short_prompt, iterations=3)
         assert mock.call_count == 3
@@ -23,7 +25,7 @@ class TestAgent:
 
     async def test_get_prompt_result(self, short_prompt: str) -> None:
         """Test that we run the prompt as many times as we specify, and we receive back an INSTANCE of `SelectedArticlesList`."""
-        agent = OpenAIAgent()
+        agent = OpenAIAgent(self.OPENAI_MODEL)
         async with patch_run_prompt() as mock:
             result = await agent.get_prompt_result(short_prompt, iterations=3)
         assert mock.call_count == 3
@@ -36,7 +38,7 @@ class TestAgent:
         articles_list1 = SelectedArticlesList(articles=[article1, different_article])
         articles_list2 = SelectedArticlesList(articles=[article1_repeated])
 
-        agent = OpenAIAgent()
+        agent = OpenAIAgent(self.OPENAI_MODEL)
         result = agent._merge_results([articles_list1, articles_list2])
         assert isinstance(result, SelectedArticlesList)
         assert set(result.articles) == {article1, different_article}
