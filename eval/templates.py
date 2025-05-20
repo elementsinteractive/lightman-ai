@@ -1,23 +1,27 @@
 from datetime import date
 from pathlib import Path
 
-from eval.utils import ClassifiedArticleResults
+from eval.utils import ClassifiedArticleResults, ResultsMetrics
 
 RESULTS_DIR = "eval/results/"
 
 
 class ResultsFileBuilder:
     def __init__(
-        self, classified_article: ClassifiedArticleResults, tag: str | None, model: str, iterations: int
+        self, results_metrics: ResultsMetrics, tag: str | None, model: str, iterations: int, samples: int
     ) -> None:
-        self.classified_article = classified_article
+        self.results_metrics = results_metrics
         self.tag = tag
         self.model = model
         self.iterations = iterations
+        self.samples = samples
 
     @property
     def file_name(self) -> str:
-        path = str(Path(RESULTS_DIR) / date.today().isoformat()) + f"-{self.model}-iterations-{self.iterations}"
+        path = (
+            str(Path(RESULTS_DIR) / date.today().isoformat())
+            + f"-{self.model}-iterations-{self.iterations}-samples-{self.samples}"
+        )
 
         if self.tag:
             path += f"-{self.tag}"
@@ -26,7 +30,7 @@ class ResultsFileBuilder:
 
     @property
     def content(self) -> str:
-        return self._get_summary() + "\n" + self._get_individual_run_results()
+        return self._get_summary() + "\n" + self._get_results_averages() + "\n" + self._get_run_results()
 
     def _get_summary(self) -> str:
         return f"""
@@ -34,34 +38,48 @@ class ResultsFileBuilder:
 - Tag: {self.tag or "-"}
 - Model: {self.model}
 - Iterations: {self.iterations}
+- Samples: {self.samples}
 """
 
-    def _get_individual_run_results(self) -> str:
+    def _get_results_averages(self) -> str:
         return f"""
-#Individual run results
+- Average Recall: {self.results_metrics.average_recall}
+- Average Precision: {self.results_metrics.average_precision}
+"""
 
-## Results
-Total relevant articles: {self.classified_article.total_relevant_articles}
-Total articles found by AI agent: {self.classified_article.total_results}
-Total relevant articles found: {self.classified_article.total_correctly_found_articles}
-Total false positives: {self.classified_article.total_false_positives}
-Total false negatives: {self.classified_article.total_false_negatives}
-Recall: {self.classified_article.recall}
-Precision: {self.classified_article.precision}
+    def _get_run_results(self) -> str:
+        individual_run_header = "# Individual sample results"
+        results = [
+            self._get_individual_run_results(sample + 1, result)
+            for sample, result in enumerate(self.results_metrics.raw_results)
+        ]
+        return individual_run_header + "\n".join(results)
+
+    def _get_individual_run_results(self, sample: int, classified_article: ClassifiedArticleResults) -> str:
+        return f"""
+
+## Result #{sample}
+Total relevant articles: {classified_article.total_relevant_articles}
+Total articles found by AI agent: {classified_article.total_results}
+Total relevant articles found: {classified_article.total_correctly_found_articles}
+Total false positives: {classified_article.total_false_positives}
+Total false negatives: {classified_article.total_false_negatives}
+Recall: {classified_article.recall}
+Precision: {classified_article.precision}
 
 ## Articles found by AI agent:
-{self._titles_to_bullet_list(self.classified_article.articles_found_titles)}
+{self._titles_to_bullet_list(classified_article.articles_found_titles)}
 
 ## Correctly classified articles:
-{self._titles_to_bullet_list(self.classified_article.correctly_found_articles_titles)}
+{self._titles_to_bullet_list(classified_article.correctly_found_articles_titles)}
 
 ## False positives:
-{self._titles_to_bullet_list(self.classified_article.false_positives_titles)}
+{self._titles_to_bullet_list(classified_article.false_positives_titles)}
 
 ## False negatives:
-{self._titles_to_bullet_list(self.classified_article.false_negatives_titles)}
+{self._titles_to_bullet_list(classified_article.false_negatives_titles)}
 """
 
     @staticmethod
     def _titles_to_bullet_list(titles: list[str]) -> str:
-        return "- " + "\n- ".join(titles)
+        return "- " + "\n- ".join(titles) if titles else "No results."
