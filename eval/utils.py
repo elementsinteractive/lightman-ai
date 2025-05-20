@@ -65,3 +65,20 @@ class ClassifiedArticleResults:
     @property
     def articles_found_titles(self) -> list[str]:
         return [article.title for article in self.results.articles]
+
+
+@dataclass
+class ResultsMetrics:
+    raw_results: list[ClassifiedArticleResults]
+
+    @property
+    def average_recall(self) -> Decimal:
+        if not self.raw_results:
+            return Decimal(0)
+        return round(Decimal(sum([result.recall for result in self.raw_results]) / len(self.raw_results)), 2)
+
+    @property
+    def average_precision(self) -> Decimal:
+        if not self.raw_results:
+            return Decimal(0)
+        return round(Decimal(sum([result.precision for result in self.raw_results]) / len(self.raw_results)), 2)
