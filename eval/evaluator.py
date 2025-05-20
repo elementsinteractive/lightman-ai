@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
@@ -15,32 +16,49 @@ RESULTS_DIR = "eval/results/"
 logger = logging.getLogger("eval")
 
 
-def get_results_fname(tag: str) -> str:
-    return str(Path(RESULTS_DIR) / date.today().isoformat()) + f"-{tag}.md"
+@dataclass
+class ResultsTemplateArgs:
+    results: ArticlesList
+    correctly_found_articles: set[Article]
+    false_positives: set[Article]
+    false_negatives: set[Article]
+    relevant_articles: set[Article]
+    model: str
+    iterations: int
+    tag: str | None
 
 
-def get_results_template(
-    results: ArticlesList,
-    correctly_found_articles: set[Article],
-    false_positives: set[Article],
-    false_negatives: set[Article],
-    relevant_articles: set[Article],
-) -> str:
+def get_results_fname(tag: str | None, model: str, iterations: int) -> str:
+    path = str(Path(RESULTS_DIR) / date.today().isoformat()) + f"-{model}-iterations-{iterations}"
+    if tag:
+        path += f"-{tag}"
+
+    return path + ".md"
+
+
+def get_results_template(args: ResultsTemplateArgs) -> str:
     def titles_to_bullet_list(titles: list[str]) -> str:
         return "- " + "\n- ".join(titles)
 
-    total_results = len(results.articles)
-    total_correctly_found_articles = len(correctly_found_articles)
-    total_relevant_articles = len(relevant_articles)
-    total_false_negatives = len(false_negatives)
-    total_false_positives = len(false_positives)
+    total_results = len(args.results.articles)
+    total_correctly_found_articles = len(args.correctly_found_articles)
+    total_relevant_articles = len(args.relevant_articles)
+    total_false_negatives = len(args.false_negatives)
+    total_false_positives = len(args.false_positives)
 
-    articles_found_titles_str = titles_to_bullet_list(results.titles)
-    correctly_found_articles_titles_str = titles_to_bullet_list([article.title for article in correctly_found_articles])
-    false_positives_titles_str = titles_to_bullet_list([article.title for article in false_positives])
-    false_negatives_titles_str = titles_to_bullet_list([article.title for article in false_negatives])
+    articles_found_titles_str = titles_to_bullet_list(args.results.titles)
+    correctly_found_articles_titles_str = titles_to_bullet_list(
+        [article.title for article in args.correctly_found_articles]
+    )
+    false_positives_titles_str = titles_to_bullet_list([article.title for article in args.false_positives])
+    false_negatives_titles_str = titles_to_bullet_list([article.title for article in args.false_negatives])
 
     return f"""
+# Run parameters
+- Tag: {args.tag or "-"}
+- Model: {args.model}
+- Iterations: {args.iterations}
+
 # Results
 Total relevant articles: {total_relevant_articles}
 Total articles found by AI agent: {total_results}
@@ -66,14 +84,15 @@ Precision: {total_correctly_found_articles / (total_correctly_found_articles + t
 
 
 @click.command()
-@click.option("--tag", type=str, help=("Tag that identifies the evaluation run"), required=True)
+@click.option("--tag", type=str, help=("Tag that identifies the evaluation run"), default=None)
 @click.option(
     "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default="gpt-4.1"
 )
-def eval(tag: str, model: str) -> None:
+@click.option("--iterations", type=int, help=("Number of times that the prompt will run"), default=1)
+def eval(model: str, iterations: int, tag: str | None = None) -> None:
     articles = ArticlesList(articles=list(RELEVANT_ARTICLES) + list(NON_RELEVANT_ARTICLES))
     agent = get_agent_instance_from_model_name(model)
-    results = asyncio.run(_classify_articles(articles, agent))
+    results = asyncio.run(_classify_articles(articles, agent, iterations))
 
     correctly_found_articles = set()
     false_positives = set()
@@ -88,10 +107,19 @@ def eval(tag: str, model: str) -> None:
 
     false_negatives = RELEVANT_ARTICLES - correctly_found_articles
     results_template = get_results_template(
-        results, correctly_found_articles, false_positives, false_negatives, RELEVANT_ARTICLES
+        ResultsTemplateArgs(
+            results=results,
+            correctly_found_articles=correctly_found_articles,
+            false_positives=false_positives,
+            false_negatives=false_negatives,
+            relevant_articles=RELEVANT_ARTICLES,
+            model=model,
+            iterations=iterations,
+            tag=tag,
+        )
     )
     logger.warning(results_template)
-    with open(get_results_fname(tag), "w") as fp:
+    with open(get_results_fname(tag, model, iterations), "w") as fp:
         fp.write(results_template)
 
 
