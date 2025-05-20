@@ -1,97 +1,21 @@
 import asyncio
 import logging
-from dataclasses import dataclass
-from datetime import date
-from pathlib import Path
 
 import click
 from dotenv import load_dotenv
+from hackerman_ai.ai.base.agent import BaseAgent
 from hackerman_ai.ai.utils import MODEL_CHOICES, get_agent_instance_from_model_name
-from hackerman_ai.article.models import Article, ArticlesList
+from hackerman_ai.article.models import ArticlesList
 from hackerman_ai.main import _classify_articles
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
+from eval.templates import ResultsFileBuilder
+from eval.utils import ClassifiedArticleResults
 
-RESULTS_DIR = "eval/results/"
 logger = logging.getLogger("eval")
 
 
-@dataclass
-class ResultsTemplateArgs:
-    results: ArticlesList
-    correctly_found_articles: set[Article]
-    false_positives: set[Article]
-    false_negatives: set[Article]
-    relevant_articles: set[Article]
-    model: str
-    iterations: int
-    tag: str | None
-
-
-def get_results_fname(tag: str | None, model: str, iterations: int) -> str:
-    path = str(Path(RESULTS_DIR) / date.today().isoformat()) + f"-{model}-iterations-{iterations}"
-    if tag:
-        path += f"-{tag}"
-
-    return path + ".md"
-
-
-def get_results_template(args: ResultsTemplateArgs) -> str:
-    def titles_to_bullet_list(titles: list[str]) -> str:
-        return "- " + "\n- ".join(titles)
-
-    total_results = len(args.results.articles)
-    total_correctly_found_articles = len(args.correctly_found_articles)
-    total_relevant_articles = len(args.relevant_articles)
-    total_false_negatives = len(args.false_negatives)
-    total_false_positives = len(args.false_positives)
-
-    articles_found_titles_str = titles_to_bullet_list(args.results.titles)
-    correctly_found_articles_titles_str = titles_to_bullet_list(
-        [article.title for article in args.correctly_found_articles]
-    )
-    false_positives_titles_str = titles_to_bullet_list([article.title for article in args.false_positives])
-    false_negatives_titles_str = titles_to_bullet_list([article.title for article in args.false_negatives])
-
-    return f"""
-# Run parameters
-- Tag: {args.tag or "-"}
-- Model: {args.model}
-- Iterations: {args.iterations}
-
-# Results
-Total relevant articles: {total_relevant_articles}
-Total articles found by AI agent: {total_results}
-Total relevant articles found: {total_correctly_found_articles}
-Total false positives: {total_false_positives}
-Total false negatives: {total_false_negatives}
-Recall: {total_correctly_found_articles / (total_correctly_found_articles + total_false_negatives)}
-Precision: {total_correctly_found_articles / (total_correctly_found_articles + total_false_positives)}
-
-# Articles found by AI agent:
-{articles_found_titles_str}
-
-# Correctly classified articles:
-{correctly_found_articles_titles_str}
-
-# False positives:
-{false_positives_titles_str}
-
-# False negatives:
-{false_negatives_titles_str}
-
-"""
-
-
-@click.command()
-@click.option("--tag", type=str, help=("Tag that identifies the evaluation run"), default=None)
-@click.option(
-    "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default="gpt-4.1"
-)
-@click.option("--iterations", type=int, help=("Number of times that the prompt will run"), default=1)
-def eval(model: str, iterations: int, tag: str | None = None) -> None:
-    articles = ArticlesList(articles=list(RELEVANT_ARTICLES) + list(NON_RELEVANT_ARTICLES))
-    agent = get_agent_instance_from_model_name(model)
+def classify_articles(articles: ArticlesList, agent: BaseAgent, iterations: int) -> ClassifiedArticleResults:
     results = asyncio.run(_classify_articles(articles, agent, iterations))
 
     correctly_found_articles = set()
@@ -106,21 +30,35 @@ def eval(model: str, iterations: int, tag: str | None = None) -> None:
             logger.error("%s", article)
 
     false_negatives = RELEVANT_ARTICLES - correctly_found_articles
-    results_template = get_results_template(
-        ResultsTemplateArgs(
-            results=results,
-            correctly_found_articles=correctly_found_articles,
-            false_positives=false_positives,
-            false_negatives=false_negatives,
-            relevant_articles=RELEVANT_ARTICLES,
-            model=model,
-            iterations=iterations,
-            tag=tag,
-        )
+
+    return ClassifiedArticleResults(
+        results=results,
+        correctly_found_articles=correctly_found_articles,
+        false_positives=false_positives,
+        false_negatives=false_negatives,
+        total_relevant_articles=len(RELEVANT_ARTICLES),
     )
-    logger.warning(results_template)
-    with open(get_results_fname(tag, model, iterations), "w") as fp:
-        fp.write(results_template)
+
+
+@click.command()
+@click.option("--tag", type=str, help=("Tag that identifies the run"), default=None)
+@click.option(
+    "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default="gpt-4.1"
+)
+@click.option("--iterations", type=int, help=("Number of times that the prompt will run"), default=1)
+def eval(model: str, iterations: int, tag: str | None = None) -> None:
+    articles = ArticlesList(articles=list(RELEVANT_ARTICLES) + list(NON_RELEVANT_ARTICLES))
+    agent = get_agent_instance_from_model_name(model)
+
+    classified_article = classify_articles(articles, agent, iterations)
+
+    results_template = ResultsFileBuilder(
+        classified_article=classified_article, tag=tag, model=model, iterations=iterations
+    )
+
+    logger.debug(results_template.content)
+    with open(results_template.file_name, "w") as fp:
+        fp.write(results_template.content)
 
 
 if __name__ == "__main__":
