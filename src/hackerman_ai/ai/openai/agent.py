@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from typing import Never, override
 
 from hackerman_ai.ai.base.agent import BaseAgent
@@ -12,9 +13,10 @@ from pydantic_ai.models.openai import OpenAIModel
 class OpenAIAgent(BaseAgent):
     """Class that provides an interface to operate with the OpenAI model."""
 
-    def __init__(self, model: str) -> None:
+    def __init__(self, model: str, logger: logging.Logger | None = None) -> None:
         ai_model = OpenAIModel(model)
         self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, output_type=SelectedArticlesList)
+        self.logger = logger or logging.getLogger()
 
     @override
     async def get_prompt_result(self, prompt: str, iterations: int = 1) -> SelectedArticlesList:
@@ -37,6 +39,7 @@ class OpenAIAgent(BaseAgent):
         try:
             result = await self._execute_agent(prompt)
         except LimitTokensExceededError as err:
+            self.logger.warning("waiting %s", err.wait_time)
             await asyncio.sleep(err.wait_time)
             result = await self._execute_agent(prompt)
 
