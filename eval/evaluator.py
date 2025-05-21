@@ -10,7 +10,7 @@ from hackerman_ai.main import _classify_articles
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
 from eval.templates import ResultsFileBuilder
-from eval.utils import ClassifiedArticleResults
+from eval.utils import ClassifiedArticleResults, ResultsMetrics
 
 logger = logging.getLogger("eval")
 
@@ -46,14 +46,27 @@ def classify_articles(articles: ArticlesList, agent: BaseAgent, iterations: int)
     "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default="gpt-4.1"
 )
 @click.option("--iterations", type=int, help=("Number of times that the prompt will run"), default=1)
-def eval(model: str, iterations: int, tag: str | None = None) -> None:
+@click.option(
+    "--samples",
+    type=int,
+    help=(
+        "Number of times the evaluation will run with all its iterations. It will calculate averages for the results. "
+    ),
+    default=1,
+)
+def eval(model: str, iterations: int, samples: int, tag: str | None = None) -> None:
+    if samples < 1:
+        raise ValueError("`samples` must be > 0.")
+
     articles = ArticlesList(articles=list(RELEVANT_ARTICLES) + list(NON_RELEVANT_ARTICLES))
     agent = get_agent_instance_from_model_name(model)
 
-    classified_article = classify_articles(articles, agent, iterations)
-
+    classified_articles = []
+    for _ in range(samples):
+        classified_articles.append(classify_articles(articles, agent, iterations))
+    results_metrics = ResultsMetrics(raw_results=classified_articles)
     results_template = ResultsFileBuilder(
-        classified_article=classified_article, tag=tag, model=model, iterations=iterations
+        results_metrics=results_metrics, tag=tag, model=model, iterations=iterations, samples=samples
     )
 
     logger.debug(results_template.content)
