@@ -6,7 +6,7 @@ from hackerman_ai.ai.openai.exceptions import (
     LimitTokensExceededError,
     QuotaExceededError,
     UnknownOpenAIError,
-    map_exceptions,
+    map_openai_exceptions,
 )
 from openai import RateLimitError
 from pydantic_ai.exceptions import ModelHTTPError
@@ -39,7 +39,7 @@ class TestExceptions:
     )
     async def test_map_openai_exceptions(self, message: str, exception: Exception) -> None:
         with pytest.raises(exception):  # type: ignore[call-overload]
-            async with map_exceptions():
+            async with map_openai_exceptions():
                 raise RateLimitError(message, response=Mock(), body=Mock())
 
     async def test_map_quota_exceeded_exception(self) -> None:
@@ -50,5 +50,5 @@ class TestExceptions:
             "code": "insufficient_quota",
         }
         with pytest.raises(QuotaExceededError):
-            async with map_exceptions():
+            async with map_openai_exceptions():
                 raise ModelHTTPError(status_code=Mock(), model_name=Mock(), body=body)
