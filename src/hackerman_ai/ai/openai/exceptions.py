@@ -72,7 +72,7 @@ RATE_LIMIT_ERRORS: list[TRateLimitErr] = [LimitTokensExceededError, InputTooLarg
 
 
 @asynccontextmanager
-async def map_exceptions() -> AsyncGenerator[Any, Any]:
+async def map_openai_exceptions() -> AsyncGenerator[Any, Any]:
     try:
         yield
     except RateLimitError as err:
