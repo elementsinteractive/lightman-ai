@@ -1,14 +1,11 @@
 import os
 import pathlib
-from collections.abc import AsyncGenerator
-from contextlib import asynccontextmanager
 from typing import Any
-from unittest.mock import patch
 
 import pytest
 from dotenv import load_dotenv
 from hackerman_ai.ai.prompts import Prompts, add_articles_to_prompt
-from hackerman_ai.article.models import ArticlesList, SelectedArticlesList
+from hackerman_ai.article.models import ArticlesList
 from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
 
 RECORD_MODE = os.environ.get("RECORD") or False
@@ -540,12 +537,3 @@ def thn_news(thn_xml: str) -> ArticlesList:
 @pytest.fixture
 def short_prompt(thn_news: ArticlesList) -> str:
     return add_articles_to_prompt(Prompts.SHORT_PROMPT, thn_news)
-
-
-@asynccontextmanager
-async def patch_run_prompt(results: SelectedArticlesList | None = None) -> AsyncGenerator[Any, None]:
-    run_prompt_result = results if results else SelectedArticlesList(articles=[])
-
-    with patch("hackerman_ai.ai.openai.agent.OpenAIAgent._run_prompt") as mock:
-        mock.return_value = run_prompt_result
-        yield mock
