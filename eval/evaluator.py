@@ -9,6 +9,7 @@ from hackerman_ai.article.models import ArticlesList
 from hackerman_ai.main import _classify_articles
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
+from eval.constants import DEFAULT_MODEL
 from eval.templates import ResultsFileBuilder
 from eval.utils import ClassifiedArticleResults, ResultsMetrics
 
@@ -43,7 +44,7 @@ def classify_articles(articles: ArticlesList, agent: BaseAgent, iterations: int)
 @click.command()
 @click.option("--tag", type=str, help=("Tag that identifies the run"), default=None)
 @click.option(
-    "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default="gpt-4.1"
+    "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default=DEFAULT_MODEL
 )
 @click.option("--iterations", type=int, help=("Number of times that the prompt will run"), default=1)
 @click.option(
