@@ -16,6 +16,7 @@ def pytest_configure() -> None:
         load_dotenv()
     else:
         os.environ["OPENAI_API_KEY"] = "dummy"
+        os.environ["GEMINI_API_KEY"] = "dummy"
 
 
 @pytest.fixture(scope="module")
@@ -30,6 +31,7 @@ def vcr_config() -> dict[str, Any]:
         "record_mode": "new_episodes" if RECORD_MODE else "none",
         "filter_headers": [
             ("authorization", "CENSORED"),
+            ("x-goog-api-key", "CENSORED"),
         ],
         "decode_compressed_response": True,
     }
