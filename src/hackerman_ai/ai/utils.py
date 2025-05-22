@@ -1,7 +1,8 @@
 from hackerman_ai.ai.base.agent import BaseAgent
+from hackerman_ai.ai.gemini.agent import GeminiAgent
 from hackerman_ai.ai.openai.agent import OpenAIAgent
 
-MODEL_TO_AGENT_MAPPING = {"gpt-4.1": OpenAIAgent}
+MODEL_TO_AGENT_MAPPING = {"gpt-4.1": OpenAIAgent, "gemini-2.5-pro-preview-05-06": GeminiAgent}
 
 
 def get_agent_instance_from_model_name(model: str) -> BaseAgent:
