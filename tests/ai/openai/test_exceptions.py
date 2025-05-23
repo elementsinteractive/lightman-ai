@@ -37,18 +37,16 @@ class TestExceptions:
             ("Good morning good afternoon", UnknownOpenAIError),
         ],
     )
-    async def test_map_openai_exceptions(self, message: str, exception: Exception) -> None:
-        with pytest.raises(exception):  # type: ignore[call-overload]
-            async with map_openai_exceptions():
-                raise RateLimitError(message, response=Mock(), body=Mock())
+    def test_map_openai_exceptions(self, message: str, exception: Exception) -> None:
+        with pytest.raises(exception), map_openai_exceptions():  # type: ignore[call-overload]
+            raise RateLimitError(message, response=Mock(), body=Mock())
 
-    async def test_map_quota_exceeded_exception(self) -> None:
+    def test_map_quota_exceeded_exception(self) -> None:
         body = {
             "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
             "type": "insufficient_quota",
             "param": None,
             "code": "insufficient_quota",
         }
-        with pytest.raises(QuotaExceededError):
-            async with map_openai_exceptions():
-                raise ModelHTTPError(status_code=Mock(), model_name=Mock(), body=body)
+        with pytest.raises(QuotaExceededError), map_openai_exceptions():
+            raise ModelHTTPError(status_code=Mock(), model_name=Mock(), body=body)

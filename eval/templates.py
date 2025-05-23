@@ -59,13 +59,13 @@ class ResultsFileBuilder:
         return f"""
 
 ## Result #{sample}
-Total relevant articles: {classified_article.total_relevant_articles}
-Total articles found by AI agent: {classified_article.total_results}
-Total relevant articles found: {classified_article.total_correctly_found_articles}
-Total false positives: {classified_article.total_false_positives}
-Total false negatives: {classified_article.total_false_negatives}
-Recall: {classified_article.recall}
-Precision: {classified_article.precision}
+- Total relevant articles: {classified_article.total_relevant_articles}
+- Total articles found by AI agent: {classified_article.total_results}
+- Total relevant articles found: {classified_article.total_correctly_found_articles}
+- Total false positives: {classified_article.total_false_positives}
+- Total false negatives: {classified_article.total_false_negatives}
+- Recall: {classified_article.recall}
+- Precision: {classified_article.precision}
 
 ## Articles found by AI agent:
 {self._titles_to_bullet_list(classified_article.articles_found_titles)}
