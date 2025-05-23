@@ -1,4 +1,3 @@
-import asyncio
 import logging
 
 import click
@@ -17,7 +16,7 @@ logger = logging.getLogger("eval")
 
 
 def classify_articles(articles: ArticlesList, agent: BaseAgent, iterations: int) -> ClassifiedArticleResults:
-    results = asyncio.run(_classify_articles(articles, agent, iterations))
+    results = _classify_articles(articles, agent, iterations)
 
     correctly_found_articles = set()
     false_positives = set()

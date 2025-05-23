@@ -11,7 +11,7 @@ class TestTheHackerNewsSource:
 
     @pytest.mark.vcr
     async def test_get_articles(self) -> None:
-        articles = await TheHackerNewsSource().get_articles()
+        articles = TheHackerNewsSource().get_articles()
 
         assert isinstance(articles, ArticlesList)
         assert len(articles.articles) == 50

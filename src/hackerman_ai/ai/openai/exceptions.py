@@ -1,7 +1,7 @@
 import math
 import re
-from collections.abc import AsyncGenerator
-from contextlib import asynccontextmanager
+from collections.abc import Generator
+from contextlib import contextmanager
 from typing import Any, override
 
 from hackerman_ai.ai.base.exceptions import BaseHackermanError
@@ -71,8 +71,8 @@ type TRateLimitErr = type[InputTooLargeError | LimitTokensExceededError]
 RATE_LIMIT_ERRORS: list[TRateLimitErr] = [LimitTokensExceededError, InputTooLargeError]
 
 
-@asynccontextmanager
-async def map_openai_exceptions() -> AsyncGenerator[Any, Any]:
+@contextmanager
+def map_openai_exceptions() -> Generator[Any, Any]:
     try:
         yield
     except RateLimitError as err:
