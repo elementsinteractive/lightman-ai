@@ -11,25 +11,25 @@ from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
 logger = logging.getLogger("hackerman")
 
 
-async def _get_articles() -> ArticlesList:
-    return await TheHackerNewsSource().get_articles()
+def _get_articles() -> ArticlesList:
+    return TheHackerNewsSource().get_articles()
 
 
-async def _classify_articles(articles: ArticlesList, agent: BaseAgent, iterations: int) -> ArticlesList:
+def _classify_articles(articles: ArticlesList, agent: BaseAgent, iterations: int) -> ArticlesList:
     prompt = add_articles_to_prompt(Prompts.SHORT_PROMPT, articles)
 
     logger.info("Selected %s.", agent)
-    results = await agent.get_prompt_result(prompt, iterations)
+    results = agent.get_prompt_result(prompt, iterations)
 
     return Processor(original_articles=articles, selected_articles=results).process()
 
 
-async def hackerman(model: str, iterations: int | None = None) -> ArticlesList:
-    articles = await _get_articles()
+def hackerman(model: str, iterations: int | None = None) -> ArticlesList:
+    articles = _get_articles()
 
     agent = get_agent_instance_from_model_name(model)
     logger.info("Selected %s.", agent)
 
-    classified_articles = await _classify_articles(articles, agent, iterations or settings.PROMPT_ITERATIONS)
+    classified_articles = _classify_articles(articles, agent, iterations or settings.PROMPT_ITERATIONS)
     logger.warning("Found these articles: %s", classified_articles.titles)
     return classified_articles
