@@ -7,7 +7,7 @@ class TestGeminiAgent:
     MODEL = "gemini-2.5-flash-preview-04-17"
 
     @pytest.mark.vcr
-    async def test__run_prompt(self, short_prompt: str) -> None:
+    def test__run_prompt(self, short_prompt: str) -> None:
         agent = GeminiAgent(self.MODEL)
-        result = await agent._run_prompt(short_prompt)
+        result = agent._run_prompt(short_prompt)
         assert isinstance(result, SelectedArticlesList)

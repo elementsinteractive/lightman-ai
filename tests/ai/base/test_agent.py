@@ -6,24 +6,24 @@ from hackerman_ai.article.models import SelectedArticle, SelectedArticlesList
 
 class FakeAgent(BaseAgent):
     @override
-    async def _run_prompt(self, prompt: str) -> SelectedArticlesList:
+    def _run_prompt(self, prompt: str) -> SelectedArticlesList:
         return SelectedArticlesList(articles=[])
 
 
 class TestBaseAgent:
-    async def test__run_prompt_multiple_times(self, short_prompt: str) -> None:
+    def test__run_prompt_multiple_times(self, short_prompt: str) -> None:
         """Test that we run the prompt as many times as we specify, and we receive back a LIST of `SelectedArticlesList`."""
         agent = FakeAgent()
 
-        result = await agent._run_prompt_multiple_times(short_prompt, iterations=3)
+        result = agent._run_prompt_multiple_times(short_prompt, iterations=3)
         assert isinstance(result, list)
         assert len(result) == 3
         assert all(isinstance(x, SelectedArticlesList) for x in result)
 
-    async def test__get_prompt_result(self, short_prompt: str) -> None:
+    def test__get_prompt_result(self, short_prompt: str) -> None:
         """Test that we run the prompt as many times as we specify, and we receive back an INSTANCE of `SelectedArticlesList`."""
         agent = FakeAgent()
-        result = await agent.get_prompt_result(short_prompt, iterations=3)
+        result = agent.get_prompt_result(short_prompt, iterations=3)
         assert isinstance(result, SelectedArticlesList)
 
     def test__merge_results(self) -> None:
