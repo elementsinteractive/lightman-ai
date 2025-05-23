@@ -16,5 +16,4 @@ def map_gemini_exceptions() -> Generator[Any, Any]:
     try:
         yield
     except Exception as err:
-        breakpoint()
         raise GeminiError from err
