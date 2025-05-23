@@ -17,7 +17,7 @@ class GeminiAgent(BaseAgent):
         self.logger = logger or logging.getLogger()
 
     @override
-    async def _run_prompt(self, prompt: str) -> SelectedArticlesList:
-        async with map_gemini_exceptions():
-            result = await self.agent.run(prompt)
+    def _run_prompt(self, prompt: str) -> SelectedArticlesList:
+        with map_gemini_exceptions():
+            result = self.agent.run_sync(prompt)
         return result.output

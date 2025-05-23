@@ -7,7 +7,7 @@ class TestAgent:
     OPENAI_MODEL = "gpt-4.1"
 
     @pytest.mark.vcr
-    async def test_run_prompt(self, short_prompt: str) -> None:
+    def test_run_prompt(self, short_prompt: str) -> None:
         agent = OpenAIAgent(self.OPENAI_MODEL)
-        result = await agent._run_prompt(short_prompt)
+        result = agent._run_prompt(short_prompt)
         assert isinstance(result, SelectedArticlesList)

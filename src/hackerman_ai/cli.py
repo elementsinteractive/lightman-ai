@@ -1,5 +1,3 @@
-import asyncio
-
 import click
 from hackerman_ai.ai.utils import MODEL_CHOICES
 from hackerman_ai.main import hackerman
@@ -19,6 +17,6 @@ def run(model: str, iterations: int | None) -> int:
 
     Holds no logic. Just calls the methods and return an exit code.
     """
-    asyncio.run(hackerman(model, iterations))
+    hackerman(model, iterations)
 
     return 0

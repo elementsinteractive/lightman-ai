@@ -1,5 +1,5 @@
-import asyncio
 import logging
+import time
 from typing import Never, override
 
 from hackerman_ai.ai.base.agent import BaseAgent
@@ -18,17 +18,17 @@ class OpenAIAgent(BaseAgent):
         self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, output_type=SelectedArticlesList)
         self.logger = logger or logging.getLogger()
 
-    async def _execute_agent(self, prompt: str) -> AgentRunResult[SelectedArticlesList]:
-        async with map_openai_exceptions():
-            return await self.agent.run(prompt)
+    def _execute_agent(self, prompt: str) -> AgentRunResult[SelectedArticlesList]:
+        with map_openai_exceptions():
+            return self.agent.run_sync(prompt)
 
     @override
-    async def _run_prompt(self, prompt: str) -> SelectedArticlesList:
+    def _run_prompt(self, prompt: str) -> SelectedArticlesList:
         try:
-            result = await self._execute_agent(prompt)
+            result = self._execute_agent(prompt)
         except LimitTokensExceededError as err:
             self.logger.warning("waiting %s", err.wait_time)
-            await asyncio.sleep(err.wait_time)
-            result = await self._execute_agent(prompt)
+            time.sleep(err.wait_time)
+            result = self._execute_agent(prompt)
 
         return result.output

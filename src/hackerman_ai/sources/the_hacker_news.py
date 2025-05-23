@@ -5,7 +5,7 @@ import httpx
 import stamina
 from hackerman_ai.article.models import Article, ArticlesList
 from hackerman_ai.sources.base import BaseSource
-from httpx import AsyncClient
+from httpx import Client
 
 _RETRY_ON = httpx.TransportError
 _ATTEMPTS = 5
@@ -17,23 +17,22 @@ THN_URL = "https://feeds.feedburner.com/TheHackersNews"
 
 class TheHackerNewsSource(BaseSource):
     @override
-    async def get_articles(self) -> ArticlesList:
+    def get_articles(self) -> ArticlesList:
         """Return the articles that are present in THN feed."""
-        feed = await self.get_feed()
+        feed = self.get_feed()
         articles = self._xml_to_list_of_articles(feed)
         return ArticlesList(articles=articles)
 
-    async def get_feed(self) -> str:
+    def get_feed(self) -> str:
         """Retrieve the TheHackerNews' RSS Feed."""
-        async for attempt in stamina.retry_context(
+        for attempt in stamina.retry_context(
             on=_RETRY_ON,
             attempts=_ATTEMPTS,
             timeout=_TIMEOUT,
         ):
-            async with AsyncClient() as http_client:
-                with attempt:
-                    hacker_news_feed = await http_client.get(THN_URL)
-                    hacker_news_feed.raise_for_status()
+            with Client() as http_client, attempt:
+                hacker_news_feed = http_client.get(THN_URL)
+                hacker_news_feed.raise_for_status()
         return hacker_news_feed.text
 
     def _xml_to_list_of_articles(self, xml: str) -> list[Article]:
