@@ -11,19 +11,19 @@ class FakeAgent(BaseAgent):
 
 
 class TestBaseAgent:
-    def test__run_prompt_multiple_times(self, short_prompt: str) -> None:
+    def test__run_prompt_multiple_times(self, test_prompt: str) -> None:
         """Test that we run the prompt as many times as we specify, and we receive back a LIST of `SelectedArticlesList`."""
         agent = FakeAgent()
 
-        result = agent._run_prompt_multiple_times(short_prompt, iterations=3)
+        result = agent._run_prompt_multiple_times(test_prompt, iterations=3)
         assert isinstance(result, list)
         assert len(result) == 3
         assert all(isinstance(x, SelectedArticlesList) for x in result)
 
-    def test__get_prompt_result(self, short_prompt: str) -> None:
+    def test__get_prompt_result(self, test_prompt: str) -> None:
         """Test that we run the prompt as many times as we specify, and we receive back an INSTANCE of `SelectedArticlesList`."""
         agent = FakeAgent()
-        result = agent.get_prompt_result(short_prompt, iterations=3)
+        result = agent.get_prompt_result(test_prompt, iterations=3)
         assert isinstance(result, SelectedArticlesList)
 
     def test__merge_results(self) -> None:

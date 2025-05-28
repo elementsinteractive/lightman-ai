@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 from dotenv import load_dotenv
-from hackerman_ai.ai.prompts import Prompts, add_articles_to_prompt
+from hackerman_ai.ai.prompts import merge_prompt_with_articles
 from hackerman_ai.article.models import ArticlesList
 from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
 
@@ -537,5 +537,14 @@ def thn_news(thn_xml: str) -> ArticlesList:
 
 
 @pytest.fixture
-def short_prompt(thn_news: ArticlesList) -> str:
-    return add_articles_to_prompt(Prompts.SHORT_PROMPT, thn_news)
+def test_prompt(thn_news: ArticlesList) -> str:
+    prompt = """
+                    I'm in software development. Given text with cybersecurity news,
+                    extract only new CVEs and vulnerabilities that:
+                    Affect Python/TypeScript frameworks, web/cloud apps, Android/iOS
+                    Have known vulnerable versions
+                    Exclude malware, actors, campaigns
+                    Use only listed tech, make no assumptions
+                    Must meet all criteria, use only text content
+                  """
+    return merge_prompt_with_articles(prompt, thn_news)
