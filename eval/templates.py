@@ -47,6 +47,7 @@ class ResultsFileBuilder:
         return f"""
 - Average Recall: {self.results_metrics.average_recall}
 - Average Precision: {self.results_metrics.average_precision}
+- Average Time Delta: {self.results_metrics.average_time_delta}s
 """
 
     def _get_run_results(self) -> str:
@@ -68,6 +69,7 @@ class ResultsFileBuilder:
 - Total false negatives: {classified_article.total_false_negatives}
 - Recall: {classified_article.recall}
 - Precision: {classified_article.precision}
+- Time delta: {classified_article.time_delta}s
 
 ## Articles found by AI agent:
 {self._titles_to_bullet_list(classified_article.articles_found_titles)}

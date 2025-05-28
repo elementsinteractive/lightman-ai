@@ -1,3 +1,4 @@
+import inspect
 from dataclasses import dataclass
 from decimal import Decimal
 
@@ -11,6 +12,7 @@ class ClassifiedArticleResults:
     false_positives: set[Article]
     false_negatives: set[Article]
     total_relevant_articles: int
+    time_delta: float
 
     @property
     def total_results(self) -> int:
@@ -71,14 +73,31 @@ class ClassifiedArticleResults:
 class ResultsMetrics:
     raw_results: list[ClassifiedArticleResults]
 
-    @property
-    def average_recall(self) -> Decimal:
+    def _calculate_average(self, field: str) -> Decimal:
+        def is_field_on_classified_articles_results() -> bool:
+            properties = [
+                name for name, obj in inspect.getmembers(ClassifiedArticleResults) if isinstance(obj, property)
+            ]
+
+            return field in properties or field in ClassifiedArticleResults.__dataclass_fields__
+
+        if not is_field_on_classified_articles_results():
+            raise KeyError(f"`{field}` is not a field of ClassifiedArticleResults")
+
         if not self.raw_results:
             return Decimal(0)
-        return round(Decimal(sum([result.recall for result in self.raw_results]) / len(self.raw_results)), 2)
+
+        average = Decimal(sum([getattr(result, field) for result in self.raw_results]) / len(self.raw_results))
+        return round(average, 2)
+
+    @property
+    def average_recall(self) -> Decimal:
+        return self._calculate_average("recall")
 
     @property
     def average_precision(self) -> Decimal:
-        if not self.raw_results:
-            return Decimal(0)
-        return round(Decimal(sum([result.precision for result in self.raw_results]) / len(self.raw_results)), 2)
+        return self._calculate_average("precision")
+
+    @property
+    def average_time_delta(self) -> Decimal:
+        return self._calculate_average("time_delta")
