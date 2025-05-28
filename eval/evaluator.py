@@ -3,6 +3,7 @@ import logging
 import click
 from dotenv import load_dotenv
 from hackerman_ai.ai.base.agent import BaseAgent
+from hackerman_ai.ai.prompts import PROMPTS_CHOICES, get_prompt
 from hackerman_ai.ai.utils import MODEL_CHOICES, get_agent_instance_from_model_name
 from hackerman_ai.article.models import ArticlesList
 from hackerman_ai.main import _classify_articles
@@ -15,8 +16,10 @@ from eval.utils import ClassifiedArticleResults, ResultsMetrics
 logger = logging.getLogger("eval")
 
 
-def classify_articles(articles: ArticlesList, agent: BaseAgent, iterations: int) -> ClassifiedArticleResults:
-    results = _classify_articles(articles, agent, iterations)
+def classify_articles(
+    articles: ArticlesList, agent: BaseAgent, prompt: str, iterations: int
+) -> ClassifiedArticleResults:
+    results = _classify_articles(articles, prompt, agent, iterations)
 
     correctly_found_articles = set()
     false_positives = set()
@@ -54,7 +57,8 @@ def classify_articles(articles: ArticlesList, agent: BaseAgent, iterations: int)
     ),
     default=1,
 )
-def eval(model: str, iterations: int, samples: int, tag: str | None = None) -> None:
+@click.option("--prompt", type=click.Choice(PROMPTS_CHOICES), help=("Which prompt to use."), default="eval")
+def eval(model: str, iterations: int, samples: int, prompt: str, tag: str | None = None) -> None:
     if samples < 1:
         raise ValueError("`samples` must be > 0.")
 
@@ -63,10 +67,10 @@ def eval(model: str, iterations: int, samples: int, tag: str | None = None) -> N
 
     classified_articles = []
     for _ in range(samples):
-        classified_articles.append(classify_articles(articles, agent, iterations))
+        classified_articles.append(classify_articles(articles, agent, get_prompt(prompt), iterations))
     results_metrics = ResultsMetrics(raw_results=classified_articles)
     results_template = ResultsFileBuilder(
-        results_metrics=results_metrics, tag=tag, model=model, iterations=iterations, samples=samples
+        results_metrics=results_metrics, tag=tag, model=model, iterations=iterations, samples=samples, prompt=prompt
     )
 
     logger.debug(results_template.content)
