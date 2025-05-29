@@ -1,4 +1,5 @@
 import logging
+import time
 
 import click
 from dotenv import load_dotenv
@@ -19,7 +20,9 @@ logger = logging.getLogger("eval")
 def classify_articles(
     articles: ArticlesList, agent: BaseAgent, prompt: str, iterations: int
 ) -> ClassifiedArticleResults:
+    time_before = time.perf_counter()
     results = _classify_articles(articles, prompt, agent, iterations)
+    time_delta = round(time.perf_counter() - time_before, 2)
 
     correctly_found_articles = set()
     false_positives = set()
@@ -40,6 +43,7 @@ def classify_articles(
         false_positives=false_positives,
         false_negatives=false_negatives,
         total_relevant_articles=len(RELEVANT_ARTICLES),
+        time_delta=time_delta,
     )
 
 
@@ -70,7 +74,12 @@ def eval(model: str, iterations: int, samples: int, prompt: str, tag: str | None
         classified_articles.append(classify_articles(articles, agent, get_prompt(prompt), iterations))
     results_metrics = ResultsMetrics(raw_results=classified_articles)
     results_template = ResultsFileBuilder(
-        results_metrics=results_metrics, tag=tag, model=model, iterations=iterations, samples=samples, prompt=prompt
+        results_metrics=results_metrics,
+        tag=tag,
+        model=model,
+        iterations=iterations,
+        samples=samples,
+        prompt=get_prompt(prompt),
     )
 
     logger.debug(results_template.content)
