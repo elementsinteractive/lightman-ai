@@ -2,14 +2,14 @@ import inspect
 from dataclasses import dataclass
 from decimal import Decimal
 
-from hackerman_ai.article.models import Article, ArticlesList
+from hackerman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
 
 
 @dataclass
 class ClassifiedArticleResults:
-    results: ArticlesList
-    correctly_found_articles: set[Article]
-    false_positives: set[Article]
+    results: SelectedArticlesList
+    correctly_found_articles: set[SelectedArticle]
+    false_positives: set[SelectedArticle]
     false_negatives: set[Article]
     total_relevant_articles: int
     time_delta: float
