@@ -19,8 +19,8 @@ class TestArticle:
 
 class TestSelectedArticle:
     def test_number_of_tokens(self) -> None:
-        article = SelectedArticle(link="https://aaaa.com")
-        assert article.number_of_tokens == 4
+        article = SelectedArticle(link="https://aaaa.com", title="Elephant gives birth to a monkey")
+        assert article.number_of_tokens == 11
 
 
 class TestArticlesList:
@@ -34,8 +34,8 @@ class TestArticlesList:
 
 class TestSelectedArticlesList:
     def test_total_number_of_tokens(self) -> None:
-        article1 = SelectedArticle(link="https://aaaa.com")
-        article2 = SelectedArticle(link="https://aaaa.com")
+        article1 = SelectedArticle(link="https://aaaa.com", title="Elephant gives birth to a monkey")
+        article2 = SelectedArticle(link="https://aaaa.com", title="Elephant gives birth to a monkey")
 
         articles_list = SelectedArticlesList(articles=[article1, article2])
-        assert articles_list.total_number_of_tokens == 8
+        assert articles_list.total_number_of_tokens == 22
