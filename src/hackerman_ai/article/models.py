@@ -30,6 +30,9 @@ class BaseArticle(BaseModel, ABC):
 
 
 class SelectedArticle(BaseArticle):
+    why_is_relevant: str
+    relevance_score: int
+
     @override
     @property
     def number_of_tokens(self) -> int:
@@ -41,7 +44,9 @@ class SelectedArticle(BaseArticle):
 
         It is a rough estimation of the total tokens to be sent for this Article.
         """
-        tokens = self._encoding.encode(f"{self.link}{self.title}")
+        tokens = self._encoding.encode(
+            f'"link": "{self.link}", "title": "{self.title}", "why_is_relevant": "{self.why_is_relevant}", "relevance_score": "{self.relevance_score}"'
+        )
         return len(tokens)
 
 
@@ -60,7 +65,9 @@ class Article(BaseArticle):
 
         It is a rough estimation of the total tokens to be sent for this Article.
         """
-        tokens = self._encoding.encode(f"{self.title}{self.description}{self.link}")
+        tokens = self._encoding.encode(
+            f'"title": "{self.title}", "description": "{self.description}", "link": "{self.link}"'
+        )
         return len(tokens)
 
 
