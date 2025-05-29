@@ -14,13 +14,15 @@ class TestBaseArticle:
 class TestArticle:
     def test_number_of_tokens(self) -> None:
         article = Article(title="Elephant gives birth to a monkey", description="lorem ipsum", link="https://aaaa.com")
-        assert article.number_of_tokens == 14
+        assert article.number_of_tokens == 28
 
 
 class TestSelectedArticle:
     def test_number_of_tokens(self) -> None:
-        article = SelectedArticle(link="https://aaaa.com", title="Elephant gives birth to a monkey")
-        assert article.number_of_tokens == 11
+        article = SelectedArticle(
+            link="https://aaaa.com", title="Elephant gives birth to a monkey", relevance_score=1, why_is_relevant=""
+        )
+        assert article.number_of_tokens == 36
 
 
 class TestArticlesList:
@@ -29,13 +31,17 @@ class TestArticlesList:
         article2 = Article(title="Elephant gives birth to a monkey", description="lorem ipsum", link="https://aaaa.com")
 
         articles_list = ArticlesList(articles=[article1, article2])
-        assert articles_list.total_number_of_tokens == 28
+        assert articles_list.total_number_of_tokens == 56
 
 
 class TestSelectedArticlesList:
     def test_total_number_of_tokens(self) -> None:
-        article1 = SelectedArticle(link="https://aaaa.com", title="Elephant gives birth to a monkey")
-        article2 = SelectedArticle(link="https://aaaa.com", title="Elephant gives birth to a monkey")
+        article1 = SelectedArticle(
+            link="https://aaaa.com", title="Elephant gives birth to a monkey", relevance_score=1, why_is_relevant=""
+        )
+        article2 = SelectedArticle(
+            link="https://aaaa.com", title="Elephant gives birth to a monkey", relevance_score=1, why_is_relevant=""
+        )
 
         articles_list = SelectedArticlesList(articles=[article1, article2])
-        assert articles_list.total_number_of_tokens == 22
+        assert articles_list.total_number_of_tokens == 72
