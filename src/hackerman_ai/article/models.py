@@ -9,6 +9,7 @@ from pydantic import BaseModel
 class BaseArticle(BaseModel, ABC):
     """Base abstract class for all Articles."""
 
+    title: str
     link: str
     _encoding: tiktoken.Encoding = tiktoken.get_encoding(settings.OPENAI_ENCODING)
 
@@ -40,7 +41,7 @@ class SelectedArticle(BaseArticle):
 
         It is a rough estimation of the total tokens to be sent for this Article.
         """
-        tokens = self._encoding.encode(f"{self.link}")
+        tokens = self._encoding.encode(f"{self.link}{self.title}")
         return len(tokens)
 
 
@@ -67,6 +68,10 @@ class BaseArticlesList[TArticle: BaseArticle](BaseModel):
     articles: list[TArticle]
 
     @property
+    def titles(self) -> list[str]:
+        return [new.title for new in self.articles]
+
+    @property
     def links(self) -> list[str]:
         return [new.link for new in self.articles]
 
@@ -85,7 +90,3 @@ class SelectedArticlesList(BaseArticlesList[SelectedArticle]):
 
 class ArticlesList(BaseArticlesList[Article]):
     """Model that saves articles with all their information."""
-
-    @property
-    def titles(self) -> list[str]:
-        return [new.title for new in self.articles]
