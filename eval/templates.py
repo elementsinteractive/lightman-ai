@@ -72,18 +72,21 @@ class ResultsFileBuilder:
 - Time delta: {classified_article.time_delta}s
 
 ## Articles found by AI agent:
-{self._titles_to_bullet_list(classified_article.articles_found_titles)}
+{self.metadata_to_bullet_list(classified_article.articles_found_metadata)}
 
 ## Correctly classified articles:
-{self._titles_to_bullet_list(classified_article.correctly_found_articles_titles)}
+{self.metadata_to_bullet_list(classified_article.correctly_found_articles_metadata)}
 
 ## False positives:
-{self._titles_to_bullet_list(classified_article.false_positives_titles)}
+{self.metadata_to_bullet_list(classified_article.false_positives_metadata)}
 
 ## False negatives:
-{self._titles_to_bullet_list(classified_article.false_negatives_titles)}
+{self.metadata_to_bullet_list(classified_article.false_negatives_metadata)}
 """
 
     @staticmethod
-    def _titles_to_bullet_list(titles: list[str]) -> str:
-        return "- " + "\n- ".join(titles) if titles else "No results."
+    def metadata_to_bullet_list(metadata: list[str]) -> str:
+        if not metadata:
+            return "No results."
+
+        return "- " + "\n- ".join(metadata)

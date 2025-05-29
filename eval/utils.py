@@ -1,8 +1,9 @@
 import inspect
+from collections.abc import Iterable
 from dataclasses import dataclass
 from decimal import Decimal
 
-from hackerman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
+from hackerman_ai.article.models import Article, BaseArticle, SelectedArticle, SelectedArticlesList
 
 
 @dataclass
@@ -53,20 +54,31 @@ class ClassifiedArticleResults:
         )
 
     @property
-    def false_positives_titles(self) -> list[str]:
-        return [article.title for article in self.false_positives]
+    def false_positives_metadata(self) -> list[str]:
+        return self._get_articles_metadata(self.false_positives)
 
     @property
-    def correctly_found_articles_titles(self) -> list[str]:
-        return [article.title for article in self.correctly_found_articles]
+    def correctly_found_articles_metadata(self) -> list[str]:
+        return self._get_articles_metadata(self.correctly_found_articles)
 
     @property
-    def false_negatives_titles(self) -> list[str]:
-        return [article.title for article in self.false_negatives]
+    def false_negatives_metadata(self) -> list[str]:
+        return self._get_articles_titles(self.false_negatives)
 
     @property
-    def articles_found_titles(self) -> list[str]:
-        return [article.title for article in self.results.articles]
+    def articles_found_metadata(self) -> list[str]:
+        return self._get_articles_titles(self.results.articles)
+
+    @staticmethod
+    def _get_articles_titles(articles: Iterable[BaseArticle]) -> list[str]:
+        return [article.title for article in articles]
+
+    @staticmethod
+    def _get_articles_metadata(articles: set[SelectedArticle]) -> list[str]:
+        return [
+            f"Title: {article.title}\n\t- Reason: {article.why_is_relevant}\n\t- Score: {article.relevance_score}"
+            for article in articles
+        ]
 
 
 @dataclass

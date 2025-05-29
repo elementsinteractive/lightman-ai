@@ -21,16 +21,21 @@ class TestBaseAgent:
         assert all(isinstance(x, SelectedArticlesList) for x in result)
 
     def test__get_prompt_result(self, test_prompt: str) -> None:
-        """Test that we run the prompt as many times as we specify, and we receive back an INSTANCE of `SelectedArticlesList`."""
+        """Check that we receive an instance of `SelectedArticlesList` when running the method."""
         agent = FakeAgent()
         result = agent.get_prompt_result(test_prompt, iterations=3)
         assert isinstance(result, SelectedArticlesList)
 
     def test__merge_results(self) -> None:
-        """Test that all the articles lists get merged into one."""
-        article1 = SelectedArticle(link="link1", title="Elephant gives birth to a monkey")
-        article1_repeated = SelectedArticle(link="link1", title="Elephant gives birth to a monkey")
-        different_article = SelectedArticle(link="link2", title="Elephant gives birth to a monkey")
+        """
+        Test that all the articles lists get merged into one.
+
+        Proves that what differentiates SelecterArticles from one another is the `link` field.
+        """
+        article1 = SelectedArticle(link="link1", relevance_score=1, title="", why_is_relevant="")
+        article1_repeated = SelectedArticle(link="link1", relevance_score=1, title="", why_is_relevant="")
+        different_article = SelectedArticle(link="link2", relevance_score=1, title="", why_is_relevant="")
+
         articles_list1 = SelectedArticlesList(articles=[article1, different_article])
         articles_list2 = SelectedArticlesList(articles=[article1_repeated])
 
