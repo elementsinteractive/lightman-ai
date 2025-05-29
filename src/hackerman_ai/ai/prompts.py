@@ -10,7 +10,7 @@ Do not show malware related news, nor malware campaigns or hackers exploiting vu
 very important: Make a distinction between exploits and vulnerabilities being exploited and newly discovered vulnerabilities.
 Show also news that can affect software that we use in our day to day work, like browsers, OS vulnerabilities and other things related.
 It is very important that I'm only interested on the news that directly relate to our technologies that may impact the development of apps. I don't want any other article that is slightly related. Only those you are sure they are relevant.
-Classify them by relevance and show only those that are more relevant."""
+Give each of them a relevance score from 1-10 and retrieve all of those with a relevance score >=7."""
 }
 
 PROMPTS_CHOICES = list(PROMPTS.keys())
