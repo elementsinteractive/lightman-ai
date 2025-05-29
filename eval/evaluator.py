@@ -35,7 +35,7 @@ def classify_articles(
         else:
             logger.error("%s", article)
 
-    false_negatives = RELEVANT_ARTICLES - correctly_found_articles
+    false_negatives = set(RELEVANT_ARTICLES).difference(correctly_found_articles)
 
     return ClassifiedArticleResults(
         results=results,

@@ -28,9 +28,9 @@ class TestBaseAgent:
 
     def test__merge_results(self) -> None:
         """Test that all the articles lists get merged into one."""
-        article1 = SelectedArticle(link="link1")
-        article1_repeated = SelectedArticle(link="link1")
-        different_article = SelectedArticle(link="link2")
+        article1 = SelectedArticle(link="link1", title="Elephant gives birth to a monkey")
+        article1_repeated = SelectedArticle(link="link1", title="Elephant gives birth to a monkey")
+        different_article = SelectedArticle(link="link2", title="Elephant gives birth to a monkey")
         articles_list1 = SelectedArticlesList(articles=[article1, different_article])
         articles_list2 = SelectedArticlesList(articles=[article1_repeated])
 
