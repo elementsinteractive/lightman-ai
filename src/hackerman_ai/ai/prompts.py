@@ -4,13 +4,15 @@ PROMPTS = {
     "eval": """
 I'm in software development. I develop web applications and mobile applications.
 Given a text with cybersecurity news,
-extract all articles showing new vulnerabilities that can affect:
-Python, javascript, android and ios development and web and mobile. Also show vulnerabilities about cloud providers.
-Do not show malware related news, nor malware campaigns or hackers exploiting vulnerabilities. I'm interested only on newly discovered vulnerabilities or malicious libraries.
-very important: Make a distinction between exploits and vulnerabilities being exploited and newly discovered vulnerabilities.
-Show also news that can affect software that we use in our day to day work, like browsers, OS vulnerabilities and other things related.
-It is very important that I'm only interested on the news that directly relate to our technologies that may impact the development of apps. I don't want any other article that is slightly related. Only those you are sure they are relevant.
-Give each of them a relevance score from 1-10 and retrieve all of those with a relevance score >=7."""
+Give a score 1-10 to each one of all the articles, depending on how relevant they are to me. Give me back the articles with the relevance that you think they have.'
+The criteria to follow is:
+- I work with Python, javascript, android and ios development and web and mobile. Also show vulnerabilities about cloud providers that are directly related with development.
+- I'm only interested in libraries vulnerabilities when they directly impact the work of a web or mobile developer
+- Even if it's a web development vulnerability but does not belong to the techonolgies that I'm interested in, it is not relevant for me.
+- I'm not interested in malware related news, nor malware campaigns or hackers exploiting vulnerabilities or rootkits using already known vulnerabilities. I'm interested only in newly discovered vulnerabilities.
+- very important: Make a distinction between exploits and vulnerabilities being exploited and newly discovered vulnerabilities.
+- It is very important that those articles not related to the technologies I use are not relevant for me.
+""",
 }
 
 PROMPTS_CHOICES = list(PROMPTS.keys())
