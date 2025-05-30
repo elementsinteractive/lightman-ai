@@ -292,11 +292,6 @@ NON_RELEVANT_ARTICLES = {
         description="Cybersecurity researchers have discovered a new phishing campaign that's being used to distribute malware called Horabot targeting Windows users in Latin American countries like Mexico, Guatemala, Colombia, Peru, Chile, and Argentina.\nThe campaign is \"using crafted emails that impersonate invoices or financial documents to trick victims into opening malicious attachments and can steal email",
     ),
     Article(
-        link="https://thehackernews.com/2025/05/microsoft-fixes-78-flaws-5-zero-days.html",
-        title="Microsoft Fixes 78 Flaws, 5 Zero-Days Exploited; CVSS 10 Bug Impacts Azure DevOps Server",
-        description="Microsoft on Tuesday shipped fixes to address a total of 78 security flaws across its software lineup, including a set of five zero-days that have come under active exploitation in the wild.\nOf the 78 flaws resolved by the tech giant, 11 are rated Critical, 66 are rated Important, and one is rated Low in severity. Twenty-eight of these vulnerabilities lead to remote code execution, 21 of them",
-    ),
-    Article(
         link="https://thehackernews.com/2025/05/fortinet-patches-cve-2025-32756-zero.html",
         title="Fortinet Patches CVE-2025-32756 Zero-Day RCE Flaw Exploited in FortiVoice Systems",
         description='Fortinet has patched a critical security flaw that it said has been exploited as a zero-day in attacks targeting FortiVoice enterprise phone systems.\nThe vulnerability, tracked as CVE-2025-32756, carries a CVSS score of 9.6 out of 10.0.\n"A stack-based overflow vulnerability [CWE-121] in FortiVoice, FortiMail, FortiNDR, FortiRecorder, and FortiCamera may allow a remote unauthenticated attacker to',
@@ -466,29 +461,15 @@ NON_RELEVANT_ARTICLES = {
         title="NSO Group Fined $168M for Targeting 1,400 WhatsApp Users With Pegasus Spyware",
         description="A federal jury on Tuesday decided that NSO Group must pay Meta-owned WhatsApp WhatsApp approximately $168 million in monetary damages, more than four months after a federal judge ruled that the Israeli company violated U.S. laws by exploiting WhatsApp servers to deploy Pegasus spyware, targeting over 1,400 individuals globally.\nWhatsApp originally filed the lawsuit against NSO Group in 2019,",
     ),
-}
-
-
-RELEVANT_ARTICLES = {
-    Article(
-        link="https://thehackernews.com/2025/05/fake-security-plugin-on-wordpress.html",
-        title="Fake Security Plugin on WordPress Enables Remote Admin Access for Attackers",
-        description='Cybersecurity researchers have shed light on a new campaign targeting WordPress sites that disguises the malware as a security plugin.\nThe plugin, which goes by the name "WP-antymalwary-bot.php," comes with a variety of features to maintain access, hide itself from the admin dashboard, and execute remote code.\n"Pinging functionality that can report back to a command-and-control (C&amp;C) server',
-    ),
-    Article(
-        link="https://thehackernews.com/2025/04/critical-commvault-command-center-flaw.html",
-        title="Critical Commvault Command Center Flaw Enables Attackers to Execute Code Remotely",
-        description='A critical security flaw has been disclosed in the Commvault Command Center that could allow arbitrary code execution on affected installations.\nThe vulnerability, tracked as CVE-2025-34028, carries a CVSS score of 9.0 out of a maximum of 10.0.\n"A critical security vulnerability has been identified in the Command Center installation, allowing remote attackers to execute arbitrary code without',
-    ),
-    Article(
-        link="https://thehackernews.com/2025/05/malicious-npm-packages-infect-3200.html",
-        title="Malicious npm Packages Infect 3,200+ Cursor Users With Backdoor, Steal Credentials",
-        description="Cybersecurity researchers have flagged three malicious npm packages that are designed to target the Apple macOS version of Cursor, a popular artificial intelligence (AI)-powered source code editor.\n\"Disguised as developer tools offering 'the cheapest Cursor API,' these packages steal user credentials, fetch an encrypted payload from threat actor-controlled infrastructure, overwrite Cursor's",
-    ),
     Article(
         link="https://thehackernews.com/2025/05/ottokit-wordpress-plugin-with-100k.html",
         title="OttoKit WordPress Plugin with 100K+ Installs Hit by Exploits Targeting Multiple Flaws",
         description='A second security flaw impacting the OttoKit (formerly SureTriggers) WordPress plugin has come under active exploitation in the wild.\nThe vulnerability, tracked as CVE-2025-27007 (CVSS score: 9.8), is a privilege escalation bug impacting all versions of the plugin prior to and including version 1.0.82.&nbsp;\n"This is due to the create_wp_connection() function missing a capability check and',
+    ),
+    Article(
+        link="https://thehackernews.com/2025/05/fake-security-plugin-on-wordpress.html",
+        title="Fake Security Plugin on WordPress Enables Remote Admin Access for Attackers",
+        description='Cybersecurity researchers have shed light on a new campaign targeting WordPress sites that disguises the malware as a security plugin.\nThe plugin, which goes by the name "WP-antymalwary-bot.php," comes with a variety of features to maintain access, hide itself from the admin dashboard, and execute remote code.\n"Pinging functionality that can report back to a command-and-control (C&amp;C) server',
     ),
     Article(
         link="https://thehackernews.com/2025/04/hackers-exploit-critical-craft-cms.html",
@@ -496,13 +477,32 @@ RELEVANT_ARTICLES = {
         description="Threat actors have been observed exploiting two newly disclosed critical security flaws in Craft CMS in zero-day attacks to breach servers and gain unauthorized access.\nThe attacks, first observed by Orange Cyberdefense SensePost on February 14, 2025, involve chaining the below vulnerabilities -\n\nCVE-2024-58136 (CVSS score: 9.0) - An improper protection of alternate path flaw in the Yii PHP",
     ),
     Article(
+        link="https://thehackernews.com/2025/04/critical-commvault-command-center-flaw.html",
+        title="Critical Commvault Command Center Flaw Enables Attackers to Execute Code Remotely",
+        description='A critical security flaw has been disclosed in the Commvault Command Center that could allow arbitrary code execution on affected installations.\nThe vulnerability, tracked as CVE-2025-34028, carries a CVSS score of 9.0 out of a maximum of 10.0.\n"A critical security vulnerability has been identified in the Command Center installation, allowing remote attackers to execute arbitrary code without',
+    ),
+    Article(
         link="https://thehackernews.com/2025/05/commvault-confirms-hackers-exploited.html",
         title="Commvault Confirms Hackers Exploited CVE-2025-3928 as Zero-Day in Azure Breach",
         description='Enterprise data backup platform Commvault has revealed that an unknown nation-state threat actor breached its Microsoft Azure environment by exploiting CVE-2025-3928 but emphasized there is no evidence of unauthorized data access.\n"This activity has affected a small number of customers we have in common with Microsoft, and we are working with those customers to provide assistance," the company',
+    ),
+}
+
+
+RELEVANT_ARTICLES = {
+    Article(
+        link="https://thehackernews.com/2025/05/malicious-npm-packages-infect-3200.html",
+        title="Malicious npm Packages Infect 3,200+ Cursor Users With Backdoor, Steal Credentials",
+        description="Cybersecurity researchers have flagged three malicious npm packages that are designed to target the Apple macOS version of Cursor, a popular artificial intelligence (AI)-powered source code editor.\n\"Disguised as developer tools offering 'the cheapest Cursor API,' these packages steal user credentials, fetch an encrypted payload from threat actor-controlled infrastructure, overwrite Cursor's",
     ),
     Article(
         link="https://thehackernews.com/2025/05/new-chrome-vulnerability-enables-cross.html",
         title="New Chrome Vulnerability Enables Cross-Origin Data Leak via Loader Referrer Policy",
         description='Google on Wednesday released updates to address four security issues in its Chrome web browser, including one for which it said there exists an exploit in the wild.\nThe high-severity vulnerability, tracked as CVE-2025-4664 (CVSS score: 4.3), has been characterized as a case of insufficient policy enforcement in a component called Loader.\n"Insufficient policy enforcement in Loader in Google',
+    ),
+    Article(
+        link="https://thehackernews.com/2025/05/microsoft-fixes-78-flaws-5-zero-days.html",
+        title="Microsoft Fixes 78 Flaws, 5 Zero-Days Exploited; CVSS 10 Bug Impacts Azure DevOps Server",
+        description="Microsoft on Tuesday shipped fixes to address a total of 78 security flaws across its software lineup, including a set of five zero-days that have come under active exploitation in the wild.\nOf the 78 flaws resolved by the tech giant, 11 are rated Critical, 66 are rated Important, and one is rated Low in severity. Twenty-eight of these vulnerabilities lead to remote code execution, 21 of them",
     ),
 }

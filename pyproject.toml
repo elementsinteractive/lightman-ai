@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hackerman_ai"
-version = "0.7.3"
+version = "0.7.7"
 description = "Cybersecurity news aggregator."
 authors = ["Daniel Sanz <daniel.sanz@groupinteractive.es>"]
 
@@ -122,7 +122,7 @@ enable_error_code = ["explicit-override"]
 
 
 [tool.coverage.run]
-omit = ["tests/*"]
+omit = ["tests/*", "eval/*"]
 
 [tool.coverage.report]
 fail_under = 95
@@ -136,7 +136,7 @@ exclude_lines = [
 [tool.commitizen]
 version_files = ["pyproject.toml:^version"]
 name = "cz_customize"
-version = "0.7.3"
+version = "0.7.7"
 tag_format = "v$version"
 
 [tool.commitizen.customize]
