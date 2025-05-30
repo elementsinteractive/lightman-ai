@@ -30,5 +30,4 @@ class OpenAIAgent(BaseAgent):
             self.logger.warning("waiting %s", err.wait_time)
             time.sleep(err.wait_time)
             result = self._execute_agent(prompt)
-
         return result.output

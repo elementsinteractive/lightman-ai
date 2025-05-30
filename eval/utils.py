@@ -3,21 +3,21 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from decimal import Decimal
 
-from hackerman_ai.article.models import Article, BaseArticle, SelectedArticle, SelectedArticlesList
+from hackerman_ai.article.models import SelectedArticle
 
 
 @dataclass
 class ClassifiedArticleResults:
-    results: SelectedArticlesList
+    articles: list[SelectedArticle]
     correctly_found_articles: set[SelectedArticle]
     false_positives: set[SelectedArticle]
-    false_negatives: set[Article]
+    false_negatives: set[SelectedArticle]
     total_relevant_articles: int
     time_delta: float
 
     @property
     def total_results(self) -> int:
-        return len(self.results.articles)
+        return len(self.articles)
 
     @property
     def total_correctly_found_articles(self) -> int:
@@ -63,14 +63,14 @@ class ClassifiedArticleResults:
 
     @property
     def false_negatives_metadata(self) -> list[str]:
-        return self._get_articles_titles(self.false_negatives)
+        return self._get_articles_metadata(self.false_negatives)
 
     @property
     def articles_found_metadata(self) -> list[str]:
-        return self._get_articles_titles(self.results.articles)
+        return self._get_articles_titles(self.articles)
 
     @staticmethod
-    def _get_articles_titles(articles: Iterable[BaseArticle]) -> list[str]:
+    def _get_articles_titles(articles: Iterable[SelectedArticle]) -> list[str]:
         return [article.title for article in articles]
 
     @staticmethod

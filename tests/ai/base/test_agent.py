@@ -1,5 +1,6 @@
 from typing import override
 
+import pytest
 from hackerman_ai.ai.base.agent import BaseAgent
 from hackerman_ai.article.models import SelectedArticle, SelectedArticlesList
 
@@ -43,3 +44,8 @@ class TestBaseAgent:
         result = agent._merge_results([articles_list1, articles_list2])
         assert isinstance(result, SelectedArticlesList)
         assert set(result.articles) == {article1, different_article}
+
+    def test_iterations_must_be_positive(self) -> None:
+        agent = FakeAgent()
+        with pytest.raises(ValueError, match="`iterations` must be > 0."):
+            agent.get_prompt_result(prompt="", iterations=0)

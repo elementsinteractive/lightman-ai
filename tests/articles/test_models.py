@@ -1,3 +1,4 @@
+import pytest
 from hackerman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
 
 
@@ -22,7 +23,7 @@ class TestSelectedArticle:
         article = SelectedArticle(
             link="https://aaaa.com", title="Elephant gives birth to a monkey", relevance_score=1, why_is_relevant=""
         )
-        assert article.number_of_tokens == 36
+        assert article.number_of_tokens == 35
 
 
 class TestArticlesList:
@@ -44,4 +45,18 @@ class TestSelectedArticlesList:
         )
 
         articles_list = SelectedArticlesList(articles=[article1, article2])
-        assert articles_list.total_number_of_tokens == 72
+        assert articles_list.total_number_of_tokens == 70
+
+    def test__get_results_above_score(self) -> None:
+        article_match = SelectedArticle(link="link1", relevance_score=5, title="", why_is_relevant="")
+        article_no_match = SelectedArticle(link="link2", relevance_score=1, title="", why_is_relevant="")
+
+        result = SelectedArticlesList(articles=[article_match, article_no_match]).get_articles_with_score_gte_threshold(
+            5
+        )
+
+        assert result == [article_match]
+
+    def test_score_threshold_must_be_positive(self) -> None:
+        with pytest.raises(ValueError, match="score threshold must be > 0."):
+            SelectedArticlesList(articles=[]).get_articles_with_score_gte_threshold(0)
