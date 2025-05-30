@@ -5,7 +5,8 @@ from hackerman_ai.article.models import SelectedArticlesList
 
 class BaseAgent(ABC):
     def get_prompt_result(self, prompt: str, iterations: int = 1) -> SelectedArticlesList:
-        assert iterations > 0, "Number of iterations must be > 0."
+        if not iterations > 0:
+            raise ValueError("`iterations` must be > 0.")
 
         articles = self._run_prompt_multiple_times(prompt, iterations)
         return self._merge_results(articles)

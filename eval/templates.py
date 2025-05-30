@@ -8,7 +8,14 @@ RESULTS_DIR = "eval/results/"
 
 class ResultsFileBuilder:
     def __init__(
-        self, results_metrics: ResultsMetrics, tag: str | None, model: str, iterations: int, samples: int, prompt: str
+        self,
+        results_metrics: ResultsMetrics,
+        tag: str | None,
+        model: str,
+        iterations: int,
+        samples: int,
+        prompt: str,
+        score: int,
     ) -> None:
         self.results_metrics = results_metrics
         self.tag = tag
@@ -16,6 +23,7 @@ class ResultsFileBuilder:
         self.iterations = iterations
         self.samples = samples
         self.prompt = prompt
+        self.score = score
 
     @property
     def file_name(self) -> str:
@@ -40,6 +48,7 @@ class ResultsFileBuilder:
 - Model: {self.model}
 - Iterations: {self.iterations}
 - Samples: {self.samples}
+- Score threshold: {self.score}
 - Prompt: \n {self.prompt}
 """
 
