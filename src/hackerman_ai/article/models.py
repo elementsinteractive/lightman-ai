@@ -45,7 +45,7 @@ class SelectedArticle(BaseArticle):
         It is a rough estimation of the total tokens to be sent for this Article.
         """
         tokens = self._encoding.encode(
-            f'"link": "{self.link}", "title": "{self.title}", "why_is_relevant": "{self.why_is_relevant}", "relevance_score": "{self.relevance_score}"'
+            f'"link": "{self.link}", "title": "{self.title}", "why_is_relevant": "{self.why_is_relevant}", "score_threshold": "{self.relevance_score}"'
         )
         return len(tokens)
 
@@ -93,6 +93,11 @@ class SelectedArticlesList(BaseArticlesList[SelectedArticle]):
 
     It saves the minimum information so that they are identifiable.
     """
+
+    def get_articles_with_score_gte_threshold(self, score_threshold: int) -> list[SelectedArticle]:
+        if not score_threshold > 0:
+            raise ValueError("score threshold must be > 0.")
+        return [article for article in self.articles if article.relevance_score >= score_threshold]
 
 
 class ArticlesList(BaseArticlesList[Article]):
