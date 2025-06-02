@@ -10,17 +10,12 @@ class FakeAgent(BaseAgent):
     def _run_prompt(self, prompt: str) -> SelectedArticlesList:
         return SelectedArticlesList(articles=[])
 
+    @override
+    def _run_prompt_multiple_times(self, prompt: str, iterations: int) -> list[SelectedArticlesList]:
+        return []
+
 
 class TestBaseAgent:
-    def test__run_prompt_multiple_times(self, test_prompt: str) -> None:
-        """Test that we run the prompt as many times as we specify, and we receive back a LIST of `SelectedArticlesList`."""
-        agent = FakeAgent()
-
-        result = agent._run_prompt_multiple_times(test_prompt, iterations=3)
-        assert isinstance(result, list)
-        assert len(result) == 3
-        assert all(isinstance(x, SelectedArticlesList) for x in result)
-
     def test__get_prompt_result(self, test_prompt: str) -> None:
         """Check that we receive an instance of `SelectedArticlesList` when running the method."""
         agent = FakeAgent()

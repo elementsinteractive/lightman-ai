@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     OPENAI_ENCODING: str = "cl100k_base"
     PROMPT_ITERATIONS: int = 3
     RELEVANCE_SCORE_THRESHOLD: int = 8
+    PARALLEL_WORKERS: int = 5
 
 
 settings = Settings()
