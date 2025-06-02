@@ -70,7 +70,7 @@ class ResultsFileBuilder:
     def _get_individual_run_results(self, sample: int, classified_article: ClassifiedArticleResults) -> str:
         return f"""
 
-## Result #{sample}
+## Result {sample}
 - Total relevant articles: {classified_article.total_relevant_articles}
 - Total articles found by AI agent: {classified_article.total_results}
 - Total relevant articles found: {classified_article.total_correctly_found_articles}

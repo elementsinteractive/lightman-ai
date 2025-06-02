@@ -2,7 +2,7 @@ from unittest.mock import Mock, patch
 
 from hackerman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
 
-from eval.evaluator import classify_articles
+from eval.evaluator import ClassifyArticlesInput, classify_articles
 
 
 class TestEval:
@@ -28,12 +28,14 @@ class TestEval:
             articles=selected_articles_above_threshold + selected_articles_below_threshold
         )
         classified_articles = classify_articles(
-            agent=Mock(),
-            prompt="",
-            score=7,
-            iterations=1,
-            relevant_articles=set(relevant_articles),
-            non_relevant_articles=set(non_relevant_articles),
+            ClassifyArticlesInput(
+                agent=Mock(),
+                prompt="",
+                score=7,
+                iterations=1,
+                relevant_articles=set(relevant_articles),
+                non_relevant_articles=set(non_relevant_articles),
+            )
         )
         assert classified_articles.total_results == 2
 
