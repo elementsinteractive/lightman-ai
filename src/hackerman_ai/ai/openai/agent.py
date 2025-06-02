@@ -31,3 +31,15 @@ class OpenAIAgent(BaseAgent):
             time.sleep(err.wait_time)
             result = self._execute_agent(prompt)
         return result.output
+
+    @override
+    def _run_prompt_multiple_times(self, prompt: str, iterations: int) -> list[SelectedArticlesList]:
+        """Run the prompt multiple times, so that we reduce the number of false negatives.
+
+        OpenAi raises an error if we exceed the limit of tokens to be processed per minute,
+        therefore we need to run all the calls one after the other.
+        """
+        results = []
+        for _ in range(iterations):
+            results.append(self._run_prompt(prompt))
+        return results
