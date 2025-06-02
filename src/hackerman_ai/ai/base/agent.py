@@ -14,11 +14,8 @@ class BaseAgent(ABC):
     @abstractmethod
     def _run_prompt(self, prompt: str) -> SelectedArticlesList: ...
 
-    def _run_prompt_multiple_times(self, prompt: str, iterations: int) -> list[SelectedArticlesList]:
-        results = []
-        for _ in range(iterations):
-            results.append(self._run_prompt(prompt))
-        return results
+    @abstractmethod
+    def _run_prompt_multiple_times(self, prompt: str, iterations: int) -> list[SelectedArticlesList]: ...
 
     def _merge_results(self, articles_list_of_lists: list[SelectedArticlesList]) -> SelectedArticlesList:
         """Merge all the news, removing repeated ones."""
