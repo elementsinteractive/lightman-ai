@@ -16,7 +16,7 @@ def pytest_configure() -> None:
         load_dotenv()
     else:
         os.environ["OPENAI_API_KEY"] = "dummy"
-        os.environ["GEMINI_API_KEY"] = "dummy"
+        os.environ["GOOGLE_API_KEY"] = "dummy"
 
 
 @pytest.fixture(scope="module")

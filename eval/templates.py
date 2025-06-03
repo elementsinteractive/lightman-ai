@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 
 from eval.utils import ClassifiedArticleResults, ResultsMetrics
@@ -54,9 +55,10 @@ class ResultsFileBuilder:
 
     def _get_results_averages(self) -> str:
         return f"""
-- Average Recall: {self.results_metrics.average_recall}
-- Average Precision: {self.results_metrics.average_precision}
+- Average Recall: {self.results_metrics.average_recall}, 95% CI: {self._format_interval(self.results_metrics.confidence_interval_recall)}
+- Average Precision: {self.results_metrics.average_precision}, 95% CI: {self._format_interval(self.results_metrics.confidence_interval_precision)}
 - Average Time Delta: {self.results_metrics.average_time_delta}s
+- Average F1 Score: {self.results_metrics.average_f1_score}
 """
 
     def _get_run_results(self) -> str:
@@ -99,3 +101,7 @@ class ResultsFileBuilder:
             return "No results."
 
         return "- " + "\n- ".join(metadata)
+
+    @staticmethod
+    def _format_interval(interval: tuple[Decimal, Decimal]) -> str:
+        return f"[{str(interval[0])}, {str(interval[1])}]"
