@@ -25,11 +25,12 @@ class ResultsFileBuilder:
         self.samples = samples
         self.prompt = prompt
         self.score = score
+        self.results_dir = Path(RESULTS_DIR)
 
     @property
     def file_name(self) -> str:
         path = (
-            str(Path(RESULTS_DIR) / date.today().isoformat())
+            str(self.results_dir / date.today().isoformat())
             + f"-{self.model}-iterations-{self.iterations}-samples-{self.samples}"
         )
 
@@ -41,6 +42,13 @@ class ResultsFileBuilder:
     @property
     def content(self) -> str:
         return self._get_summary() + "\n" + self._get_results_averages() + "\n" + self._get_run_results()
+
+    def save(self) -> None:
+        if not self.results_dir.exists():
+            self.results_dir.mkdir()
+
+        with open(self.file_name, "w") as fp:
+            fp.write(self.content)
 
     def _get_summary(self) -> str:
         return f"""
