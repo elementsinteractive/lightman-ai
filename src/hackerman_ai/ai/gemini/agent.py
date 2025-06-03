@@ -7,14 +7,14 @@ from hackerman_ai.ai.gemini.exceptions import map_gemini_exceptions
 from hackerman_ai.article.models import SelectedArticlesList
 from hackerman_ai.core.settings import settings
 from pydantic_ai import Agent
-from pydantic_ai.models.gemini import GeminiModel
+from pydantic_ai.models.google import GoogleModel
 
 
 class GeminiAgent(BaseAgent):
     """Class that provides an interface to operate with the Gemini model."""
 
     def __init__(self, model: str, logger: logging.Logger | None = None) -> None:
-        ai_model = GeminiModel(model)
+        ai_model = GoogleModel(model)
         self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, output_type=SelectedArticlesList)
         self.logger = logger or logging.getLogger()
 
