@@ -41,6 +41,7 @@ def eval(
         samples=samples,
         prompt=full_prompt,
         score=score_threshold,
+        logger=logger,
     )
 
     results_template.save()
