@@ -5,7 +5,7 @@ bin := venv + "/bin"
 python_version := "python3.13"
 run := "poetry run"
 target_dirs := "src tests eval"
-eval_path := "eval/evaluator.py"
+eval_path := "eval/cli.py"
 # SENTINELS
 venv-exists := path_exists(venv)
 
