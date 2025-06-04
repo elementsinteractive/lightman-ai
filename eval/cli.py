@@ -26,8 +26,14 @@ from eval.evaluator import eval
 )
 @click.option("--prompt", type=click.Choice(PROMPTS_CHOICES), help=("Which prompt to use."), default="eval")
 def run(model: str, iterations: int, score: int, samples: int, prompt: str, tag: str | None = None) -> None:
-    if samples < 1:
-        raise click.BadParameter("`samples` must be > 0.")
+    def validate_positive_int(field: str, value: int) -> None:
+        if value is not None and value < 1:
+            raise click.BadParameter(f"`{field}` must be > 0.")
+
+    validate_positive_int("samples", samples)
+    validate_positive_int("score", score)
+    validate_positive_int("iterations", iterations)
+
     eval(
         score_threshold=score or settings.RELEVANCE_SCORE_THRESHOLD,
         iterations=iterations,
