@@ -486,15 +486,250 @@ NON_RELEVANT_ARTICLES = {
         title="Commvault Confirms Hackers Exploited CVE-2025-3928 as Zero-Day in Azure Breach",
         description='Enterprise data backup platform Commvault has revealed that an unknown nation-state threat actor breached its Microsoft Azure environment by exploiting CVE-2025-3928 but emphasized there is no evidence of unauthorized data access.\n"This activity has affected a small number of customers we have in common with Microsoft, and we are working with those customers to provide assistance," the company',
     ),
-}
-
-
-RELEVANT_ARTICLES = {
+    Article(
+        title="Fake DocuSign, Gitcode Sites Spread NetSupport RAT via Multi-Stage PowerShell Attack",
+        link="https://thehackernews.com/2025/06/fake-docusign-gitcode-sites-spread.html",
+        description='Threat hunters are alerting to a new campaign that employs deceptive websites to trick unsuspecting users into executing malicious PowerShell scripts on their machines and infect them with the NetSupport RAT malware.\nThe DomainTools Investigations (DTI) team said it identified "malicious multi-stage downloader Powershell scripts" hosted on lure websites that masquerade as Gitcode and DocuSign.\n"',
+    ),
+    Article(
+        title="Critical 10-Year-Old Roundcube Webmail Bug Allows Authenticated Users Run Malicious Code",
+        link="https://thehackernews.com/2025/06/critical-10-year-old-roundcube-webmail.html",
+        description="Cybersecurity researchers have disclosed details of a critical security flaw in the Roundcube webmail software that has gone unnoticed for a decade and could be exploited to take over susceptible systems and execute arbitrary code.\nThe vulnerability, tracked as CVE-2025-49113, carries a CVSS score of 9.9 out of 10.0. It has been described as a case of post-authenticated remote code execution via",
+    ),
+    Article(
+        title="Scattered Spider: Understanding Help Desk Scams and How to Defend Your Organization",
+        link="https://thehackernews.com/2025/06/scattered-spider-understanding-help.html",
+        description="In the wake of high-profile attacks on UK retailers Marks &amp; Spencer and Co-op, Scattered Spider has been all over the media, with coverage spilling over into the mainstream news due to the severity of the disruption caused — currently looking like hundreds of millions in lost profits for M&amp;S alone.&nbsp;\nThis coverage is extremely valuable for the cybersecurity community as it raises",
+    ),
+    Article(
+        title="Android Trojan Crocodilus Now Active in 8 Countries, Targeting Banks and Crypto Wallets",
+        link="https://thehackernews.com/2025/06/android-trojan-crocodilus-now-active-in.html",
+        description="A growing number of malicious campaigns have leveraged a recently discovered Android banking trojan called Crocodilus to target users in Europe and South America.\nThe malware, according to a new report published by ThreatFabric, has also adopted improved obfuscation techniques to hinder analysis and detection, and includes the ability to create new contacts in the victim's contacts list.\n\"Recent",
+    ),
+    Article(
+        title="Google Chrome to Distrust Two Certificate Authorities Over Compliance and Conduct Issues",
+        link="https://thehackernews.com/2025/06/google-chrome-to-distrust-two.html",
+        description='Google has revealed that it will no longer trust digital certificates issued by Chunghwa Telecom and Netlock citing "patterns of concerning behavior observed over the past year."\nThe changes are expected to be introduced in Chrome 139, which is scheduled for public release in early August 2025. The current major version is 137.&nbsp;\nThe update will affect all Transport Layer Security (TLS)',
+    ),
+    Article(
+        title="Microsoft and CrowdStrike Launch Shared Threat Actor Glossary to Cut Attribution Confusion",
+        link="https://thehackernews.com/2025/06/microsoft-and-crowdstrike-launch-shared.html",
+        description='Microsoft and CrowdStrike have announced that they are teaming up to align their individual threat actor taxonomies by publishing a new joint threat actor mapping.\n"By mapping where our knowledge of these actors align, we will provide security professionals with the ability to connect insights faster and make decisions with greater confidence," Vasu Jakkal, corporate vice president at Microsoft',
+    ),
+    Article(
+        title="Cryptojacking Campaign Exploits DevOps APIs Using Off-the-Shelf Tools from GitHub",
+        link="https://thehackernews.com/2025/06/cryptojacking-campaign-exploits-devops.html",
+        description="Cybersecurity researchers have discovered a new cryptojacking campaign that's targeting publicly accessible DevOps web servers such as those associated with Docker, Gitea, and HashiCorp Consul and Nomad to illicitly mine cryptocurrencies.\nCloud security firm Wiz, which is tracking the activity under the name JINX-0132, said the attackers are exploiting a wide range of known misconfigurations and",
+    ),
+    Article(
+        title="Preinstalled Apps on Ulefone, Krüger&Matz Phones Let Any App Reset Device, Steal PIN",
+        link="https://thehackernews.com/2025/06/preinstalled-apps-on-ulefone-kruger.html",
+        description='Three security vulnerabilities have been disclosed in preloaded Android applications on smartphones from Ulefone and Krüger&amp;Matz that could enable any app installed on the device to perform a factory reset and encrypt an application.\nA brief description of the three flaws is as follows -\n\nCVE-2024-13915 (CVSS score: 6.9) - A pre-installed "com.pri.factorytest" application on Ulefone and',
+    ),
+    Article(
+        title="⚡ Weekly Recap: APT Intrusions, AI Malware, Zero-Click Exploits, Browser Hijacks and More",
+        link="https://thehackernews.com/2025/06/weekly-recap-apt-intrusions-ai-malware.html",
+        description="If this had been a security drill, someone would’ve said it went too far. But it wasn’t a drill—it was real. The access? Everything looked normal. The tools? Easy to find. The detection? Came too late.\nThis is how attacks happen now—quiet, convincing, and fast. Defenders aren’t just chasing hackers anymore—they’re struggling to trust what their systems are telling them.\nThe problem isn’t too",
+    ),
+    Article(
+        title="The Secret Defense Strategy of Four Critical Industries Combating Advanced Cyber Threats",
+        link="https://thehackernews.com/2025/06/the-secret-defense-strategy-of-four.html",
+        description="The evolution of cyber threats has forced organizations across all industries to rethink their security strategies. As attackers become more sophisticated — leveraging encryption, living-off-the-land techniques, and lateral movement to evade traditional defenses — security teams are finding more threats wreaking havoc before they can be detected. Even after an attack has been identified, it can",
+    ),
+    Article(
+        title="Fake Recruiter Emails Target CFOs Using Legit NetBird Tool Across 6 Global Regions",
+        link="https://thehackernews.com/2025/06/fake-recruiter-emails-target-cfos-using.html",
+        description='Cybersecurity researchers have warned of a new spear-phishing campaign that uses a legitimate remote access tool called Netbird to target Chief Financial Officers (CFOs) and financial executives at banks, energy companies, insurers, and investment firms across Europe, Africa, Canada, the Middle East, and South Asia.&nbsp;\n"In what appears to be a multi-stage phishing operation, the attackers',
+    ),
+    Article(
+        title="U.S. DoJ Seizes 4 Domains Supporting Cybercrime Crypting Services in Global Operation",
+        link="https://thehackernews.com/2025/05/us-doj-seizes-4-domains-supporting.html",
+        description="A multinational law enforcement operation has resulted in the takedown of an online cybercrime syndicate that offered services to threat actors to ensure that their malicious software stayed undetected from security software.\nTo that effect, the U.S. Department of Justice (DoJ) said it seized four domains and their associated server facilitated the crypting service on May 27, 2025, in",
+    ),
+    Article(
+        title="New EDDIESTEALER Malware Bypasses Chrome's App-Bound Encryption to Steal Browser Data",
+        link="https://thehackernews.com/2025/05/eddiestealer-malware-uses-clickfix.html",
+        description='A new malware campaign is distributing a novel Rust-based information stealer dubbed EDDIESTEALER using the popular ClickFix social engineering tactic initiated via fake CAPTCHA verification pages.\n"This campaign leverages deceptive CAPTCHA verification pages that trick users into executing a malicious PowerShell script, which ultimately deploys the infostealer, harvesting sensitive data such as',
+    ),
+    Article(
+        title="China-Linked Hackers Exploit SAP and SQL Server Flaws in Attacks Across Asia and Brazil",
+        link="https://thehackernews.com/2025/05/china-linked-hackers-exploit-sap-and.html",
+        description='The China-linked threat actor behind the recent in-the-wild exploitation of a critical security flaw in SAP NetWeaver has been attributed to a broader set of attacks targeting organizations in Brazil, India, and Southeast Asia since 2023.\n"The threat actor mainly targets the SQL injection vulnerabilities discovered on web applications to access the SQL servers of targeted organizations," Trend',
+    ),
+    Article(
+        title='From the "Department of No" to a "Culture of Yes": A Healthcare CISO\'s Journey to Enabling Modern Care',
+        link="https://thehackernews.com/2025/05/from-department-of-no-to-culture-of-yes.html",
+        description="Breaking Out of the Security Mosh Pit\nWhen Jason Elrod, CISO of MultiCare Health System, describes legacy healthcare IT environments, he doesn't mince words: \"Healthcare loves to walk backwards into the future. And this is how we got here, because there are a lot of things that we could have prepared for that we didn't, because we were so concentrated on where we were.\"\nThis chaotic approach has",
+    ),
+    Article(
+        title="U.S. Sanctions Funnull for $200M Romance Baiting Scams Tied to Crypto Fraud",
+        link="https://thehackernews.com/2025/05/us-sanctions-funnull-for-200m-romance.html",
+        description="The U.S. Department of Treasury's Office of Foreign Assets Control (OFAC) has levied sanctions against a Philippines-based company named Funnull Technology Inc. and its administrator Liu Lizhi for providing infrastructure to conduct romance baiting scams that led to massive cryptocurrency losses.\nThe Treasury accused the Taguig-headquartered company of enabling thousands of websites involved in",
+    ),
+    Article(
+        title="ConnectWise Hit by Cyberattack; Nation-State Actor Suspected in Targeted Breach",
+        link="https://thehackernews.com/2025/05/connectwise-hit-by-cyberattack-nation.html",
+        description='ConnectWise, the developer of remote access and support software ScreenConnect, has disclosed that it was the victim of a cyber attack that it said was likely perpetrated by a nation-state threat actor.\n"ConnectWise recently learned of suspicious activity within our environment that we believe was tied to a sophisticated nation-state actor, which affected a very small number of ScreenConnect',
+    ),
+    Article(
+        title="Meta Disrupts Influence Ops Targeting Romania, Azerbaijan, and Taiwan with Fake Personas",
+        link="https://thehackernews.com/2025/05/meta-disrupts-influence-ops-targeting.html",
+        description='Meta on Thursday revealed that it disrupted three covert influence operations originating from Iran, China, and Romania during the first quarter of 2025.\n"We detected and removed these campaigns before they were able to build authentic audiences on our apps," the social media giant said in its quarterly Adversarial Threat Report.\nThis included a network of 658 accounts on Facebook, 14 Pages, and',
+    ),
+    Article(
+        title="Cybercriminals Target AI Users with Malware-Loaded Installers Posing as Popular Tools",
+        link="https://thehackernews.com/2025/05/cybercriminals-target-ai-users-with.html",
+        description='Fake installers for popular artificial intelligence (AI) tools like OpenAI ChatGPT and InVideo AI are being used as lures to propagate various threats, such as the CyberLock and Lucky_Gh0$t ransomware families, and a new malware dubbed Numero.\n"CyberLock ransomware, developed using PowerShell, primarily focuses on encrypting specific files on the victim\'s system," Cisco Talos researcher Chetan',
+    ),
+    Article(
+        title="New Windows RAT Evades Detection for Weeks Using Corrupted DOS and PE Headers",
+        link="https://thehackernews.com/2025/05/new-windows-rat-evades-detection-for.html",
+        description="Cybersecurity researchers have taken the wraps off an unusual cyber attack that leveraged malware with corrupted DOS and PE headers, according to new findings from Fortinet.\nThe DOS (Disk Operating System) and PE (Portable Executable) headers are essential parts of a Windows PE file, providing information about the executable.\nWhile the DOS header makes the executable file backward compatible",
+    ),
+    Article(
+        title="DragonForce Exploits SimpleHelp Flaws to Deploy Ransomware Across Customer Endpoints",
+        link="https://thehackernews.com/2025/05/dragonforce-exploits-simplehelp-flaws.html",
+        description="The threat actors behind the DragonForce ransomware gained access to an unnamed Managed Service Provider's (MSP) SimpleHelp remote monitoring and management (RMM) tool, and then leveraged it to exfiltrate data and drop the locker on multiple endpoints.\nIt's believed that the attackers exploited a trio of security flaws in SimpleHelp (CVE-2024-57727, CVE-2024-57728, and CVE-2024-57726) that were",
+    ),
+    Article(
+        title="Chinese APT41 Exploits Google Calendar for Malware Command-and-Control Operations",
+        link="https://thehackernews.com/2025/05/chinese-apt41-exploits-google-calendar.html",
+        description='Google on Wednesday disclosed that the Chinese state-sponsored threat actor known as APT41 leveraged a malware called TOUGHPROGRESS that uses Google Calendar for command-and-control (C2).\nThe tech giant, which discovered the activity in late October 2024, said the malware was hosted on a compromised government website and was used to target multiple other government entities.\n"Misuse of cloud',
+    ),
+    Article(
+        title="Over 100,000 WordPress Sites at Risk from Critical CVSS 10.0 Vulnerability in Wishlist Plugin",
+        link="https://thehackernews.com/2025/05/over-100000-wordpress-sites-at-risk.html",
+        description="Cybersecurity researchers have disclosed a critical unpatched security flaw impacting TI WooCommerce Wishlist plugin for WordPress that could be exploited by unauthenticated attackers to upload arbitrary files.\nTI WooCommerce Wishlist, which has over 100,000 active installations, is a tool to allow e-commerce site customers to save their favorite products for later and share the lists on social",
+    ),
+    Article(
+        title="Iranian Hacker Pleads Guilty in $19 Million Robbinhood Ransomware Attack on Baltimore",
+        link="https://thehackernews.com/2025/05/iranian-hacker-pleads-guilty-in-19.html",
+        description="An Iranian national has pleaded guilty in the U.S. over his involvement in an international ransomware and extortion scheme involving the Robbinhood ransomware.\nSina Gholinejad (aka Sina Ghaaf), 37, and his co-conspirators are said to have breached the computer networks of various organizations in the United States and encrypted files with Robbinhood ransomware to demand Bitcoin ransom payments.",
+    ),
+    Article(
+        title="Czech Republic Blames China-Linked APT31 Hackers for 2022 Cyberattack",
+        link="https://thehackernews.com/2025/05/czech-republic-blames-china-linked.html",
+        description="The Czech Republic on Wednesday formally accused a threat actor associated with the People's Republic of China (PRC) of targeting its Ministry of Foreign Affairs.\nIn a public statement, the government said it identified China as the culprit behind a malicious campaign targeting one of the unclassified networks of the Czech Ministry of Foreign Affairs. The extent of the breach is presently not",
+    ),
+    Article(
+        title="New PumaBot Botnet Targets Linux IoT Devices to Steal SSH Credentials and Mine Crypto",
+        link="https://thehackernews.com/2025/05/new-pumabot-botnet-targets-linux-iot.html",
+        description='Embedded Linux-based Internet of Things (IoT) devices have become the target of a new botnet dubbed PumaBot.\nWritten in Go, the botnet is designed to conduct brute-force attacks against SSH instances to expand in size and scale and deliver additional malware to the infected hosts.\n"Rather than scanning the internet, the malware retrieves a list of targets from a command-and-control (C2) server',
+    ),
+    Article(
+        title="From Infection to Access: A 24-Hour Timeline of a Modern Stealer Campaign",
+        link="https://thehackernews.com/2025/05/from-infection-to-access-24-hour.html",
+        description="Stealer malware no longer just steals passwords. In 2025, it steals live sessions—and attackers are moving faster and more efficiently than ever.\nWhile many associate account takeovers with personal services, the real threat is unfolding in the enterprise. Flare’s latest research, The Account and Session Takeover Economy, analyzed over 20 million stealer logs and tracked attacker activity across",
+    ),
+    Article(
+        title="Mimo Hackers Exploit CVE-2025-32432 in Craft CMS to Deploy Cryptominer and Proxyware",
+        link="https://thehackernews.com/2025/05/mimo-hackers-exploit-cve-2025-32432-in.html",
+        description="A financially motivated threat actor has been observed exploiting a recently disclosed remote code execution flaw affecting the Craft Content Management System (CMS) to deploy multiple payloads, including a cryptocurrency miner, a loader dubbed Mimo Loader, and residential proxyware.\nThe vulnerability in question is CVE-2025-32432, a maximum severity flaw in Craft CMS that was patched in",
+    ),
+    Article(
+        title="How 'Browser-in-the-Middle' Attacks Steal Sessions in Seconds",
+        link="https://thehackernews.com/2025/05/how-browser-in-middle-attacks-steal.html",
+        description="Would you expect an end user to log on to a cybercriminal’s computer, open their browser, and type in their usernames and passwords? Hopefully not! But that’s essentially what happens if they fall victim to a Browser-in-the-Middle (BitM) attack.\nLike Man-in-the-Middle (MitM) attacks, BiTM sees criminals look to control the data flow between the victim’s computer and the target service, as",
+    ),
+    Article(
+        title="251 Amazon-Hosted IPs Used in Exploit Scan Targeting ColdFusion, Struts, and Elasticsearch",
+        link="https://thehackernews.com/2025/05/251-amazon-hosted-ips-used-in-exploit.html",
+        description='Cybersecurity researchers have disclosed details of a coordinated cloud-based scanning activity that targeted 75 distinct "exposure points" earlier this month.\nThe activity, observed by GreyNoise on May 8, 2025, involved as many as 251 malicious IP addresses that are all geolocated to Japan and hosted by Amazon.\n"These IPs triggered 75 distinct behaviors, including CVE exploits,',
+    ),
+    Article(
+        title="Apple Blocks $9 Billion in Fraud Over 5 Years Amid Rising App Store Threats",
+        link="https://thehackernews.com/2025/05/apple-blocks-9-billion-in-fraud-over-5.html",
+        description='Apple on Tuesday revealed that it prevented over $9 billion in fraudulent transactions in the last five years, including more than $2 billion in 2024 alone.\nThe company said the App Store is confronted by a wide range of threats that seek to defraud users in various ways, ranging from "deceptive apps designed to steal personal information to fraudulent payment schemes that attempt to exploit',
+    ),
+    Article(
+        title="New Self-Spreading Malware Infects Docker Containers to Mine Dero Cryptocurrency",
+        link="https://thehackernews.com/2025/05/new-self-spreading-malware-infects.html",
+        description="Misconfigured Docker API instances have become the target of a new malware campaign that transforms them into a cryptocurrency mining botnet.\nThe attacks, designed to mine for Dero currency, is notable for its worm-like capabilities to propagate the malware to other exposed Docker instances and rope them into an ever-growing horde of mining bots.\nKaspersky said it observed an unidentified threat",
+    ),
+    Article(
+        title="Cybercriminals Clone Antivirus Site to Spread Venom RAT and Steal Crypto Wallets",
+        link="https://thehackernews.com/2025/05/cybercriminals-clone-antivirus-site-to_4.html",
+        description='Cybersecurity researchers have disclosed a new malicious campaign that uses a fake website advertising antivirus software from Bitdefender to dupe victims into downloading a remote access trojan called Venom RAT.\nThe campaign indicates a "clear intent to target individuals for financial gain by compromising their credentials, crypto wallets, and potentially selling access to their systems," the',
+    ),
+    Article(
+        title="Russian Hackers Breach 20+ NGOs Using Evilginx Phishing via Fake Microsoft Entra Pages",
+        link="https://thehackernews.com/2025/05/russian-hackers-breach-20-ngos-using.html",
+        description='Microsoft has shed light on a previously undocumented cluster of malicious activity originating from a Russia-affiliated threat actor dubbed Void Blizzard (aka Laundry Bear) that it said is attributed to "worldwide cloud abuse."\nActive since at least April 2024, the hacking group is linked to espionage operations mainly targeting organizations that are important to Russian government objectives,',
+    ),
+    Article(
+        title="AI Agents and the Non‑Human Identity Crisis: How to Deploy AI\u202fMore Securely\u202fat\u202fScale",
+        link="https://thehackernews.com/2025/05/ai-agents-and-nonhuman-identity-crisis.html",
+        description="Artificial intelligence is driving a massive shift in enterprise productivity, from GitHub\u202fCopilot’s code completions to chatbots that mine internal knowledge bases for instant answers. Each new agent must authenticate to other services, quietly swelling the population of non‑human identities (NHIs) across corporate clouds.\nThat population is already overwhelming the enterprise: many companies",
+    ),
+    Article(
+        title="Employees Searching Payroll Portals on Google Tricked Into Sending Paychecks to Hackers",
+        link="https://thehackernews.com/2025/05/employees-searching-payroll-portals-on.html",
+        description="Threat hunters have exposed a novel campaign that makes use of search engine optimization (SEO) poisoning techniques to target employee mobile devices and facilitate payroll fraud.\nThe activity, first detected by ReliaQuest in May 2025 targeting an unnamed customer in the manufacturing sector, is characterized by the use of fake login pages to access the employee payroll portal and redirect",
+    ),
+    Article(
+        title="Hackers Are Calling Your Office: FBI Alerts Law Firms to Luna Moth’s Stealth Phishing Campaign",
+        link="https://thehackernews.com/2025/05/hackers-are-calling-your-office-fbi.html",
+        description='The U.S. Federal Bureau of Investigation (FBI) has warned of social engineering attacks mounted by a criminal extortion actor known as Luna Moth targeting law firms over the past two years.\nThe campaign leverages "information technology (IT) themed social engineering calls, and callback phishing emails, to gain remote access to systems or devices and steal sensitive data to extort the victims,"',
+    ),
+    Article(
+        title="Russia-Linked Hackers Target Tajikistan Government with Weaponized Word Documents",
+        link="https://thehackernews.com/2025/05/russia-linked-hackers-target-tajikistan.html",
+        description="The Russia-aligned threat actor known as TAG-110 has been observed conducting a spear-phishing campaign targeting Tajikistan using macro-enabled Word templates as an initial payload.\nThe attack chain is a departure from the threat actor's previously documented use of an HTML Application (.HTA) loader dubbed HATVIBE, Recorded Future's Insikt Group said in an analysis.\n\"Given TAG-110's historical",
+    ),
+    Article(
+        title="Over 70 Malicious npm and VS Code Packages Found Stealing Data and Crypto",
+        link="https://thehackernews.com/2025/05/over-70-malicious-npm-and-vs-code.html",
+        description="As many as 60 malicious npm packages have been discovered in the package registry with malicious functionality to harvest hostnames, IP addresses, DNS servers, and user directories to a Discord-controlled endpoint.\nThe packages, published under three different accounts, come with an install‑time script that's triggered during npm install, Socket security researcher Kirill Boychenko said in a",
+    ),
+    Article(
+        title="CISO's Guide To Web Privacy Validation And Why It's Important",
+        link="https://thehackernews.com/2025/05/cisos-guide-to-web-privacy-validation.html",
+        description="Are your web privacy controls protecting your users, or just a box-ticking exercise? This CISO’s guide provides a practical roadmap for continuous web privacy validation that’s aligned with real-world practices.\n– Download the full guide here.\n\n\nWeb Privacy: From Legal Requirement to Business Essential\nAs regulators ramp up enforcement and users grow more privacy-aware, CISOs face a mounting",
+    ),
+    Article(
+        title="⚡ Weekly Recap: APT Campaigns, Browser Hijacks, AI Malware, Cloud Breaches and Critical CVEs",
+        link="https://thehackernews.com/2025/05/weekly-recap-apt-campaigns-browser.html",
+        description="Cyber threats don't show up one at a time anymore. They’re layered, planned, and often stay hidden until it’s too late.\nFor cybersecurity teams, the key isn’t just reacting to alerts—it’s spotting early signs of trouble before they become real threats. This update is designed to deliver clear, accurate insights based on real patterns and changes we can verify. With today’s complex systems, we",
+    ),
+    Article(
+        title="Hackers Use Fake VPN and Browser NSIS Installers to Deliver Winos 4.0 Malware",
+        link="https://thehackernews.com/2025/05/hackers-use-fake-vpn-and-browser-nsis.html",
+        description='Cybersecurity researchers have disclosed a malware campaign that uses fake software installers masquerading as popular tools like LetsVPN and QQ Browser to deliver the Winos 4.0 framework.\nThe campaign, first detected by Rapid7 in February 2025, involves the use of a multi-stage, memory-resident loader called Catena.\n"Catena uses embedded shellcode and configuration switching logic to stage',
+    ),
+    Article(
+        title="Hackers Use TikTok Videos to Distribute Vidar and StealC Malware via ClickFix Technique",
+        link="https://thehackernews.com/2025/05/hackers-use-tiktok-videos-to-distribute.html",
+        description='The malware known as Latrodectus has become the latest to embrace the widely-used social engineering technique called ClickFix as a distribution vector.\n"The ClickFix technique is particularly risky because it allows the malware to execute in memory rather than being written to disk," Expel said in a report shared with The Hacker News. "This removes many opportunities for browsers or security',
+    ),
+    Article(
+        title="ViciousTrap Uses Cisco Flaw to Build Global Honeypot from 5,300 Compromised Devices",
+        link="https://thehackernews.com/2025/05/vicioustrap-uses-cisco-flaw-to-build.html",
+        description="Cybersecurity researchers have disclosed that a threat actor codenamed ViciousTrap has compromised nearly 5,300 unique network edge devices across 84 countries and turned them into a honeypot-like network.\nThe threat actor has been observed exploiting a critical security flaw impacting Cisco Small Business RV016, RV042, RV042G, RV082, RV320, and RV325 Routers (CVE-2023-20118) to corral them into",
+    ),
+    Article(
+        title="300 Servers and €3.5M Seized as Europol Strikes Ransomware Networks Worldwide",
+        link="https://thehackernews.com/2025/05/300-servers-and-35m-seized-as-europol.html",
+        description='As part of the latest "season" of Operation Endgame, a coalition of law enforcement agencies have taken down about 300 servers worldwide, neutralized 650 domains, and issued arrest warrants against 20 targets.\nOperation Endgame, first launched in May 2024, is an ongoing law enforcement operation targeting services and infrastructures assisting in or directly providing initial or consolidating',
+    ),
+    Article(
+        title="HPE Issues Security Patch for StoreOnce Bug Allowing Remote Authentication Bypass",
+        link="https://thehackernews.com/2025/06/hpe-issues-security-patch-for-storeonce.html",
+        description='Hewlett Packard Enterprise (HPE) has released security updates to address as many as eight vulnerabilities in its StoreOnce data backup and deduplication solution that could result in an authentication bypass and remote code execution.\n"These vulnerabilities could be remotely exploited to allow remote code execution, disclosure of information, server-side request forgery, authentication bypass,',
+    ),
     Article(
         link="https://thehackernews.com/2025/05/malicious-npm-packages-infect-3200.html",
         title="Malicious npm Packages Infect 3,200+ Cursor Users With Backdoor, Steal Credentials",
         description="Cybersecurity researchers have flagged three malicious npm packages that are designed to target the Apple macOS version of Cursor, a popular artificial intelligence (AI)-powered source code editor.\n\"Disguised as developer tools offering 'the cheapest Cursor API,' these packages steal user credentials, fetch an encrypted payload from threat actor-controlled infrastructure, overwrite Cursor's",
     ),
+    Article(
+        title="Microsoft OneDrive File Picker Flaw Grants Apps Full Cloud Access — Even When Uploading Just One File",
+        link="https://thehackernews.com/2025/05/microsoft-onedrive-file-picker-flaw.html",
+        description="Cybersecurity researchers have discovered a security flaw in Microsoft's OneDrive File Picker that, if successfully exploited, could allow websites to access a user's entire cloud storage content, as opposed to just the files selected for upload via the tool.\n\"This stems from overly broad OAuth scopes and misleading consent screens that fail to clearly explain the extent of access being granted,",
+    ),
+}
+
+
+RELEVANT_ARTICLES = {
     Article(
         link="https://thehackernews.com/2025/05/new-chrome-vulnerability-enables-cross.html",
         title="New Chrome Vulnerability Enables Cross-Origin Data Leak via Loader Referrer Policy",
@@ -504,5 +739,25 @@ RELEVANT_ARTICLES = {
         link="https://thehackernews.com/2025/05/microsoft-fixes-78-flaws-5-zero-days.html",
         title="Microsoft Fixes 78 Flaws, 5 Zero-Days Exploited; CVSS 10 Bug Impacts Azure DevOps Server",
         description="Microsoft on Tuesday shipped fixes to address a total of 78 security flaws across its software lineup, including a set of five zero-days that have come under active exploitation in the wild.\nOf the 78 flaws resolved by the tech giant, 11 are rated Critical, 66 are rated Important, and one is rated Low in severity. Twenty-eight of these vulnerabilities lead to remote code execution, 21 of them",
+    ),
+    Article(
+        title="New Chrome Zero-Day Actively Exploited; Google Issues Emergency Out-of-Band Patch",
+        link="https://thehackernews.com/2025/06/new-chrome-zero-day-actively-exploited.html",
+        description='Google on Monday released out-of-band fixes to address three security issues in its Chrome browser, including one that it said has come under active exploitation in the wild.\nThe high-severity flaw is being tracked as CVE-2025-5419 (CVSS score: 8.8), and has been flagged&nbsp;as an out-of-bounds read and write vulnerability in the V8 JavaScript and WebAssembly engine.\n"Out-of-bounds read and',
+    ),
+    Article(
+        title="Qualcomm Fixes 3 Zero-Days Used in Targeted Android Attacks via Adreno GPU",
+        link="https://thehackernews.com/2025/06/qualcomm-fixes-3-zero-days-used-in.html",
+        description="Qualcomm has shipped security updates to address three zero-day vulnerabilities that it said have been exploited in limited, targeted attacks in the wild.\nThe flaws in question, which were responsibly disclosed to the company by the Google Android Security team, are listed below -\n\nCVE-2025-21479 and CVE-2025-21480 (CVSS score: 8.6) - Two incorrect authorization vulnerabilities in the Graphics",
+    ),
+    Article(
+        title="New Linux Flaws Allow Password Hash Theft via Core Dumps in Ubuntu, RHEL, Fedora",
+        link="https://thehackernews.com/2025/05/new-linux-flaws-allow-password-hash.html",
+        description="Two information disclosure flaws have been identified in apport and systemd-coredump, the core dump handlers in Ubuntu, Red Hat Enterprise Linux, and Fedora, according to the Qualys Threat Research Unit (TRU).\nTracked as CVE-2025-5054 and CVE-2025-4598, both vulnerabilities are race condition bugs that could enable a local attacker to obtain access to access sensitive information. Tools like",
+    ),
+    Article(
+        title="PostgreSQL Vulnerability Exploited Alongside BeyondTrust Zero-Day in Targeted Attacks",
+        link="https://thehackernews.com/2025/02/postgresql-vulnerability-exploited.html",
+        description="Threat actors who were behind the exploitation of a zero-day vulnerability in BeyondTrust Privileged Remote Access (PRA) and Remote Support (RS) products in December 2024 likely also exploited a previously unknown SQL injection flaw in PostgreSQL, according to findings from Rapid7. The vulnerability, tracked as CVE-2025-1094 (CVSS score: 8.1), affects the PostgreSQL interactive tool psql.",
     ),
 }

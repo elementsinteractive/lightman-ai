@@ -5,11 +5,11 @@ from concurrent.futures import ThreadPoolExecutor
 from hackerman_ai.ai.base.agent import BaseAgent
 from hackerman_ai.ai.gemini.agent import GeminiAgent
 from hackerman_ai.ai.openai.agent import OpenAIAgent
-from hackerman_ai.article.models import Article, ArticlesList
+from hackerman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
 from hackerman_ai.core.settings import settings
 from hackerman_ai.main import _classify_articles
 
-from eval.constants import EVAL_WORKERS, MAX_WORKERS
+from eval.constants import EVAL_WORKERS, MAX_WORKERS, MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
 from eval.utils import ClassifiedArticleResults
 
 logger = logging.getLogger("eval")
@@ -56,6 +56,31 @@ class Classifier:
         )
         time_delta = round(time.perf_counter() - time_before, 2)
 
+        self._check_results_integrity(results)
+
+        correctly_found_articles = set()
+        false_positives = set()
+
+        articles_above_threshold = results.get_articles_with_score_gte_threshold(self.score)
+        for article in articles_above_threshold:
+            if article in self.relevant_articles:
+                correctly_found_articles.add(article)
+            elif article in self.non_relevant_articles:
+                false_positives.add(article)
+            else:
+                logger.error("%s is not present either in relevant_articles nor in non_relevant_articles", article)
+
+        false_negatives = self._get_false_negatives(correctly_found_articles, results)
+        return ClassifiedArticleResults(
+            articles=articles_above_threshold,
+            correctly_found_articles=correctly_found_articles,
+            false_positives=false_positives,
+            false_negatives=false_negatives,
+            total_relevant_articles=len(self.relevant_articles),
+            time_delta=time_delta,
+        )
+
+    def _check_results_integrity(self, results: SelectedArticlesList) -> None:
         if len(results.articles) > len(self.relevant_articles) + len(self.non_relevant_articles):
             # Sometimes, some LLM models fail to return all the articles
             # even if explicitly told so
@@ -72,18 +97,9 @@ class Classifier:
             )
             logger.error("Got less articles than expected! Total: %s. articles: %s", diff_count, missing_articles)
 
-        correctly_found_articles = set()
-        false_positives = set()
-
-        articles_above_threshold = results.get_articles_with_score_gte_threshold(self.score)
-        for article in articles_above_threshold:
-            if article in self.relevant_articles:
-                correctly_found_articles.add(article)
-            elif article in self.non_relevant_articles:
-                false_positives.add(article)
-            else:
-                logger.error("%s is not present either in relevant_articles nor in non_relevant_articles", article)
-
+    def _get_false_negatives(
+        self, correctly_found_articles: set[SelectedArticle], results: SelectedArticlesList
+    ) -> set[SelectedArticle]:
         false_negatives_no_score = set(self.relevant_articles).difference(correctly_found_articles)
 
         # We cannot use here `set(results.articles).insterection(false_negatives_no_score)` to retrieve
@@ -93,17 +109,24 @@ class Classifier:
         # selected_article_object_set & article_object_set will return `SelectedArticle` object,
         # as per Python implementation it will pick up the one that's optimum to select,
         # wich can be an instance of `Article` instead.
-        # Because of this, we have to manually craft the set.
-        false_negatives = {article for article in results.articles if article in false_negatives_no_score}
-
-        return ClassifiedArticleResults(
-            articles=articles_above_threshold,
-            correctly_found_articles=correctly_found_articles,
-            false_positives=false_positives,
-            false_negatives=false_negatives,
-            total_relevant_articles=len(self.relevant_articles),
-            time_delta=time_delta,
-        )
+        # Because of this, we have to manually craft the set
+        false_negatives: set[SelectedArticle] = {
+            article for article in results.articles if article in false_negatives_no_score
+        }
+        if false_negatives_diff := false_negatives_no_score.difference(false_negatives):
+            # The LLM did not return all the articles
+            # We are going to add it to the set,
+            # even if we don't have the computed values
+            for article in false_negatives_diff:
+                false_negatives.add(
+                    SelectedArticle(
+                        title=article.title,
+                        link=article.link,
+                        why_is_relevant=MISSED_ARTICLE_REASON,
+                        relevance_score=MISSED_ARTICLE_RELEVANCE_SCORE,
+                    )
+                )
+        return false_negatives
 
     @staticmethod
     def _can_run_in_parallel(agent: BaseAgent) -> bool:
