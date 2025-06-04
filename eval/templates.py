@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -17,6 +18,7 @@ class ResultsFileBuilder:
         samples: int,
         prompt: str,
         score: int,
+        logger: logging.Logger | None = None,
     ) -> None:
         self.results_metrics = results_metrics
         self.tag = tag
@@ -26,6 +28,7 @@ class ResultsFileBuilder:
         self.prompt = prompt
         self.score = score
         self.results_dir = Path(RESULTS_DIR)
+        self.logger = logger or logging.getLogger("eval")
 
     @property
     def file_name(self) -> str:
@@ -49,6 +52,8 @@ class ResultsFileBuilder:
 
         with open(self.file_name, "w") as fp:
             fp.write(self.content)
+
+        self.logger.warning("\nSaved contents to file %s", self.file_name)
 
     def _get_summary(self) -> str:
         return f"""
