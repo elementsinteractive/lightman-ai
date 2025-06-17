@@ -8,8 +8,6 @@ class Settings(BaseSettings):
         super().__init__(*args, **kwargs)
 
     OPENAI_ENCODING: str = "cl100k_base"
-    PROMPT_ITERATIONS: int = 3
-    RELEVANCE_SCORE_THRESHOLD: int = 8
     PARALLEL_WORKERS: int = 5
 
 
