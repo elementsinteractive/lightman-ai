@@ -1,6 +1,9 @@
 import os
 import pathlib
+from collections.abc import Iterator
+from contextlib import contextmanager
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 from dotenv import load_dotenv
@@ -548,3 +551,11 @@ def test_prompt(thn_news: ArticlesList) -> str:
                     Must meet all criteria, use only text content
                   """
     return merge_prompt_with_articles(prompt, thn_news)
+
+
+@contextmanager
+def patch_config_file(content: str = "", exists: bool = True) -> Iterator[Any]:
+    with patch("pathlib.Path.read_text") as m_content, patch("pathlib.Path.exists") as m_exists:
+        m_content.return_value = content
+        m_exists.return_value = exists
+        yield m_content
