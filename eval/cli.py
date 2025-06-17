@@ -2,7 +2,6 @@ import click
 from dotenv import load_dotenv
 from hackerman_ai.ai.prompts import PROMPTS_CHOICES
 from hackerman_ai.ai.utils import MODEL_CHOICES
-from hackerman_ai.core.settings import settings
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
 from eval.constants import DEFAULT_MODEL
@@ -15,7 +14,7 @@ from eval.evaluator import eval
     "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default=DEFAULT_MODEL
 )
 @click.option("--iterations", type=int, help=("Number of times that the prompt will run"), default=1)
-@click.option("--score", type=int, help=("Minimum score to consider an article to be relevant"), default=None)
+@click.option("--score", type=int, help=("Minimum score to consider an article to be relevant"), default=8)
 @click.option(
     "--samples",
     type=int,
@@ -35,7 +34,7 @@ def run(model: str, iterations: int, score: int, samples: int, prompt: str, tag:
     validate_positive_int("iterations", iterations)
 
     eval(
-        score_threshold=score or settings.RELEVANCE_SCORE_THRESHOLD,
+        score_threshold=score,
         iterations=iterations,
         relevant_articles=RELEVANT_ARTICLES,
         non_relevant_articles=NON_RELEVANT_ARTICLES,

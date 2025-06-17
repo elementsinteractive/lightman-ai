@@ -2,7 +2,7 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from typing import Any
 
-from hackerman_ai.ai.base.exceptions import BaseHackermanError
+from hackerman_ai.core.exceptions import BaseHackermanError
 
 
 class BaseGeminiError(BaseHackermanError): ...
