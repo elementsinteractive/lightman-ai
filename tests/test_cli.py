@@ -22,8 +22,10 @@ class TestCli:
                 "1",
                 "--iterations",
                 "2",
-                "--config",
+                "--config-path",
                 "config-path",
+                "--config",
+                "my-config",
             ],
         )
 
@@ -36,7 +38,7 @@ class TestCli:
             iterations=2,
         )
         assert m_config.call_count == 1
-        assert m_config.call_args == call("config-path")
+        assert m_config.call_args == call(config_section="my-config", path="config-path")
 
     def test_invalid_config(self) -> None:
         runner = CliRunner()
