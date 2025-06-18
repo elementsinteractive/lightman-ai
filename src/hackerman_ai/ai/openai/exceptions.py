@@ -4,7 +4,7 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from typing import Any, override
 
-from hackerman_ai.ai.base.exceptions import BaseHackermanError
+from hackerman_ai.core.exceptions import BaseHackermanError
 from pydantic_ai.exceptions import ModelHTTPError
 
 from openai import RateLimitError
