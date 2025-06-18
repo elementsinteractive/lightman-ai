@@ -32,14 +32,6 @@ def run(model: str, prompt: str, iterations: int | None, score: int | None, conf
 
     Holds no logic. It calls the main method and returns 0 when succesful .
     """
-
-    def validate_positive_int_field(field: str, value: int | None) -> None:
-        if value is not None and not value > 0:
-            raise click.BadParameter(f"`{field}` must be > 0.")
-
-    validate_positive_int_field("iterations", iterations)
-    validate_positive_int_field("score", score)
-
     try:
         config_from_file = FileConfig.get_config_from_file(config)
         final_config = FinalConfig.init_from_dict(

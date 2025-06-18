@@ -38,28 +38,6 @@ class TestCli:
         assert m_config.call_count == 1
         assert m_config.call_args == call("config-path")
 
-    @patch("hackerman_ai.cli.hackerman")
-    def test_iterations_must_be_positive(self, m_hackerman: Mock) -> None:
-        runner = CliRunner()
-        result = runner.invoke(
-            cli.run,
-            ["--iterations", "0", "--score", "1"],
-        )
-        assert result.exit_code == 2
-        assert "Error: Invalid value: `iterations` must be > 0." in result.output
-        assert m_hackerman.call_count == 0
-
-    @patch("hackerman_ai.cli.hackerman")
-    def test_score_must_be_positive(self, m_hackerman: Mock) -> None:
-        runner = CliRunner()
-        result = runner.invoke(
-            cli.run,
-            ["--score", "0", "--iterations", "1"],
-        )
-        assert result.exit_code == 2
-        assert "Error: Invalid value: `score` must be > 0." in result.output
-        assert m_hackerman.call_count == 0
-
     def test_invalid_config(self) -> None:
         runner = CliRunner()
         with patch("hackerman_ai.cli.hackerman") as m_hackerman, patch_config_file(content="") as m_config:
