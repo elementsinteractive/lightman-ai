@@ -4,7 +4,7 @@ from typing import Any, Self
 
 import tomlkit
 from hackerman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict, PositiveInt, ValidationError
 
 CONFIG_FILE = "hackerman.toml"
 
@@ -12,10 +12,10 @@ logger = logging.getLogger("hackerman")
 
 
 class FinalConfig(BaseModel):
-    iterations: int
+    iterations: PositiveInt
     prompt: str
     model: str
-    score_threshold: int
+    score_threshold: PositiveInt
 
     @classmethod
     def init_from_dict(cls, data: dict[str, Any]) -> Self:
