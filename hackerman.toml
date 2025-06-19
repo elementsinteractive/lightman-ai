@@ -1,0 +1,12 @@
+[default]
+iterations = 1
+model = 'gpt-4.1'
+score_threshold = 8
+prompt = 'eval'
+
+[eval]
+iterations = 1
+model = 'gpt-4.1'
+score_threshold = 8
+prompt = 'eval'
+samples = 3
