@@ -93,3 +93,13 @@ class TestFinalConfig:
             "as an integer,`prompt`: Field required,`model`: Field required,"
             "`score_threshold`: Field required]"
         )
+
+    def test_iterations_must_be_positive_int(self) -> None:
+        with pytest.raises(InvalidConfigError) as exc:
+            FinalConfig.init_from_dict({"iterations": 0})
+        assert "`iterations`: Input should be greater than 0" in exc.value.args[0]
+
+    def test_score_must_be_positive_int(self) -> None:
+        with pytest.raises(InvalidConfigError) as exc:
+            FinalConfig.init_from_dict({"score_threshold": 0})
+        assert "`score_threshold`: Input should be greater than 0" in exc.value.args[0]
