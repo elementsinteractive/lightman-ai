@@ -2,16 +2,13 @@ from unittest.mock import patch
 
 import pytest
 from hackerman_ai.ai.gemini.agent import GeminiAgent
+from hackerman_ai.ai.gemini.exceptions import GeminiError
 from hackerman_ai.article.models import SelectedArticlesList
+from tests.utils import patch_agent_raise_exception
 
 
 class TestGeminiAgent:
     agent = GeminiAgent("gemini-2.5-flash-preview-04-17")
-
-    @pytest.mark.vcr
-    def test__run_prompt(self, test_prompt: str) -> None:
-        result = self.agent._run_prompt(test_prompt)
-        assert isinstance(result, SelectedArticlesList)
 
     def test__run_prompt_multiple_times(self, test_prompt: str) -> None:
         """Test that we run the prompt as many times as we specify, and we receive back a LIST of `SelectedArticlesList`."""
@@ -23,3 +20,7 @@ class TestGeminiAgent:
         assert isinstance(result, list)
         assert len(result) == 3
         assert all(isinstance(x, SelectedArticlesList) for x in result)
+
+    def test_gemini_exception(self) -> None:
+        with pytest.raises(GeminiError), patch_agent_raise_exception():
+            self.agent.get_prompt_result("")
