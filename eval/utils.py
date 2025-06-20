@@ -4,6 +4,16 @@ from dataclasses import dataclass
 from decimal import Decimal
 
 from hackerman_ai.article.models import SelectedArticle
+from hackerman_ai.core.config import FileConfig, FinalConfig
+from pydantic import PositiveInt
+
+
+class EvalConfig(FinalConfig):
+    samples: PositiveInt
+
+
+class EvalFileConfig(FileConfig):
+    samples: int | None = None
 
 
 @dataclass
