@@ -5,8 +5,8 @@ from typing import Any
 from unittest.mock import patch
 
 import pytest
-from hackerman_ai.ai.prompts import merge_prompt_with_articles
 from hackerman_ai.article.models import ArticlesList
+from hackerman_ai.main import _merge_prompt_with_articles
 from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
 
 
@@ -525,7 +525,7 @@ def test_prompt(thn_news: ArticlesList) -> str:
                     Use only listed tech, make no assumptions
                     Must meet all criteria, use only text content
                   """
-    return merge_prompt_with_articles(prompt, thn_news)
+    return _merge_prompt_with_articles(prompt, thn_news)
 
 
 @contextmanager
