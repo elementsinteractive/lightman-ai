@@ -1,43 +1,18 @@
 import os
-import pathlib
 from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Any
 from unittest.mock import patch
 
 import pytest
-from dotenv import load_dotenv
 from hackerman_ai.ai.prompts import merge_prompt_with_articles
 from hackerman_ai.article.models import ArticlesList
 from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
 
-RECORD_MODE = os.environ.get("RECORD") or False
-
 
 def pytest_configure() -> None:
-    if RECORD_MODE:
-        load_dotenv()
-    else:
-        os.environ["OPENAI_API_KEY"] = "dummy"
-        os.environ["GOOGLE_API_KEY"] = "dummy"
-
-
-@pytest.fixture(scope="module")
-def vcr_cassette_dir(request: Any) -> Any:
-    return str(pathlib.Path(__file__).parent / "cassettes")
-
-
-@pytest.fixture(scope="session")
-def vcr_config() -> dict[str, Any]:
-    return {
-        "match_on": ("method", "path", "query", "body"),
-        "record_mode": "new_episodes" if RECORD_MODE else "none",
-        "filter_headers": [
-            ("authorization", "CENSORED"),
-            ("x-goog-api-key", "CENSORED"),
-        ],
-        "decode_compressed_response": True,
-    }
+    os.environ["OPENAI_API_KEY"] = "dummy"
+    os.environ["GOOGLE_API_KEY"] = "dummy"
 
 
 @pytest.fixture
