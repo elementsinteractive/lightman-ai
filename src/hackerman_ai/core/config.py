@@ -44,7 +44,7 @@ class FileConfig(BaseModel):
         return Path(path)
 
     @classmethod
-    def get_config_from_file(cls, path: str | None = None) -> Self:
+    def get_config_from_file(cls, *, config_section: str, path: str | None = None) -> Self:
         fpath = cls.get_fpath(path)
         if not fpath.exists():
             if path:
@@ -56,4 +56,4 @@ class FileConfig(BaseModel):
         content = fpath.read_text()
         parsed_content = tomlkit.parse(content)
 
-        return cls(**parsed_content.get("settings", {}))
+        return cls(**parsed_content.get(config_section, {}))
