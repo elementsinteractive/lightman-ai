@@ -2,7 +2,7 @@ import logging
 
 import click
 from hackerman_ai.ai.utils import MODEL_CHOICES
-from hackerman_ai.constants import DEFAULT_CONFIG_SECTION
+from hackerman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
 from hackerman_ai.core.config import FileConfig, FinalConfig, PromptConfig
 from hackerman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
 from hackerman_ai.main import hackerman
@@ -17,6 +17,12 @@ def entry_point() -> None:
 
 @entry_point.command()
 @click.option("--model", type=click.Choice(MODEL_CHOICES), help=("Which model to use"))
+@click.option(
+    "--prompt-file",
+    type=str,
+    default=DEFAULT_CONFIG_FILE,
+    help=(f"Location of the config file containing the prompts. Defaults to `{DEFAULT_CONFIG_FILE}`."),
+)
 @click.option("--prompt", type=str, help=("Which prompt to use"))
 @click.option("--iterations", type=int, help=("The number of iterations that the agent will run"), default=None)
 @click.option(
@@ -25,10 +31,26 @@ def entry_point() -> None:
     help=("The minimum score relevance that an article needs to have to be considered relevant"),
     default=None,
 )
-@click.option("--config-path", type=str, default=None, help=("The config file path"))
-@click.option("--config", type=str, default=DEFAULT_CONFIG_SECTION, help=("The config settings to use"))
+@click.option(
+    "--config-file",
+    type=str,
+    default=DEFAULT_CONFIG_FILE,
+    help=(f"The config file path. Defaults to `{DEFAULT_CONFIG_FILE}`."),
+)
+@click.option(
+    "--config",
+    type=str,
+    default=DEFAULT_CONFIG_SECTION,
+    help=(f"The config settings to use. Defaults to `{DEFAULT_CONFIG_SECTION}`."),
+)
 def run(
-    model: str, prompt: str, iterations: int | None, score: int | None, config_path: str | None, config: str
+    model: str,
+    prompt: str,
+    prompt_file: str,
+    iterations: int | None,
+    score: int | None,
+    config_file: str,
+    config: str,
 ) -> int:
     """
     Entrypoint of the application.
@@ -36,8 +58,8 @@ def run(
     Holds no logic. It calls the main method and returns 0 when succesful .
     """
     try:
-        prompt_config = PromptConfig.get_config_from_file(path=config_path)
-        config_from_file = FileConfig.get_config_from_file(config_section=config, path=config_path)
+        prompt_config = PromptConfig.get_config_from_file(path=prompt_file)
+        config_from_file = FileConfig.get_config_from_file(config_section=config, path=config_file)
         final_config = FinalConfig.init_from_dict(
             data={
                 "model": model or config_from_file.model,
@@ -47,10 +69,8 @@ def run(
             }
         )
         prompt_text = prompt_config.get_prompt(final_config.prompt)
-    except (InvalidConfigError, PromptNotFoundError) as err:
+    except (InvalidConfigError, PromptNotFoundError, ConfigNotFoundError) as err:
         raise click.BadParameter(err.args[0]) from None
-    except ConfigNotFoundError:
-        raise click.BadParameter("Config file `%s` not found!" % config_path) from None
 
     relevant_articles = hackerman(
         iterations=final_config.iterations,
