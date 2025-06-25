@@ -1,6 +1,7 @@
 import click
 from dotenv import load_dotenv
 from hackerman_ai.ai.utils import MODEL_CHOICES
+from hackerman_ai.constants import DEFAULT_CONFIG_FILE
 from hackerman_ai.core.config import PromptConfig
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
@@ -24,7 +25,18 @@ from eval.utils import EvalConfig, EvalFileConfig
     ),
 )
 @click.option("--prompt", type=str, help=("Which prompt to use."))
-@click.option("--config-path", type=str, default=None, help=("The config file path"))
+@click.option(
+    "--prompt-file",
+    type=str,
+    default=DEFAULT_CONFIG_FILE,
+    help=(f"Location of the config file containing the prompts. Defaults to `{DEFAULT_CONFIG_FILE}`."),
+)
+@click.option(
+    "--config-file",
+    type=str,
+    default=DEFAULT_CONFIG_FILE,
+    help=(f"The config file path.  Defaults to `{DEFAULT_CONFIG_FILE}`."),
+)
 @click.option("--config", type=str, default=DEFAULT_EVAL_CONFIG_SECTION, help=("The config settings to use"))
 def run(
     model: str,
@@ -33,11 +45,12 @@ def run(
     samples: int,
     prompt: str,
     config: str,
-    config_path: str | None,
+    config_file: str,
+    prompt_file: str,
     tag: str | None = None,
 ) -> None:
-    config_from_file = EvalFileConfig.get_config_from_file(config_section=config, path=config_path)
-    configured_prompts = PromptConfig.get_config_from_file(path=config_path)
+    config_from_file = EvalFileConfig.get_config_from_file(config_section=config, path=config_file)
+    configured_prompts = PromptConfig.get_config_from_file(path=prompt_file)
     eval_config = EvalConfig.init_from_dict(
         {
             "model": model or config_from_file.model,
@@ -47,6 +60,7 @@ def run(
             "samples": samples or config_from_file.samples,
         }
     )
+
     eval(
         score_threshold=eval_config.score_threshold,
         iterations=eval_config.iterations,
