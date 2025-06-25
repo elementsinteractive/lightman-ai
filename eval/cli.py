@@ -1,10 +1,10 @@
 import click
 from dotenv import load_dotenv
-from hackerman_ai.ai.prompts import PROMPTS_CHOICES
 from hackerman_ai.ai.utils import MODEL_CHOICES
+from hackerman_ai.core.config import PromptConfig
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
-from eval.constants import DEFAULT_MODEL
+from eval.constants import DEFAULT_EVAL_CONFIG_SECTION, DEFAULT_MODEL
 from eval.evaluator import eval
 from eval.utils import EvalConfig, EvalFileConfig
 
@@ -23,10 +23,22 @@ from eval.utils import EvalConfig, EvalFileConfig
         "Number of times the evaluation will run with all its iterations. It will calculate averages for the results. "
     ),
 )
-@click.option("--prompt", type=click.Choice(PROMPTS_CHOICES), help=("Which prompt to use."))
-def run(model: str, iterations: int, score: int, samples: int, prompt: str, tag: str | None = None) -> None:
-    config_from_file = EvalFileConfig.get_config_from_file(config_section="eval")
-    config = EvalConfig.init_from_dict(
+@click.option("--prompt", type=str, help=("Which prompt to use."))
+@click.option("--config-path", type=str, default=None, help=("The config file path"))
+@click.option("--config", type=str, default=DEFAULT_EVAL_CONFIG_SECTION, help=("The config settings to use"))
+def run(
+    model: str,
+    iterations: int,
+    score: int,
+    samples: int,
+    prompt: str,
+    config: str,
+    config_path: str | None,
+    tag: str | None = None,
+) -> None:
+    config_from_file = EvalFileConfig.get_config_from_file(config_section=config, path=config_path)
+    configured_prompts = PromptConfig.get_config_from_file(path=config_path)
+    eval_config = EvalConfig.init_from_dict(
         {
             "model": model or config_from_file.model,
             "prompt": prompt or config_from_file.prompt,
@@ -36,14 +48,14 @@ def run(model: str, iterations: int, score: int, samples: int, prompt: str, tag:
         }
     )
     eval(
-        score_threshold=config.score_threshold,
-        iterations=config.iterations,
+        score_threshold=eval_config.score_threshold,
+        iterations=eval_config.iterations,
         relevant_articles=RELEVANT_ARTICLES,
         non_relevant_articles=NON_RELEVANT_ARTICLES,
-        samples=config.samples,
+        samples=eval_config.samples,
         tag=tag,
-        model=config.model,
-        prompt=config.prompt,
+        model=eval_config.model,
+        prompt=configured_prompts.get_prompt(eval_config.prompt),
     )
 
 
