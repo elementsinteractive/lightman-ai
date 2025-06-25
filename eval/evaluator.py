@@ -1,6 +1,5 @@
 import logging
 
-from hackerman_ai.ai.prompts import get_prompt
 from hackerman_ai.ai.utils import get_agent_instance_from_model_name
 from hackerman_ai.article.models import Article
 
@@ -21,10 +20,9 @@ def eval(
     tag: str | None,
     model: str,
 ) -> None:
-    full_prompt = get_prompt(prompt)
     classified_articles = Classifier(
         agent=get_agent_instance_from_model_name(model),
-        prompt=full_prompt,
+        prompt=prompt,
         score=score_threshold,
         iterations=iterations,
         relevant_articles=relevant_articles,
@@ -39,7 +37,7 @@ def eval(
         model=model,
         iterations=iterations,
         samples=samples,
-        prompt=full_prompt,
+        prompt=prompt,
         score=score_threshold,
         logger=logger,
     )
