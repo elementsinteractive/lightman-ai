@@ -16,7 +16,7 @@ db.sqlite3
 # IntelliJ
 out/
 
-# JIRA plugin
+# SERVICE_DESK plugin
 atlassian-ide-plugin.xml
 
 # Python #
