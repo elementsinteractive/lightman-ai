@@ -1,6 +1,7 @@
 import logging
 
 import click
+from dotenv import load_dotenv
 from hackerman_ai.ai.utils import MODEL_CHOICES
 from hackerman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
 from hackerman_ai.core.config import FileConfig, FinalConfig, PromptConfig
@@ -43,6 +44,13 @@ def entry_point() -> None:
     default=DEFAULT_CONFIG_SECTION,
     help=(f"The config settings to use. Defaults to `{DEFAULT_CONFIG_SECTION}`."),
 )
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help=(
+        "When set, runs the script without publishing the results to the integrated services, just shows them in stdout."
+    ),
+)
 def run(
     model: str,
     prompt: str,
@@ -51,12 +59,14 @@ def run(
     score: int | None,
     config_file: str,
     config: str,
+    dry_run: bool,
 ) -> int:
     """
     Entrypoint of the application.
 
     Holds no logic. It calls the main method and returns 0 when succesful .
     """
+    load_dotenv()
     try:
         prompt_config = PromptConfig.get_config_from_file(path=prompt_file)
         config_from_file = FileConfig.get_config_from_file(config_section=config, path=config_file)
@@ -68,6 +78,7 @@ def run(
                 "iterations": iterations or config_from_file.iterations,
             }
         )
+
         prompt_text = prompt_config.get_prompt(final_config.prompt)
     except (InvalidConfigError, PromptNotFoundError, ConfigNotFoundError) as err:
         raise click.BadParameter(err.args[0]) from None
@@ -77,6 +88,9 @@ def run(
         model=final_config.model,
         prompt=prompt_text,
         score_threshold=final_config.score_threshold,
+        dry_run=dry_run,
+        project_key=config_from_file.service_desk_project_key,
+        request_id_type=config_from_file.service_desk_request_id_type,
     )
     relevant_articles_titles = [article.title for article in relevant_articles]
     logger.warning("Found these articles: %s", "\n".join(relevant_articles_titles))

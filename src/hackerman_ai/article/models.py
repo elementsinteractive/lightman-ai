@@ -74,6 +74,9 @@ class Article(BaseArticle):
 class BaseArticlesList[TArticle: BaseArticle](BaseModel):
     articles: list[TArticle]
 
+    def __len__(self) -> int:
+        return len(self.articles)
+
     @property
     def titles(self) -> list[str]:
         return [new.title for new in self.articles]

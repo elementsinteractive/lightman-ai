@@ -36,11 +36,16 @@ class TestCli:
 
         assert result.exit_code == 0
         assert m_hackerman.call_count == 1
+        from unittest.mock import ANY
+
         assert m_hackerman.call_args == call(
+            iterations=2,
             model="gemini-2.5-pro-preview-05-06",
             prompt="eval prompt",
             score_threshold=1,
-            iterations=2,
+            dry_run=False,
+            project_key=ANY,
+            request_id_type=ANY,
         )
         assert m_config.call_count == 1
         assert m_config.call_args == call(config_section="my-config", path="config-path")
