@@ -6,9 +6,9 @@ from unittest.mock import patch
 
 import pytest
 import stamina
-from hackerman_ai.article.models import ArticlesList
-from hackerman_ai.main import _merge_prompt_with_articles
-from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
+from lightman_ai.article.models import ArticlesList
+from lightman_ai.main import _merge_prompt_with_articles
+from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 from stamina._core import _RetryContextIterator
 
 

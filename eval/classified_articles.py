@@ -1,4 +1,4 @@
-from hackerman_ai.article.models import Article
+from lightman_ai.article.models import Article
 
 NON_RELEVANT_ARTICLES = {
     Article(

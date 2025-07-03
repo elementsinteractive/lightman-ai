@@ -2,12 +2,12 @@ import logging
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from hackerman_ai.ai.base.agent import BaseAgent
-from hackerman_ai.ai.gemini.agent import GeminiAgent
-from hackerman_ai.ai.openai.agent import OpenAIAgent
-from hackerman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
-from hackerman_ai.core.settings import settings
-from hackerman_ai.main import _classify_articles
+from lightman_ai.ai.base.agent import BaseAgent
+from lightman_ai.ai.gemini.agent import GeminiAgent
+from lightman_ai.ai.openai.agent import OpenAIAgent
+from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
+from lightman_ai.core.settings import settings
+from lightman_ai.main import _classify_articles
 
 from eval.constants import EVAL_WORKERS, MAX_WORKERS, MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
 from eval.utils import ClassifiedArticleResults

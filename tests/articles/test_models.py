@@ -1,5 +1,5 @@
 import pytest
-from hackerman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
+from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
 
 
 class TestBaseArticle:

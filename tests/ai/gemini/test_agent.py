@@ -1,9 +1,9 @@
 from unittest.mock import patch
 
 import pytest
-from hackerman_ai.ai.gemini.agent import GeminiAgent
-from hackerman_ai.ai.gemini.exceptions import GeminiError
-from hackerman_ai.article.models import SelectedArticlesList
+from lightman_ai.ai.gemini.agent import GeminiAgent
+from lightman_ai.ai.gemini.exceptions import GeminiError
+from lightman_ai.article.models import SelectedArticlesList
 from tests.utils import patch_agent_raise_exception
 
 
@@ -12,7 +12,7 @@ class TestGeminiAgent:
 
     def test__run_prompt_multiple_times(self, test_prompt: str) -> None:
         """Test that we run the prompt as many times as we specify, and we receive back a LIST of `SelectedArticlesList`."""
-        with patch("hackerman_ai.ai.gemini.agent.GeminiAgent._run_prompt") as mock:
+        with patch("lightman_ai.ai.gemini.agent.GeminiAgent._run_prompt") as mock:
             mock.return_value = SelectedArticlesList(articles=[])
             result = self.agent._run_prompt_multiple_times(test_prompt, iterations=3)
 
