@@ -1,8 +1,12 @@
+import asyncio
 import logging
 
 from hackerman_ai.ai.base.agent import BaseAgent
 from hackerman_ai.ai.utils import get_agent_instance_from_model_name
 from hackerman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
+from hackerman_ai.integrations.service_desk.integration import (
+    ServiceDeskIntegration,
+)
 from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
 
 logger = logging.getLogger("hackerman")
@@ -24,10 +28,48 @@ def _classify_articles(articles: ArticlesList, prompt: str, agent: BaseAgent, it
     return agent.get_prompt_result(prompt=full_prompt, iterations=iterations)
 
 
-def hackerman(model: str, prompt: str, score_threshold: int, iterations: int) -> list[SelectedArticle]:
-    articles = _get_articles()
+def _create_service_desk_issues(
+    selected_articles: list[SelectedArticle],
+    service_desk_client: ServiceDeskIntegration,
+    project_key: str,
+    request_id_type: str,
+) -> None:
+    async def schedule_task(article: SelectedArticle) -> None:
+        try:
+            await service_desk_client.create_request_of_type(
+                project_key=project_key,
+                summary=article.title,
+                description=article.link,
+                request_id_type=request_id_type,
+            )
+        except Exception:
+            logger.exception("Could not create ServiceDesk issue: %s, %s", article.title, article.link)
+            raise
 
-    agent = get_agent_instance_from_model_name(model)
+    async def create_all() -> None:
+        tasks = []
+        for article in selected_articles:
+            tasks.append(schedule_task(article))
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        errors = [result for result in results if isinstance(result, Exception)]
+        if errors:
+            raise ExceptionGroup("Could not create all ServiceDesk issues", errors)
+
+    asyncio.run(create_all())
+
+
+def hackerman(
+    model: str,
+    prompt: str,
+    score_threshold: int,
+    iterations: int,
+    project_key: str | None = None,
+    request_id_type: str | None = None,
+    dry_run: bool = False,
+) -> list[SelectedArticle]:
+    articles: ArticlesList = _get_articles()
+
+    agent: BaseAgent = get_agent_instance_from_model_name(model)
     logger.info("Selected %s.", agent)
 
     classified_articles = _classify_articles(
@@ -37,6 +79,24 @@ def hackerman(model: str, prompt: str, score_threshold: int, iterations: int) ->
         iterations=iterations,
     )
 
-    logger.warning("Found these articles: %s", classified_articles.titles)
+    selected_articles: list[SelectedArticle] = classified_articles.get_articles_with_score_gte_threshold(
+        score_threshold
+    )
+    if selected_articles:
+        logger.warning("Found these articles: %s", selected_articles)
+    else:
+        logger.warning("No articles found to be relevant. Total returned articles by AI %s", len(classified_articles))
 
-    return classified_articles.get_articles_with_score_gte_threshold(score_threshold)
+    if not dry_run:
+        if not project_key or not request_id_type:
+            raise ValueError("Missing Service Desk's project key or issue id type")
+
+        service_desk_client = ServiceDeskIntegration.from_env()
+        _create_service_desk_issues(
+            selected_articles=selected_articles,
+            service_desk_client=service_desk_client,
+            project_key=project_key,
+            request_id_type=request_id_type,
+        )
+
+    return selected_articles
