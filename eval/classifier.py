@@ -22,7 +22,6 @@ class Classifier:
         agent: BaseAgent,
         prompt: str,
         score: int,
-        iterations: int,
         relevant_articles: set[Article],
         non_relevant_articles: set[Article],
         samples: int,
@@ -30,7 +29,6 @@ class Classifier:
         self.agent = agent
         self.prompt = prompt
         self.score = score
-        self.iterations = iterations
         self.relevant_articles = relevant_articles
         self.non_relevant_articles = non_relevant_articles
         self.samples = samples
@@ -52,7 +50,6 @@ class Classifier:
             articles=articles,
             prompt=self.prompt,
             agent=self.agent,
-            iterations=self.iterations,
         )
         time_delta = round(time.perf_counter() - time_before, 2)
 

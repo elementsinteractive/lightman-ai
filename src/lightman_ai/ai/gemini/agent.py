@@ -1,11 +1,9 @@
 import logging
-from concurrent.futures import ThreadPoolExecutor
 from typing import Never, override
 
 from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.gemini.exceptions import map_gemini_exceptions
 from lightman_ai.article.models import SelectedArticlesList
-from lightman_ai.core.settings import settings
 from pydantic_ai import Agent
 from pydantic_ai.models.google import GoogleModel
 
@@ -23,17 +21,3 @@ class GeminiAgent(BaseAgent):
         with map_gemini_exceptions():
             result = self.agent.run_sync(prompt)
         return result.output
-
-    @override
-    def _run_prompt_multiple_times(self, prompt: str, iterations: int) -> list[SelectedArticlesList]:
-        """Run the prompt multiple times, so that we reduce the number of false negatives.
-
-        Gemini does not raise any error while we are running multiple calls at the same time
-        so we can run all of them at once.
-
-        This should be done using async ideally, but pydantic-ai has a bug that in some cases it closes
-        the event loop before we've finished running the tasks.
-        """
-        with ThreadPoolExecutor(max_workers=settings.PARALLEL_WORKERS) as executor:
-            results = list(executor.map(self._run_prompt, [prompt for _ in range(iterations)]))
-        return results

@@ -25,7 +25,6 @@ def entry_point() -> None:
     help=(f"Location of the config file containing the prompts. Defaults to `{DEFAULT_CONFIG_FILE}`."),
 )
 @click.option("--prompt", type=str, help=("Which prompt to use"))
-@click.option("--iterations", type=int, help=("The number of iterations that the agent will run"), default=None)
 @click.option(
     "--score",
     type=int,
@@ -55,7 +54,6 @@ def run(
     model: str,
     prompt: str,
     prompt_file: str,
-    iterations: int | None,
     score: int | None,
     config_file: str,
     config: str,
@@ -75,7 +73,6 @@ def run(
                 "model": model or config_from_file.model,
                 "prompt": prompt or config_from_file.prompt,
                 "score_threshold": score or config_from_file.score_threshold,
-                "iterations": iterations or config_from_file.iterations,
             }
         )
 
@@ -84,7 +81,6 @@ def run(
         raise click.BadParameter(err.args[0]) from None
 
     relevant_articles = lightman(
-        iterations=final_config.iterations,
         model=final_config.model,
         prompt=prompt_text,
         score_threshold=final_config.score_threshold,

@@ -14,7 +14,6 @@ class ResultsFileBuilder:
         results_metrics: ResultsMetrics,
         tag: str | None,
         model: str,
-        iterations: int,
         samples: int,
         prompt: str,
         score: int,
@@ -23,7 +22,6 @@ class ResultsFileBuilder:
         self.results_metrics = results_metrics
         self.tag = tag
         self.model = model
-        self.iterations = iterations
         self.samples = samples
         self.prompt = prompt
         self.score = score
@@ -32,10 +30,7 @@ class ResultsFileBuilder:
 
     @property
     def file_name(self) -> str:
-        path = (
-            str(self.results_dir / date.today().isoformat())
-            + f"-{self.model}-iterations-{self.iterations}-samples-{self.samples}"
-        )
+        path = str(self.results_dir / date.today().isoformat()) + f"-{self.model}-samples-{self.samples}"
 
         if self.tag:
             path += f"-{self.tag}"
@@ -60,7 +55,6 @@ class ResultsFileBuilder:
 # Summary
 - Tag: {self.tag or "-"}
 - Model: {self.model}
-- Iterations: {self.iterations}
 - Samples: {self.samples}
 - Score threshold: {self.score}
 - Prompt: \n {self.prompt}
