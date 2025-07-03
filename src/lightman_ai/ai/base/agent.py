@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from hackerman_ai.article.models import SelectedArticlesList
+from lightman_ai.article.models import SelectedArticlesList
 
 
 class BaseAgent(ABC):

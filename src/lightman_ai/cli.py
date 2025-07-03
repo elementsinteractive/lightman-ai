@@ -2,13 +2,13 @@ import logging
 
 import click
 from dotenv import load_dotenv
-from hackerman_ai.ai.utils import MODEL_CHOICES
-from hackerman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
-from hackerman_ai.core.config import FileConfig, FinalConfig, PromptConfig
-from hackerman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
-from hackerman_ai.main import hackerman
+from lightman_ai.ai.utils import MODEL_CHOICES
+from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
+from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
+from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
+from lightman_ai.main import lightman
 
-logger = logging.getLogger("hackerman")
+logger = logging.getLogger("lightman")
 
 
 @click.group()
@@ -83,7 +83,7 @@ def run(
     except (InvalidConfigError, PromptNotFoundError, ConfigNotFoundError) as err:
         raise click.BadParameter(err.args[0]) from None
 
-    relevant_articles = hackerman(
+    relevant_articles = lightman(
         iterations=final_config.iterations,
         model=final_config.model,
         prompt=prompt_text,

@@ -1,5 +1,5 @@
 import httpx
-from hackerman_ai.integrations.service_desk.exceptions import ServiceDeskServerError
+from lightman_ai.integrations.service_desk.exceptions import ServiceDeskServerError
 
 # Retry configuration for ServiceDeskIntegration
 SERVICE_DESK_RETRY_ON = (httpx.TransportError, httpx.TimeoutException, ServiceDeskServerError)

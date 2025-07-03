@@ -1,9 +1,9 @@
 import pathlib
 
 import pytest
-from hackerman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
-from hackerman_ai.core.config import FileConfig, FinalConfig, PromptConfig
-from hackerman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
+from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
+from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
+from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
 from pydantic import ValidationError
 from tests.conftest import patch_config_file
 

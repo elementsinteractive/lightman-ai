@@ -1,15 +1,15 @@
 import asyncio
 import logging
 
-from hackerman_ai.ai.base.agent import BaseAgent
-from hackerman_ai.ai.utils import get_agent_instance_from_model_name
-from hackerman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
-from hackerman_ai.integrations.service_desk.integration import (
+from lightman_ai.ai.base.agent import BaseAgent
+from lightman_ai.ai.utils import get_agent_instance_from_model_name
+from lightman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
+from lightman_ai.integrations.service_desk.integration import (
     ServiceDeskIntegration,
 )
-from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
+from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 
-logger = logging.getLogger("hackerman")
+logger = logging.getLogger("lightman")
 
 
 def _get_articles() -> ArticlesList:
@@ -58,7 +58,7 @@ def _create_service_desk_issues(
     asyncio.run(create_all())
 
 
-def hackerman(
+def lightman(
     model: str,
     prompt: str,
     score_threshold: int,

@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
-from hackerman_ai.article.models import ArticlesList
-from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
+from lightman_ai.article.models import ArticlesList
+from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 
 
 class TestTheHackerNewsSource:

@@ -4,8 +4,8 @@ ARG PYTHON_IMAGE=3.13-slim
 FROM python:${PYTHON_IMAGE} AS base
 
 # Define global values. Define them as ARG so they are not present in the final image, and so they can be modified
-ARG USER=hackerman
-ARG GROUP=hackerman
+ARG USER=lightman
+ARG GROUP=lightman
 ARG WORKDIR=/app
 ARG VENV_PATH=${WORKDIR}/.venv
 
@@ -65,4 +65,4 @@ COPY src src
 # Install the CLI tool
 RUN $VENV_PATH/bin/pip install --no-cache-dir .
 
-ENTRYPOINT [ "hackerman" ]
+ENTRYPOINT [ "lightman" ]

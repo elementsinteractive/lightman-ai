@@ -2,13 +2,13 @@ import logging
 from typing import Any
 from unittest.mock import AsyncMock, patch
 
-from hackerman_ai.article.models import SelectedArticle, SelectedArticlesList
-from hackerman_ai.main import hackerman
+from lightman_ai.article.models import SelectedArticle, SelectedArticlesList
+from lightman_ai.main import lightman
 from tests.utils import patch_agent
 
 
 class TestHackerman:
-    def test_hackerman_and_service_desk_publish(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
+    def test_lightman_and_service_desk_publish(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
         relevant_article_1 = SelectedArticle(
             title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8
         )
@@ -23,16 +23,16 @@ class TestHackerman:
             caplog.at_level(logging.INFO),
             patch("httpx.get") as m_thn,
             patch_agent(agent_response),
-            patch("hackerman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
+            patch("lightman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
         ):
             m_thn.return_value = thn_xml
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
-            result = hackerman(
+            result = lightman(
                 "gpt-4.1", test_prompt, score_threshold=8, iterations=1, project_key="4", request_id_type="2"
             )
 
-        # Check hackerman result
+        # Check lightman result
         assert isinstance(result, list)
         assert len(result) == 2
         assert relevant_article_1 in result
@@ -47,7 +47,7 @@ class TestHackerman:
         assert relevant_article_1.title in called_titles
         assert relevant_article_2.title in called_titles
 
-    def test_hackerman_no_publish_if_dry_run(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
+    def test_lightman_no_publish_if_dry_run(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
         relevant_article_1 = SelectedArticle(
             title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8
         )
@@ -62,12 +62,12 @@ class TestHackerman:
             caplog.at_level(logging.INFO),
             patch("httpx.get") as m_thn,
             patch_agent(agent_response),
-            patch("hackerman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
+            patch("lightman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
         ):
             m_thn.return_value = thn_xml
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
-            hackerman("gpt-4.1", test_prompt, score_threshold=8, iterations=1, dry_run=True)
+            lightman("gpt-4.1", test_prompt, score_threshold=8, iterations=1, dry_run=True)
 
         # Check ServiceDesk integration is NOT called in dry_run mode
         mock_service_desk_env.assert_not_called()

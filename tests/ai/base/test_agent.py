@@ -1,8 +1,8 @@
 from typing import override
 
 import pytest
-from hackerman_ai.ai.base.agent import BaseAgent
-from hackerman_ai.article.models import SelectedArticle, SelectedArticlesList
+from lightman_ai.ai.base.agent import BaseAgent
+from lightman_ai.article.models import SelectedArticle, SelectedArticlesList
 
 
 class FakeAgent(BaseAgent):
