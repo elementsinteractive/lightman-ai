@@ -4,12 +4,12 @@ from pathlib import Path
 from typing import Any, Self, cast
 
 import tomlkit
-from hackerman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
+from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
 from pydantic import BaseModel, ConfigDict, PositiveInt, ValidationError, field_validator
 from pydantic_core.core_schema import FieldValidationInfo
 
 PROMPTS_SECTION = "prompts"
-logger = logging.getLogger("hackerman")
+logger = logging.getLogger("lightman")
 
 
 def read_config_from_file(*, config_section: str, path: str) -> dict[str, Any]:

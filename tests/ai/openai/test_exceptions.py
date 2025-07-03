@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 
 import pytest
-from hackerman_ai.ai.openai.exceptions import (
+from lightman_ai.ai.openai.exceptions import (
     InputTooLargeError,
     LimitTokensExceededError,
     QuotaExceededError,

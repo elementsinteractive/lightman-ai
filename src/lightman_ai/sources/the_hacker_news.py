@@ -3,9 +3,9 @@ from xml.etree import ElementTree
 
 import httpx
 import stamina
-from hackerman_ai.article.models import Article, ArticlesList
-from hackerman_ai.sources.base import BaseSource
 from httpx import Client
+from lightman_ai.article.models import Article, ArticlesList
+from lightman_ai.sources.base import BaseSource
 
 _RETRY_ON = httpx.TransportError
 _ATTEMPTS = 5

@@ -4,17 +4,17 @@ from typing import Any, Self
 
 import httpx
 import stamina
-from hackerman_ai.integrations.service_desk.constants import (
+from lightman_ai.integrations.service_desk.constants import (
     SERVICE_DESK_RETRY_ATTEMPTS,
     SERVICE_DESK_RETRY_ON,
     SERVICE_DESK_RETRY_TIMEOUT,
 )
-from hackerman_ai.integrations.service_desk.exceptions import (
+from lightman_ai.integrations.service_desk.exceptions import (
     MissingIssueIDError,
     handle_service_desk_exceptions,
 )
 
-logger = logging.getLogger("hackerman")
+logger = logging.getLogger("lightman")
 
 
 class ServiceDeskIntegration:

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from hackerman_ai.article.models import ArticlesList
+from lightman_ai.article.models import ArticlesList
 
 
 class BaseSource(ABC):

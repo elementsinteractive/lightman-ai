@@ -1,8 +1,8 @@
 import click
 from dotenv import load_dotenv
-from hackerman_ai.ai.utils import MODEL_CHOICES
-from hackerman_ai.constants import DEFAULT_CONFIG_FILE
-from hackerman_ai.core.config import PromptConfig
+from lightman_ai.ai.utils import MODEL_CHOICES
+from lightman_ai.constants import DEFAULT_CONFIG_FILE
+from lightman_ai.core.config import PromptConfig
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
 from eval.constants import DEFAULT_EVAL_CONFIG_SECTION, DEFAULT_MODEL

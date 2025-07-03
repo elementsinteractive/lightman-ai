@@ -2,10 +2,10 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from typing import Never, override
 
-from hackerman_ai.ai.base.agent import BaseAgent
-from hackerman_ai.ai.gemini.exceptions import map_gemini_exceptions
-from hackerman_ai.article.models import SelectedArticlesList
-from hackerman_ai.core.settings import settings
+from lightman_ai.ai.base.agent import BaseAgent
+from lightman_ai.ai.gemini.exceptions import map_gemini_exceptions
+from lightman_ai.article.models import SelectedArticlesList
+from lightman_ai.core.settings import settings
 from pydantic_ai import Agent
 from pydantic_ai.models.google import GoogleModel
 
