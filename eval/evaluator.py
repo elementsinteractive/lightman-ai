@@ -1,7 +1,7 @@
 import logging
 
-from hackerman_ai.ai.utils import get_agent_instance_from_model_name
-from hackerman_ai.article.models import Article
+from lightman_ai.ai.utils import get_agent_instance_from_model_name
+from lightman_ai.article.models import Article
 
 from eval.classifier import Classifier
 from eval.templates import ResultsFileBuilder

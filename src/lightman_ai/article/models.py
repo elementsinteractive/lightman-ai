@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import override
 
 import tiktoken
-from hackerman_ai.core.settings import settings
+from lightman_ai.core.settings import settings
 from pydantic import BaseModel
 
 

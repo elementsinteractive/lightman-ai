@@ -2,9 +2,9 @@ import logging
 import time
 from typing import Never, override
 
-from hackerman_ai.ai.base.agent import BaseAgent
-from hackerman_ai.ai.openai.exceptions import LimitTokensExceededError, map_openai_exceptions
-from hackerman_ai.article.models import SelectedArticlesList
+from lightman_ai.ai.base.agent import BaseAgent
+from lightman_ai.ai.openai.exceptions import LimitTokensExceededError, map_openai_exceptions
+from lightman_ai.article.models import SelectedArticlesList
 from pydantic_ai import Agent
 from pydantic_ai.agent import AgentRunResult
 from pydantic_ai.models.openai import OpenAIModel
