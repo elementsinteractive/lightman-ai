@@ -1,16 +1,16 @@
 from unittest.mock import Mock, call, patch
 
 from click.testing import CliRunner
-from hackerman_ai import cli
-from hackerman_ai.core.config import PromptConfig
+from lightman_ai import cli
+from lightman_ai.core.config import PromptConfig
 from tests.conftest import patch_config_file
 
 
 class TestCli:
-    @patch("hackerman_ai.cli.hackerman")
-    @patch("hackerman_ai.cli.FileConfig.get_config_from_file")
-    @patch("hackerman_ai.cli.PromptConfig.get_config_from_file")
-    def test_arguments(self, m_prompt: Mock, m_config: Mock, m_hackerman: Mock) -> None:
+    @patch("lightman_ai.cli.lightman")
+    @patch("lightman_ai.cli.FileConfig.get_config_from_file")
+    @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
+    def test_arguments(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
         with patch_config_file():
@@ -35,10 +35,10 @@ class TestCli:
             )
 
         assert result.exit_code == 0
-        assert m_hackerman.call_count == 1
+        assert m_lightman.call_count == 1
         from unittest.mock import ANY
 
-        assert m_hackerman.call_args == call(
+        assert m_lightman.call_args == call(
             iterations=2,
             model="gemini-2.5-pro-preview-05-06",
             prompt="eval prompt",
@@ -56,7 +56,7 @@ class TestCli:
         config_content = """
         [prompts]
         eval = 'eval prompt'"""
-        with patch("hackerman_ai.cli.hackerman") as m_hackerman, patch_config_file(content=config_content) as m_config:
+        with patch("lightman_ai.cli.lightman") as m_lightman, patch_config_file(content=config_content) as m_config:
             result = runner.invoke(
                 cli.run,
                 ["--prompt", "eval"],
@@ -68,12 +68,12 @@ class TestCli:
             "`model`: Input should be a valid string,"
             "`score_threshold`: Input should be a valid integer]" in result.output
         )
-        assert m_hackerman.call_count == 0
+        assert m_lightman.call_count == 0
         assert m_config.call_count == 2
 
     def test_invalid_prompt(self) -> None:
         runner = CliRunner()
-        with patch("hackerman_ai.cli.hackerman") as m_hackerman, patch_config_file(content="") as m_config:
+        with patch("lightman_ai.cli.lightman") as m_lightman, patch_config_file(content="") as m_config:
             result = runner.invoke(
                 cli.run,
                 [
@@ -89,7 +89,7 @@ class TestCli:
             )
         assert result.exit_code == 2
         assert "Invalid value: prompt `eval` not found in config file" in result.output
-        assert m_hackerman.call_count == 0
+        assert m_lightman.call_count == 0
         assert m_config.call_count == 2
 
     def test_prompt_file_not_found(self) -> None:
