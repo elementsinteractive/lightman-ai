@@ -5,7 +5,8 @@ from typing import Any, Self, cast
 
 import tomlkit
 from hackerman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
-from pydantic import BaseModel, ConfigDict, PositiveInt, ValidationError
+from pydantic import BaseModel, ConfigDict, PositiveInt, ValidationError, field_validator
+from pydantic_core.core_schema import FieldValidationInfo
 
 PROMPTS_SECTION = "prompts"
 logger = logging.getLogger("hackerman")
@@ -42,8 +43,24 @@ class FileConfig(BaseModel):
     prompt: str | None = None
     model: str | None = None
     score_threshold: int | None = None
+    service_desk_project_key: str | None = None
+    service_desk_request_id_type: str | None = None
 
     model_config = ConfigDict(extra="forbid")
+
+    @field_validator("service_desk_project_key", "service_desk_request_id_type", mode="before")
+    @classmethod
+    def _cast_service_fields(cls, v: Any, info: FieldValidationInfo) -> Any:
+        if v is None:
+            return v
+        if isinstance(v, int):
+            return str(v)
+        if isinstance(v, str):
+            try:
+                int(v)
+            except ValueError as err:
+                raise ValueError(f"{info.field_name} must be a number!") from err
+        return v
 
     @classmethod
     def get_config_from_file(cls, config_section: str, path: str) -> Self:

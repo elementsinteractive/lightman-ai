@@ -1,18 +1,32 @@
 import os
-from collections.abc import Iterator
+from collections.abc import Generator, Iterator
 from contextlib import contextmanager
 from typing import Any
 from unittest.mock import patch
 
 import pytest
+import stamina
 from hackerman_ai.article.models import ArticlesList
 from hackerman_ai.main import _merge_prompt_with_articles
 from hackerman_ai.sources.the_hacker_news import TheHackerNewsSource
+from stamina._core import _RetryContextIterator
 
 
 def pytest_configure() -> None:
     os.environ["OPENAI_API_KEY"] = "dummy"
     os.environ["GOOGLE_API_KEY"] = "dummy"
+
+
+@pytest.fixture
+def patch_service_desk_retry_wait_max() -> Generator[None, Any, None]:
+    original_retry_context = stamina.retry_context
+
+    def patched_retry_context(*args: Any, **kwargs: Any) -> _RetryContextIterator:
+        kwargs["wait_max"] = 0
+        return original_retry_context(*args, **kwargs)
+
+    with patch("stamina.retry_context", new=patched_retry_context) as mock:
+        yield mock
 
 
 @pytest.fixture
