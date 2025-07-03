@@ -76,6 +76,53 @@ class TestConfig:
         assert config.score_threshold == 8
         assert config.prompt == "eval-prompt"
 
+    def test_service_desk_fields_accept_str(self) -> None:
+        config = FileConfig(
+            iterations=3,
+            prompt="prompt1",
+            model="gpt-4.1",
+            score_threshold=7,
+            service_desk_project_key="123",
+            service_desk_request_id_type="456",
+        )
+        assert config.service_desk_project_key == "123"
+        assert config.service_desk_request_id_type == "456"
+
+    def test_service_desk_fields_cast_int(self) -> None:
+        config = FileConfig(
+            iterations=3,
+            prompt="prompt1",
+            model="gpt-4.1",
+            score_threshold=7,
+            service_desk_project_key=123,  # type: ignore[arg-type]
+            service_desk_request_id_type=456,  # type: ignore[arg-type]
+        )
+        assert config.service_desk_project_key == "123"
+        assert config.service_desk_request_id_type == "456"
+
+    def test_service_desk_fields_reject_invalid_type(self) -> None:
+        with pytest.raises(ValueError, match="must be a number"):
+            FileConfig(
+                iterations=3,
+                prompt="prompt1",
+                model="gpt-4.1",
+                score_threshold=7,
+                service_desk_project_key="notanumber",
+                service_desk_request_id_type=None,
+            )
+
+    def test_service_desk_fields_accept_none(self) -> None:
+        config = FileConfig(
+            iterations=3,
+            prompt="prompt1",
+            model="gpt-4.1",
+            score_threshold=7,
+            service_desk_project_key=None,
+            service_desk_request_id_type=None,
+        )
+        assert config.service_desk_project_key is None
+        assert config.service_desk_request_id_type is None
+
 
 class TestFinalConfig:
     def test_init_error(self) -> None:
