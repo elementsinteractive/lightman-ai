@@ -2,7 +2,7 @@
 iterations = 1
 model = 'gpt-4.1'
 score_threshold = 8
-prompt = 'eval'
+prompt = 'development'
 
 service_desk_project_key=18
 service_desk_request_id_type=230
@@ -11,11 +11,11 @@ service_desk_request_id_type=230
 iterations = 1
 model = 'gpt-4.1'
 score_threshold = 8
-prompt = 'eval'
+prompt = 'development'
 samples = 3
 
 [prompts]
-eval = """
+development = """
 I'm in software development. I develop web applications and mobile applications.
 Given a text with cybersecurity news,
 Give a score 1-10 to each one of all the articles, depending on how relevant they are to me. Give me back the articles with the relevance that you think they have.
