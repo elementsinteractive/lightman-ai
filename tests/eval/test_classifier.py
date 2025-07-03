@@ -1,6 +1,6 @@
 from unittest.mock import Mock, patch
 
-from hackerman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
+from lightman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
 
 from eval.classifier import Classifier
 from eval.constants import MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE

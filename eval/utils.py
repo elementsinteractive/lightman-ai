@@ -3,8 +3,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from decimal import Decimal
 
-from hackerman_ai.article.models import SelectedArticle
-from hackerman_ai.core.config import FileConfig, FinalConfig
+from lightman_ai.article.models import SelectedArticle
+from lightman_ai.core.config import FileConfig, FinalConfig
 from pydantic import PositiveInt
 
 

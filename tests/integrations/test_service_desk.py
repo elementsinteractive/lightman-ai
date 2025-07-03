@@ -2,14 +2,14 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import httpx
 import pytest
-from hackerman_ai.integrations.service_desk.exceptions import (
+from lightman_ai.integrations.service_desk.exceptions import (
     MissingIssueIDError,
     ServiceDeskAuthenticationError,
     ServiceDeskClientError,
     ServiceDeskConnectionError,
     ServiceDeskPermissionError,
 )
-from hackerman_ai.integrations.service_desk.integration import ServiceDeskIntegration
+from lightman_ai.integrations.service_desk.integration import ServiceDeskIntegration
 
 
 @pytest.fixture

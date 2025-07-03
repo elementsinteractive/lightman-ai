@@ -2,7 +2,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
-from hackerman_ai.article.models import SelectedArticlesList
+from lightman_ai.article.models import SelectedArticlesList
 
 
 @contextmanager

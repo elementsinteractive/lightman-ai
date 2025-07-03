@@ -4,9 +4,9 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 import httpx
-from hackerman_ai.core.exceptions import BaseHackermanError
+from lightman_ai.core.exceptions import BaseHackermanError
 
-logger = logging.getLogger("hackerman")
+logger = logging.getLogger("lightman")
 
 
 class BaseServiceDeskError(BaseHackermanError):
