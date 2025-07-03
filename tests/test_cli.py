@@ -25,8 +25,6 @@ class TestCli:
                     "prompt file",
                     "--score",
                     "1",
-                    "--iterations",
-                    "2",
                     "--config-file",
                     "config-path",
                     "--config",
@@ -39,7 +37,6 @@ class TestCli:
         from unittest.mock import ANY
 
         assert m_lightman.call_args == call(
-            iterations=2,
             model="gemini-2.5-pro-preview-05-06",
             prompt="eval prompt",
             score_threshold=1,
@@ -64,8 +61,7 @@ class TestCli:
         assert result.exit_code == 2
         assert (
             "Invalid value: Invalid configuration provided: "
-            "[`iterations`: Input should be a valid integer,"
-            "`model`: Input should be a valid string,"
+            "[`model`: Input should be a valid string,"
             "`score_threshold`: Input should be a valid integer]" in result.output
         )
         assert m_lightman.call_count == 0
@@ -83,8 +79,6 @@ class TestCli:
                     "eval",
                     "--score",
                     "1",
-                    "--iterations",
-                    "2",
                 ],
             )
         assert result.exit_code == 2
