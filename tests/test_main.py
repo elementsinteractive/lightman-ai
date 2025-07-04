@@ -28,9 +28,7 @@ class TestHackerman:
             m_thn.return_value = thn_xml
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
-            result = lightman(
-                "gpt-4.1", test_prompt, score_threshold=8, iterations=1, project_key="4", request_id_type="2"
-            )
+            result = lightman("gpt-4.1", test_prompt, score_threshold=8, project_key="4", request_id_type="2")
 
         # Check lightman result
         assert isinstance(result, list)
@@ -67,7 +65,7 @@ class TestHackerman:
             m_thn.return_value = thn_xml
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
-            lightman("gpt-4.1", test_prompt, score_threshold=8, iterations=1, dry_run=True)
+            lightman("gpt-4.1", test_prompt, score_threshold=8, dry_run=True)
 
         # Check ServiceDesk integration is NOT called in dry_run mode
         mock_service_desk_env.assert_not_called()

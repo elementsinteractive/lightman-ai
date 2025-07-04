@@ -1,5 +1,4 @@
 [default]
-iterations = 1
 model = 'gpt-4.1'
 score_threshold = 8
 prompt = 'development'
@@ -8,7 +7,6 @@ service_desk_project_key=18
 service_desk_request_id_type=230
 
 [eval]
-iterations = 1
 model = 'gpt-4.1'
 score_threshold = 8
 prompt = 'development'
