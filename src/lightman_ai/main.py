@@ -23,9 +23,9 @@ def _merge_prompt_with_articles(prompt: str, articles: ArticlesList) -> str:
             """
 
 
-def _classify_articles(articles: ArticlesList, prompt: str, agent: BaseAgent, iterations: int) -> SelectedArticlesList:
+def _classify_articles(articles: ArticlesList, prompt: str, agent: BaseAgent) -> SelectedArticlesList:
     full_prompt = _merge_prompt_with_articles(prompt, articles)
-    return agent.get_prompt_result(prompt=full_prompt, iterations=iterations)
+    return agent.get_prompt_result(prompt=full_prompt)
 
 
 def _create_service_desk_issues(
@@ -62,7 +62,6 @@ def lightman(
     model: str,
     prompt: str,
     score_threshold: int,
-    iterations: int,
     project_key: str | None = None,
     request_id_type: str | None = None,
     dry_run: bool = False,
@@ -76,7 +75,6 @@ def lightman(
         articles=articles,
         prompt=prompt,
         agent=agent,
-        iterations=iterations,
     )
 
     selected_articles: list[SelectedArticle] = classified_articles.get_articles_with_score_gte_threshold(

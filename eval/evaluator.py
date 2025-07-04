@@ -13,7 +13,6 @@ logger = logging.getLogger("eval")
 def eval(
     prompt: str,
     score_threshold: int,
-    iterations: int,
     relevant_articles: set[Article],
     non_relevant_articles: set[Article],
     samples: int,
@@ -24,7 +23,6 @@ def eval(
         agent=get_agent_instance_from_model_name(model),
         prompt=prompt,
         score=score_threshold,
-        iterations=iterations,
         relevant_articles=relevant_articles,
         non_relevant_articles=non_relevant_articles,
         samples=samples,
@@ -35,7 +33,6 @@ def eval(
         results_metrics=results_metrics,
         tag=tag,
         model=model,
-        iterations=iterations,
         samples=samples,
         prompt=prompt,
         score=score_threshold,

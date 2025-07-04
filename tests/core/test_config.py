@@ -12,7 +12,6 @@ class TestConfig:
     def test_get_from_file(self) -> None:
         content = """
         [default]
-        iterations = 3
         model = 'gpt-4.1'
         score_threshold = 8
         prompt = 'eval-prompt'
@@ -20,7 +19,6 @@ class TestConfig:
         with patch_config_file(content=content):
             config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
 
-        assert config.iterations == 3
         assert config.model == "gpt-4.1"
         assert config.score_threshold == 8
         assert config.prompt == "eval-prompt"
@@ -30,7 +28,6 @@ class TestConfig:
         with patch_config_file(content=content):
             config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
 
-        assert config.iterations is None
         assert config.model is None
         assert config.score_threshold is None
 
@@ -42,18 +39,18 @@ class TestConfig:
 
     def test_load_different_config(self) -> None:
         content = """[default]
-        iterations = 1
+        model = 'gpt-4.1'
         [settings]
-        iterations = 2"""
+        model = 'gpt-4.2'"""
         with patch_config_file(content):
             config = FileConfig.get_config_from_file(config_section="settings", path=DEFAULT_CONFIG_FILE)
-        assert config.iterations == 2
+        assert config.model == "gpt-4.2"
 
     def test_get_from_file_config_not_found_and_no_path_specified(self) -> None:
         with patch_config_file(exists=False):
             config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
 
-        assert config.iterations is None
+        assert config.model is None
         assert config.model is None
         assert config.score_threshold is None
         assert config.prompt is None
@@ -62,7 +59,6 @@ class TestConfig:
         path = "my_path.toml"
         content = """
         [default]
-        iterations = 3
         model = 'gpt-4.1'
         score_threshold = 8
         prompt = 'eval-prompt'
@@ -71,14 +67,12 @@ class TestConfig:
         fpath.write_text(content)
         config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=str(fpath))
 
-        assert config.iterations == 3
         assert config.model == "gpt-4.1"
         assert config.score_threshold == 8
         assert config.prompt == "eval-prompt"
 
     def test_service_desk_fields_accept_str(self) -> None:
         config = FileConfig(
-            iterations=3,
             prompt="prompt1",
             model="gpt-4.1",
             score_threshold=7,
@@ -90,7 +84,6 @@ class TestConfig:
 
     def test_service_desk_fields_cast_int(self) -> None:
         config = FileConfig(
-            iterations=3,
             prompt="prompt1",
             model="gpt-4.1",
             score_threshold=7,
@@ -103,7 +96,6 @@ class TestConfig:
     def test_service_desk_fields_reject_invalid_type(self) -> None:
         with pytest.raises(ValueError, match="must be a number"):
             FileConfig(
-                iterations=3,
                 prompt="prompt1",
                 model="gpt-4.1",
                 score_threshold=7,
@@ -113,7 +105,6 @@ class TestConfig:
 
     def test_service_desk_fields_accept_none(self) -> None:
         config = FileConfig(
-            iterations=3,
             prompt="prompt1",
             model="gpt-4.1",
             score_threshold=7,
@@ -129,20 +120,10 @@ class TestFinalConfig:
         with pytest.raises(InvalidConfigError) as exc:
             FinalConfig.init_from_dict({})
         assert (
-            exc.value.args[0] == "Invalid configuration provided: [`iterations`: Field required,"
-            "`prompt`: Field required,"
+            exc.value.args[0] == "Invalid configuration provided: [`prompt`: Field required,"
             "`model`: Field required,"
             "`score_threshold`: Field required]"
         )
-
-    def test_iterations_must_be_positive_int(self) -> None:
-        with pytest.raises(InvalidConfigError) as exc:
-            FinalConfig.init_from_dict(
-                {
-                    "iterations": 0,
-                }
-            )
-        assert "`iterations`: Input should be greater than 0" in exc.value.args[0]
 
     def test_score_must_be_positive_int(self) -> None:
         with pytest.raises(InvalidConfigError) as exc:

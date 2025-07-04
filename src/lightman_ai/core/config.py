@@ -39,7 +39,6 @@ class PromptConfig:
 
 
 class FileConfig(BaseModel):
-    iterations: int | None = None
     prompt: str | None = None
     model: str | None = None
     score_threshold: int | None = None
@@ -73,7 +72,6 @@ class FileConfig(BaseModel):
 
 
 class FinalConfig(BaseModel):
-    iterations: PositiveInt
     prompt: str
     model: str
     score_threshold: PositiveInt
