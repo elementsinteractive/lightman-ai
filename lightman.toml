@@ -1,5 +1,5 @@
 [default]
-model = 'gpt-4.1'
+agent = 'openai'
 score_threshold = 8
 prompt = 'development'
 
@@ -7,7 +7,7 @@ service_desk_project_key=18
 service_desk_request_id_type=230
 
 [eval]
-model = 'gpt-4.1'
+agent = 'openai'
 score_threshold = 8
 prompt = 'development'
 samples = 3
