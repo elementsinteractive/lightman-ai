@@ -40,7 +40,7 @@ class PromptConfig:
 
 class FileConfig(BaseModel):
     prompt: str | None = None
-    model: str | None = None
+    agent: str | None = None
     score_threshold: int | None = None
     service_desk_project_key: str | None = None
     service_desk_request_id_type: str | None = None
@@ -73,7 +73,7 @@ class FileConfig(BaseModel):
 
 class FinalConfig(BaseModel):
     prompt: str
-    model: str
+    agent: str
     score_threshold: PositiveInt
 
     @classmethod
