@@ -12,14 +12,14 @@ class TestConfig:
     def test_get_from_file(self) -> None:
         content = """
         [default]
-        model = 'gpt-4.1'
+        agent = 'openai'
         score_threshold = 8
         prompt = 'eval-prompt'
         """
         with patch_config_file(content=content):
             config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
 
-        assert config.model == "gpt-4.1"
+        assert config.agent == "openai"
         assert config.score_threshold == 8
         assert config.prompt == "eval-prompt"
 
@@ -28,7 +28,7 @@ class TestConfig:
         with patch_config_file(content=content):
             config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
 
-        assert config.model is None
+        assert config.agent is None
         assert config.score_threshold is None
 
     def test_get_from_file_does_not_accept_random_keys(self) -> None:
@@ -39,19 +39,19 @@ class TestConfig:
 
     def test_load_different_config(self) -> None:
         content = """[default]
-        model = 'gpt-4.1'
+        agent = 'openai'
         [settings]
-        model = 'gpt-4.2'"""
+        agent = 'gpt-4.2'"""
         with patch_config_file(content):
             config = FileConfig.get_config_from_file(config_section="settings", path=DEFAULT_CONFIG_FILE)
-        assert config.model == "gpt-4.2"
+        assert config.agent == "gpt-4.2"
 
     def test_get_from_file_config_not_found_and_no_path_specified(self) -> None:
         with patch_config_file(exists=False):
             config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
 
-        assert config.model is None
-        assert config.model is None
+        assert config.agent is None
+        assert config.agent is None
         assert config.score_threshold is None
         assert config.prompt is None
 
@@ -59,7 +59,7 @@ class TestConfig:
         path = "my_path.toml"
         content = """
         [default]
-        model = 'gpt-4.1'
+        agent = 'openai'
         score_threshold = 8
         prompt = 'eval-prompt'
         """
@@ -67,14 +67,14 @@ class TestConfig:
         fpath.write_text(content)
         config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=str(fpath))
 
-        assert config.model == "gpt-4.1"
+        assert config.agent == "openai"
         assert config.score_threshold == 8
         assert config.prompt == "eval-prompt"
 
     def test_service_desk_fields_accept_str(self) -> None:
         config = FileConfig(
             prompt="prompt1",
-            model="gpt-4.1",
+            agent="openai",
             score_threshold=7,
             service_desk_project_key="123",
             service_desk_request_id_type="456",
@@ -85,7 +85,7 @@ class TestConfig:
     def test_service_desk_fields_cast_int(self) -> None:
         config = FileConfig(
             prompt="prompt1",
-            model="gpt-4.1",
+            agent="openai",
             score_threshold=7,
             service_desk_project_key=123,  # type: ignore[arg-type]
             service_desk_request_id_type=456,  # type: ignore[arg-type]
@@ -97,7 +97,7 @@ class TestConfig:
         with pytest.raises(ValueError, match="must be a number"):
             FileConfig(
                 prompt="prompt1",
-                model="gpt-4.1",
+                agent="openai",
                 score_threshold=7,
                 service_desk_project_key="notanumber",
                 service_desk_request_id_type=None,
@@ -106,7 +106,7 @@ class TestConfig:
     def test_service_desk_fields_accept_none(self) -> None:
         config = FileConfig(
             prompt="prompt1",
-            model="gpt-4.1",
+            agent="openai",
             score_threshold=7,
             service_desk_project_key=None,
             service_desk_request_id_type=None,
@@ -121,7 +121,7 @@ class TestFinalConfig:
             FinalConfig.init_from_dict({})
         assert (
             exc.value.args[0] == "Invalid configuration provided: [`prompt`: Field required,"
-            "`model`: Field required,"
+            "`agent`: Field required,"
             "`score_threshold`: Field required]"
         )
 
