@@ -4,6 +4,8 @@ from lightman_ai.article.models import SelectedArticlesList
 
 
 class BaseAgent(ABC):
+    model: str
+
     def get_prompt_result(self, prompt: str) -> SelectedArticlesList:
         return self._run_prompt(prompt)
 

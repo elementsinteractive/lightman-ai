@@ -2,7 +2,7 @@ import logging
 
 import click
 from dotenv import load_dotenv
-from lightman_ai.ai.utils import MODEL_CHOICES
+from lightman_ai.ai.utils import AGENT_CHOICES
 from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
 from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
 from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
@@ -17,7 +17,7 @@ def entry_point() -> None:
 
 
 @entry_point.command()
-@click.option("--model", type=click.Choice(MODEL_CHOICES), help=("Which model to use"))
+@click.option("--agent", type=click.Choice(AGENT_CHOICES), help=("Which agent to use"))
 @click.option(
     "--prompt-file",
     type=str,
@@ -51,7 +51,7 @@ def entry_point() -> None:
     ),
 )
 def run(
-    model: str,
+    agent: str,
     prompt: str,
     prompt_file: str,
     score: int | None,
@@ -70,7 +70,7 @@ def run(
         config_from_file = FileConfig.get_config_from_file(config_section=config, path=config_file)
         final_config = FinalConfig.init_from_dict(
             data={
-                "model": model or config_from_file.model,
+                "agent": agent or config_from_file.agent,
                 "prompt": prompt or config_from_file.prompt,
                 "score_threshold": score or config_from_file.score_threshold,
             }
@@ -81,7 +81,7 @@ def run(
         raise click.BadParameter(err.args[0]) from None
 
     relevant_articles = lightman(
-        model=final_config.model,
+        agent=final_config.agent,
         prompt=prompt_text,
         score_threshold=final_config.score_threshold,
         dry_run=dry_run,

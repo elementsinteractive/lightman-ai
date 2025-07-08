@@ -13,8 +13,10 @@ from pydantic_ai.models.openai import OpenAIModel
 class OpenAIAgent(BaseAgent):
     """Class that provides an interface to operate with the OpenAI model."""
 
-    def __init__(self, model: str, logger: logging.Logger | None = None) -> None:
-        ai_model = OpenAIModel(model)
+    model: str = "gpt-4.1"
+
+    def __init__(self, logger: logging.Logger | None = None) -> None:
+        ai_model = OpenAIModel(self.model)
         self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, output_type=SelectedArticlesList)
         self.logger = logger or logging.getLogger()
 

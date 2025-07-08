@@ -1,11 +1,11 @@
 import click
 from dotenv import load_dotenv
-from lightman_ai.ai.utils import MODEL_CHOICES
+from lightman_ai.ai.utils import AGENT_CHOICES
 from lightman_ai.constants import DEFAULT_CONFIG_FILE
 from lightman_ai.core.config import PromptConfig
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
-from eval.constants import DEFAULT_EVAL_CONFIG_SECTION, DEFAULT_MODEL
+from eval.constants import DEFAULT_EVAL_CONFIG_SECTION
 from eval.evaluator import eval
 from eval.utils import EvalConfig, EvalFileConfig
 
@@ -13,7 +13,9 @@ from eval.utils import EvalConfig, EvalFileConfig
 @click.command()
 @click.option("--tag", type=str, help=("Tag that identifies the run"), default=None)
 @click.option(
-    "--model", type=click.Choice(MODEL_CHOICES), help=("The model to use to analyze articles"), default=DEFAULT_MODEL
+    "--agent",
+    type=click.Choice(AGENT_CHOICES),
+    help=("The agent to use to analyze articles"),
 )
 @click.option("--score", type=int, help=("Minimum score to consider an article to be relevant"))
 @click.option(
@@ -38,7 +40,7 @@ from eval.utils import EvalConfig, EvalFileConfig
 )
 @click.option("--config", type=str, default=DEFAULT_EVAL_CONFIG_SECTION, help=("The config settings to use"))
 def run(
-    model: str,
+    agent: str,
     score: int,
     samples: int,
     prompt: str,
@@ -51,7 +53,7 @@ def run(
     configured_prompts = PromptConfig.get_config_from_file(path=prompt_file)
     eval_config = EvalConfig.init_from_dict(
         {
-            "model": model or config_from_file.model,
+            "agent": agent or config_from_file.agent,
             "prompt": prompt or config_from_file.prompt,
             "score_threshold": score or config_from_file.score_threshold,
             "samples": samples or config_from_file.samples,
@@ -64,7 +66,7 @@ def run(
         non_relevant_articles=NON_RELEVANT_ARTICLES,
         samples=eval_config.samples,
         tag=tag,
-        model=eval_config.model,
+        agent=eval_config.agent,
         prompt=configured_prompts.get_prompt(eval_config.prompt),
     )
 

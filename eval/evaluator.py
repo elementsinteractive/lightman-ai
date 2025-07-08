@@ -1,6 +1,6 @@
 import logging
 
-from lightman_ai.ai.utils import get_agent_instance_from_model_name
+from lightman_ai.ai.utils import get_agent_instance_from_agent_name
 from lightman_ai.article.models import Article
 
 from eval.classifier import Classifier
@@ -17,10 +17,10 @@ def eval(
     non_relevant_articles: set[Article],
     samples: int,
     tag: str | None,
-    model: str,
+    agent: str,
 ) -> None:
     classified_articles = Classifier(
-        agent=get_agent_instance_from_model_name(model),
+        agent=get_agent_instance_from_agent_name(agent),
         prompt=prompt,
         score=score_threshold,
         relevant_articles=relevant_articles,
@@ -32,7 +32,7 @@ def eval(
     results_template = ResultsFileBuilder(
         results_metrics=results_metrics,
         tag=tag,
-        model=model,
+        agent=agent,
         samples=samples,
         prompt=prompt,
         score=score_threshold,
