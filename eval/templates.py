@@ -13,7 +13,7 @@ class ResultsFileBuilder:
         self,
         results_metrics: ResultsMetrics,
         tag: str | None,
-        model: str,
+        agent: str,
         samples: int,
         prompt: str,
         score: int,
@@ -21,7 +21,7 @@ class ResultsFileBuilder:
     ) -> None:
         self.results_metrics = results_metrics
         self.tag = tag
-        self.model = model
+        self.agent = agent
         self.samples = samples
         self.prompt = prompt
         self.score = score
@@ -30,7 +30,7 @@ class ResultsFileBuilder:
 
     @property
     def file_name(self) -> str:
-        path = str(self.results_dir / date.today().isoformat()) + f"-{self.model}-samples-{self.samples}"
+        path = str(self.results_dir / date.today().isoformat()) + f"-{self.agent}-samples-{self.samples}"
 
         if self.tag:
             path += f"-{self.tag}"
@@ -54,7 +54,7 @@ class ResultsFileBuilder:
         return f"""
 # Summary
 - Tag: {self.tag or "-"}
-- Model: {self.model}
+- Agent: {self.agent}
 - Samples: {self.samples}
 - Score threshold: {self.score}
 - Prompt: \n {self.prompt}

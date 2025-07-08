@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from lightman_ai.ai.base.agent import BaseAgent
-from lightman_ai.ai.utils import get_agent_instance_from_model_name
+from lightman_ai.ai.utils import get_agent_instance_from_agent_name
 from lightman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
 from lightman_ai.integrations.service_desk.integration import (
     ServiceDeskIntegration,
@@ -59,7 +59,7 @@ def _create_service_desk_issues(
 
 
 def lightman(
-    model: str,
+    agent: str,
     prompt: str,
     score_threshold: int,
     project_key: str | None = None,
@@ -68,13 +68,13 @@ def lightman(
 ) -> list[SelectedArticle]:
     articles: ArticlesList = _get_articles()
 
-    agent: BaseAgent = get_agent_instance_from_model_name(model)
-    logger.info("Selected %s.", agent)
+    agent_instance: BaseAgent = get_agent_instance_from_agent_name(agent)
+    logger.info("Selected %s.", agent_instance)
 
     classified_articles = _classify_articles(
         articles=articles,
         prompt=prompt,
-        agent=agent,
+        agent=agent_instance,
     )
 
     selected_articles: list[SelectedArticle] = classified_articles.get_articles_with_score_gte_threshold(

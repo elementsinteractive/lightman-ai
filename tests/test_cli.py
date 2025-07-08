@@ -17,8 +17,8 @@ class TestCli:
             result = runner.invoke(
                 cli.run,
                 [
-                    "--model",
-                    "gemini-2.5-pro-preview-05-06",
+                    "--agent",
+                    "gemini",
                     "--prompt",
                     "eval",
                     "--prompt-file",
@@ -37,7 +37,7 @@ class TestCli:
         from unittest.mock import ANY
 
         assert m_lightman.call_args == call(
-            model="gemini-2.5-pro-preview-05-06",
+            agent="gemini",
             prompt="eval prompt",
             score_threshold=1,
             dry_run=False,
@@ -61,7 +61,7 @@ class TestCli:
         assert result.exit_code == 2
         assert (
             "Invalid value: Invalid configuration provided: "
-            "[`model`: Input should be a valid string,"
+            "[`agent`: Input should be a valid string,"
             "`score_threshold`: Input should be a valid integer]" in result.output
         )
         assert m_lightman.call_count == 0
@@ -73,8 +73,8 @@ class TestCli:
             result = runner.invoke(
                 cli.run,
                 [
-                    "--model",
-                    "gemini-2.5-pro-preview-05-06",
+                    "--agent",
+                    "gemini",
                     "--prompt",
                     "eval",
                     "--score",
