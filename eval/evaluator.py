@@ -20,8 +20,7 @@ def eval(
     agent: str,
 ) -> None:
     classified_articles = Classifier(
-        agent=get_agent_instance_from_agent_name(agent),
-        prompt=prompt,
+        agent=get_agent_instance_from_agent_name(agent)(prompt),
         score=score_threshold,
         relevant_articles=relevant_articles,
         non_relevant_articles=non_relevant_articles,
