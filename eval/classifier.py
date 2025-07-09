@@ -20,14 +20,12 @@ class Classifier:
         self,
         *,
         agent: BaseAgent,
-        prompt: str,
         score: int,
         relevant_articles: set[Article],
         non_relevant_articles: set[Article],
         samples: int,
     ) -> None:
         self.agent = agent
-        self.prompt = prompt
         self.score = score
         self.relevant_articles = relevant_articles
         self.non_relevant_articles = non_relevant_articles
@@ -48,7 +46,6 @@ class Classifier:
         time_before = time.perf_counter()
         results = _classify_articles(
             articles=articles,
-            prompt=self.prompt,
             agent=self.agent,
         )
         time_delta = round(time.perf_counter() - time_before, 2)
@@ -127,6 +124,11 @@ class Classifier:
 
     @staticmethod
     def _can_run_in_parallel(agent: BaseAgent) -> bool:
+        """Determine whether the agent can run in parallel or not.
+
+        It is defined here instead of being a property on each agent,
+        because this only makes sense during the eval, and the agents should not know about it.
+        """
         if isinstance(agent, OpenAIAgent):
             return False
         if isinstance(agent, GeminiAgent):
