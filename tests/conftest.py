@@ -7,7 +7,6 @@ from unittest.mock import patch
 import pytest
 import stamina
 from lightman_ai.article.models import ArticlesList
-from lightman_ai.main import _merge_prompt_with_articles
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 from stamina._core import _RetryContextIterator
 
@@ -529,7 +528,7 @@ def thn_news(thn_xml: str) -> ArticlesList:
 
 
 @pytest.fixture
-def test_prompt(thn_news: ArticlesList) -> str:
+def test_prompt() -> str:
     prompt = """
                     I'm in software development. Given text with cybersecurity news,
                     extract only new CVEs and vulnerabilities that:
@@ -539,7 +538,7 @@ def test_prompt(thn_news: ArticlesList) -> str:
                     Use only listed tech, make no assumptions
                     Must meet all criteria, use only text content
                   """
-    return _merge_prompt_with_articles(prompt, thn_news)
+    return prompt
 
 
 @contextmanager

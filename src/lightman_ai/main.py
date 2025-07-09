@@ -16,16 +16,8 @@ def _get_articles() -> ArticlesList:
     return TheHackerNewsSource().get_articles()
 
 
-def _merge_prompt_with_articles(prompt: str, articles: ArticlesList) -> str:
-    return f"""{prompt}
-                This is the json:
-                {articles}
-            """
-
-
-def _classify_articles(articles: ArticlesList, prompt: str, agent: BaseAgent) -> SelectedArticlesList:
-    full_prompt = _merge_prompt_with_articles(prompt, articles)
-    return agent.get_prompt_result(prompt=full_prompt)
+def _classify_articles(articles: ArticlesList, agent: BaseAgent) -> SelectedArticlesList:
+    return agent.get_prompt_result(prompt=str(articles))
 
 
 def _create_service_desk_issues(
@@ -68,12 +60,12 @@ def lightman(
 ) -> list[SelectedArticle]:
     articles: ArticlesList = _get_articles()
 
-    agent_instance: BaseAgent = get_agent_instance_from_agent_name(agent)
+    agent_class = get_agent_instance_from_agent_name(agent)
+    agent_instance = agent_class(prompt)
     logger.info("Selected %s.", agent_instance)
 
     classified_articles = _classify_articles(
         articles=articles,
-        prompt=prompt,
         agent=agent_instance,
     )
 
