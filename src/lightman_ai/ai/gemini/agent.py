@@ -1,22 +1,16 @@
-import logging
-from typing import Never, override
+from typing import override
 
 from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.gemini.exceptions import map_gemini_exceptions
 from lightman_ai.article.models import SelectedArticlesList
-from pydantic_ai import Agent
 from pydantic_ai.models.google import GoogleModel
 
 
 class GeminiAgent(BaseAgent):
     """Class that provides an interface to operate with the Gemini model."""
 
-    model: str = "gemini-2.5-pro-preview-05-06"
-
-    def __init__(self, logger: logging.Logger | None = None) -> None:
-        ai_model = GoogleModel(self.model)
-        self.agent: Agent[Never, SelectedArticlesList] = Agent(model=ai_model, output_type=SelectedArticlesList)
-        self.logger = logger or logging.getLogger()
+    _model = GoogleModel
+    _model_name = "gemini-2.5-pro-preview-05-06"
 
     @override
     def _run_prompt(self, prompt: str) -> SelectedArticlesList:
