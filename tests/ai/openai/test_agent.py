@@ -5,7 +5,7 @@ from lightman_ai.article.models import SelectedArticlesList
 
 
 class TestAgent:
-    agent = OpenAIAgent()
+    agent = OpenAIAgent(system_prompt="Test system prompt")
 
     def test__run_prompt(self, test_prompt: str) -> None:
         """Test that we can run a prompt and receive a SelectedArticlesList."""
