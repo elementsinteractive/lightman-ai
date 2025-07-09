@@ -32,7 +32,6 @@ class TestClassifier:
 
         false_negatives = Classifier(
             agent=Mock(),
-            prompt="",
             score=7,
             relevant_articles=set(relevant_articles),
             non_relevant_articles=set(non_relevant_articles),
@@ -68,7 +67,6 @@ class TestClassifier:
         )
         classified_articles = Classifier(
             agent=Mock(),
-            prompt="",
             score=7,
             relevant_articles=set(relevant_articles),
             non_relevant_articles=set(non_relevant_articles),
