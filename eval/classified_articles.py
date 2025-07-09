@@ -726,10 +726,6 @@ NON_RELEVANT_ARTICLES = {
         link="https://thehackernews.com/2025/05/microsoft-onedrive-file-picker-flaw.html",
         description="Cybersecurity researchers have discovered a security flaw in Microsoft's OneDrive File Picker that, if successfully exploited, could allow websites to access a user's entire cloud storage content, as opposed to just the files selected for upload via the tool.\n\"This stems from overly broad OAuth scopes and misleading consent screens that fail to clearly explain the extent of access being granted,",
     ),
-}
-
-
-RELEVANT_ARTICLES = {
     Article(
         link="https://thehackernews.com/2025/05/new-chrome-vulnerability-enables-cross.html",
         title="New Chrome Vulnerability Enables Cross-Origin Data Leak via Loader Referrer Policy",
@@ -761,3 +757,6 @@ RELEVANT_ARTICLES = {
         description="Threat actors who were behind the exploitation of a zero-day vulnerability in BeyondTrust Privileged Remote Access (PRA) and Remote Support (RS) products in December 2024 likely also exploited a previously unknown SQL injection flaw in PostgreSQL, according to findings from Rapid7. The vulnerability, tracked as CVE-2025-1094 (CVSS score: 8.1), affects the PostgreSQL interactive tool psql.",
     ),
 }
+
+
+RELEVANT_ARTICLES: set[Article] = set()
