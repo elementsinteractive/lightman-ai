@@ -1,7 +1,7 @@
 import click
 from dotenv import load_dotenv
 from lightman_ai.ai.utils import AGENT_CHOICES
-from lightman_ai.constants import DEFAULT_CONFIG_FILE
+from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_ENV_FILE
 from lightman_ai.core.config import PromptConfig
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
@@ -39,6 +39,12 @@ from eval.utils import EvalConfig, EvalFileConfig
     help=(f"The config file path.  Defaults to `{DEFAULT_CONFIG_FILE}`."),
 )
 @click.option("--config", type=str, default=DEFAULT_EVAL_CONFIG_SECTION, help=("The config settings to use"))
+@click.option(
+    "--env-file",
+    type=str,
+    default=DEFAULT_ENV_FILE,
+    help=(f"Path to the environment file. Defaults to `{DEFAULT_ENV_FILE}`."),
+)
 def run(
     agent: str,
     score: int,
@@ -47,8 +53,10 @@ def run(
     config: str,
     config_file: str,
     prompt_file: str,
+    env_file: str,
     tag: str | None = None,
 ) -> None:
+    load_dotenv(env_file)
     config_from_file = EvalFileConfig.get_config_from_file(config_section=config, path=config_file)
     configured_prompts = PromptConfig.get_config_from_file(path=prompt_file)
     eval_config = EvalConfig.init_from_dict(
@@ -72,5 +80,4 @@ def run(
 
 
 if __name__ == "__main__":
-    load_dotenv()
     run()
