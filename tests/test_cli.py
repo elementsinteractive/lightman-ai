@@ -7,10 +7,11 @@ from tests.conftest import patch_config_file
 
 
 class TestCli:
+    @patch("lightman_ai.cli.load_dotenv")
     @patch("lightman_ai.cli.lightman")
     @patch("lightman_ai.cli.FileConfig.get_config_from_file")
     @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
-    def test_arguments(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock) -> None:
+    def test_arguments(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
         with patch_config_file():
@@ -47,8 +48,35 @@ class TestCli:
         assert m_config.call_count == 1
         assert m_config.call_args == call(config_section="my-config", path="config-path")
         assert m_prompt.call_args == call(path="prompt file")
+        assert m_load_dotenv.call_args == call(".env")  # Default env file
 
-    def test_invalid_config(self) -> None:
+    @patch("lightman_ai.cli.load_dotenv")
+    @patch("lightman_ai.cli.lightman")
+    @patch("lightman_ai.cli.FileConfig.get_config_from_file")
+    @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
+    def test_custom_env_file(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
+        runner = CliRunner()
+        m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
+        with patch_config_file():
+            result = runner.invoke(
+                cli.run,
+                [
+                    "--agent",
+                    "gemini",
+                    "--prompt",
+                    "eval",
+                    "--score",
+                    "1",
+                    "--env-file",
+                    "custom.env",
+                ],
+            )
+
+        assert result.exit_code == 0
+        assert m_load_dotenv.call_args == call("custom.env")
+
+    @patch("lightman_ai.cli.load_dotenv")
+    def test_invalid_config(self, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         config_content = """
         [prompts]
@@ -67,7 +95,8 @@ class TestCli:
         assert m_lightman.call_count == 0
         assert m_config.call_count == 2
 
-    def test_invalid_prompt(self) -> None:
+    @patch("lightman_ai.cli.load_dotenv")
+    def test_invalid_prompt(self, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         with patch("lightman_ai.cli.lightman") as m_lightman, patch_config_file(content="") as m_config:
             result = runner.invoke(
@@ -86,7 +115,8 @@ class TestCli:
         assert m_lightman.call_count == 0
         assert m_config.call_count == 2
 
-    def test_prompt_file_not_found(self) -> None:
+    @patch("lightman_ai.cli.load_dotenv")
+    def test_prompt_file_not_found(self, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         result = runner.invoke(
             cli.run,
