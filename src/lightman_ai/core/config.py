@@ -55,6 +55,8 @@ class FileConfig(BaseModel):
         if isinstance(v, int):
             return str(v)
         if isinstance(v, str):
+            if v == "":
+                return v
             try:
                 int(v)
             except ValueError as err:
