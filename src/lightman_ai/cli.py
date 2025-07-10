@@ -3,7 +3,7 @@ import logging
 import click
 from dotenv import load_dotenv
 from lightman_ai.ai.utils import AGENT_CHOICES
-from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
+from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION, DEFAULT_ENV_FILE
 from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
 from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
 from lightman_ai.main import lightman
@@ -44,6 +44,12 @@ def entry_point() -> None:
     help=(f"The config settings to use. Defaults to `{DEFAULT_CONFIG_SECTION}`."),
 )
 @click.option(
+    "--env-file",
+    type=str,
+    default=DEFAULT_ENV_FILE,
+    help=(f"Path to the environment file. Defaults to `{DEFAULT_ENV_FILE}`."),
+)
+@click.option(
     "--dry-run",
     is_flag=True,
     help=(
@@ -57,6 +63,7 @@ def run(
     score: int | None,
     config_file: str,
     config: str,
+    env_file: str,
     dry_run: bool,
 ) -> int:
     """
@@ -64,7 +71,7 @@ def run(
 
     Holds no logic. It calls the main method and returns 0 when succesful .
     """
-    load_dotenv()
+    load_dotenv(env_file)
     try:
         prompt_config = PromptConfig.get_config_from_file(path=prompt_file)
         config_from_file = FileConfig.get_config_from_file(config_section=config, path=config_file)
