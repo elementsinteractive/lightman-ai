@@ -15,6 +15,8 @@ class TestConfig:
         agent = 'openai'
         score_threshold = 8
         prompt = 'eval-prompt'
+        service_desk_project_key = '123'
+        service_desk_request_id_type = '456'
         """
         with patch_config_file(content=content):
             config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
@@ -22,6 +24,8 @@ class TestConfig:
         assert config.agent == "openai"
         assert config.score_threshold == 8
         assert config.prompt == "eval-prompt"
+        assert config.service_desk_project_key == "123"
+        assert config.service_desk_request_id_type == "456"
 
     def test_get_from_file_empty(self) -> None:
         content = ""
@@ -50,7 +54,6 @@ class TestConfig:
         with patch_config_file(exists=False):
             config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
 
-        assert config.agent is None
         assert config.agent is None
         assert config.score_threshold is None
         assert config.prompt is None
@@ -94,14 +97,25 @@ class TestConfig:
         assert config.service_desk_request_id_type == "456"
 
     def test_service_desk_fields_reject_invalid_type(self) -> None:
-        with pytest.raises(ValueError, match="must be a number"):
+        with pytest.raises(ValueError, match="service_desk_project_key must be a number"):
             FileConfig(
                 prompt="prompt1",
                 agent="openai",
                 score_threshold=7,
                 service_desk_project_key="notanumber",
-                service_desk_request_id_type=None,
+                service_desk_request_id_type="1",
             )
+
+    def test_service_desk_fields_accept_empty_string(self) -> None:
+        config = FileConfig(
+            prompt="prompt1",
+            agent="openai",
+            score_threshold=7,
+            service_desk_project_key="",
+            service_desk_request_id_type="",
+        )
+        assert config.service_desk_project_key == ""
+        assert config.service_desk_request_id_type == ""
 
     def test_service_desk_fields_accept_none(self) -> None:
         config = FileConfig(
