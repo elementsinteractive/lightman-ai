@@ -127,3 +127,35 @@ class TestCli:
         )
         assert result.exit_code == 2
         assert "Invalid value: `non-existing-file.toml` not found!" in result.output
+
+    @patch("lightman_ai.cli.load_dotenv")
+    def test_service_desk_variables_missing_from_toml(self, m_load_dotenv: Mock) -> None:
+        """Test CLI with TOML file that doesn't include service desk configuration."""
+        runner = CliRunner()
+        # TOML content without any service desk fields
+        config_content = """
+        [default]
+        agent = 'openai'
+        score_threshold = 8
+        prompt = 'classify'
+        [prompts]
+        classify = 'Analyze security threats'
+        """
+        with patch("lightman_ai.cli.lightman") as m_lightman, patch_config_file(content=config_content) as m_config:
+            result = runner.invoke(
+                cli.run,
+                [
+                    "--dry-run",
+                ],
+            )
+        assert result.exit_code == 0
+        assert m_lightman.call_count == 1
+        assert m_lightman.call_args == call(
+            agent="openai",
+            prompt="Analyze security threats",
+            score_threshold=8,
+            dry_run=True,
+            project_key=None,
+            request_id_type=None,
+        )
+        assert m_config.call_count == 2
