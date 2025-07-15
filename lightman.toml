@@ -1,0 +1,16 @@
+[default]
+agent = 'openai'
+score_threshold = 8
+prompt = 'classify'
+
+service_desk_project_key=''
+service_desk_request_id_type=''
+
+[eval]
+agent = 'openai'
+score_threshold = 8
+prompt = 'classify'
+samples = 3
+
+[prompts]
+classify = ""
