@@ -376,11 +376,6 @@ We follow [Semantic Versioning](https://semver.org/):
 - **Merge Requests**: For code contributions
 - **Email**: For security issues or private matters
 
-### Questions?
-
-- Check existing [issues](https://gitlab.com/makerstreet-development/elements/backend/lightman_ai/-/issues)
-- Create a new issue with the "question" label
-- Review the [documentation](https://makerstreet-development.gitlab.io/elements/backend/lightman_ai)
 
 ## 🙏 Recognition
 

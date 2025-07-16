@@ -122,20 +122,6 @@ docker run -d \
 - `SERVICE_DESK_USER` - Service desk username (optional)
 - `SERVICE_DESK_TOKEN` - Service desk API token (optional)
 
-### From Source
-```bash
-git clone https://gitlab.com/makerstreet-development/elements/backend/lightman_ai.git
-cd lightman_ai
-poetry install
-
-```
-
-### Development Installation
-```bash
-git clone https://gitlab.com/makerstreet-development/elements/backend/lightman_ai.git
-cd lightman_ai
-just venv  # Creates virtual environment and installs dependencies
-```
 
 ## ⚙️ Configuration
 
@@ -363,15 +349,6 @@ The evaluation framework compares the AI agent's classifications against these k
 This approach ensures that performance metrics reflect real-world usage scenarios where the AI must distinguish between various types of cybersecurity news content.
 
 **Make sure to fill in the `RELEVANT_ARTICLES` with the ones you classify as relevant, so that you can compare the accuracy after running the `eval` script.*** 
-
-### Reporting Issues
-
-Found a bug or have a feature request? Please [open an issue](https://gitlab.com/makerstreet-development/elements/backend/lightman_ai/-/issues) with:
-
-- **Clear description** of the issue or feature
-- **Steps to reproduce** (for bugs)
-- **Expected behavior**
-- **Environment details** (OS, Python version, etc.)
 
 ## 📄 License
 
