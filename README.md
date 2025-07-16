@@ -303,28 +303,6 @@ lightman run --dry-run --config testing
 lightman run --env-file staging.env --dry-run --config testing
 ```
 
-## 🤖 AI Agents & Models
-
-Lightman AI supports multiple AI providers for flexible deployment:
-
-### OpenAI GPT Models
-- **Models**: GPT-4, GPT-4 Turbo, GPT-3.5 Turbo
-- **Strengths**: Excellent reasoning, consistent performance
-- **Use case**: Production environments, critical analysis
-
-```bash
-lightman run --agent openai
-```
-
-### Google Gemini Models
-- **Models**: Gemini Pro, Gemini Flash
-- **Strengths**: Fast processing, cost-effective
-- **Use case**: High-volume scanning, development
-
-```bash
-lightman run --agent gemini
-```
-
 
 ## 📊 Evaluation & Testing
 
@@ -338,6 +316,10 @@ just eval --agent openai --samples 3 --score 7
 
 # Compare different agents
 just eval --agent gemini --samples 5 --tag "gemini-test"
+
+# Add tags to differentiate runs
+just eval --agent gemini --samples 5 --tag "gemini-test1"
+just eval --agent gemini --samples 5 --tag "gemini-test2"
 
 # Test custom prompts
 just eval --prompt custom_security --samples 10
