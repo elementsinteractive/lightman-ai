@@ -61,7 +61,7 @@ COPY --from=build --chown=${USER}:${GROUP} ${WORKDIR}/pyproject.toml .
 
 # Copy source code
 COPY src src
-
+COPY README.md README.md
 # Install the CLI tool
 RUN $VENV_PATH/bin/pip install --no-cache-dir .
 
