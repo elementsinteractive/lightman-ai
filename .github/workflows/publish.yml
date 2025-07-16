@@ -1,7 +1,9 @@
 name: Publish
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   push_to_pypi:
@@ -64,8 +66,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache
-          cache-to: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max
 
   release_notes:
     runs-on: ubuntu-latest
