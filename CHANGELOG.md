@@ -1,3 +1,9 @@
+## v0.19.6 (2025-07-16)
+
+### Fix
+
+- add README.md to Dockerfile
+
 ## v0.19.5 (2025-07-16)
 
 ### CI
