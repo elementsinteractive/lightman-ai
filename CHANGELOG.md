@@ -1,3 +1,9 @@
+## v0.19.4 (2025-07-16)
+
+### CI
+
+- automatically publish after version bump
+
 ## v0.19.3 (2025-07-16)
 
 ### CI
