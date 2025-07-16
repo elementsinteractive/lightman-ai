@@ -1,3 +1,9 @@
+## v0.19.5 (2025-07-16)
+
+### CI
+
+- add description when publishing
+
 ## v0.19.4 (2025-07-16)
 
 ### CI
