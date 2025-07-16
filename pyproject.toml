@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lightman_ai"
-version = "0.19.2"
+version = "0.19.3"
 description = "Cybersecurity news aggregator."
 authors = ["Daniel Sanz <daniel.sanz@elementsinteractive.es>"]
 
@@ -136,7 +136,7 @@ exclude_lines = [
 [tool.commitizen]
 version_files = ["pyproject.toml:^version"]
 name = "cz_customize"
-version = "0.19.2"
+version = "0.19.3"
 tag_format = "v$version"
 
 [tool.commitizen.customize]
