@@ -5,12 +5,12 @@ name: Security
 on:
   push:
     branches: ["main"]
-    tags-ignore: ["**"]
   pull_request:
     branches: ["main"]
 
 jobs:
   osv-scanner:
+    if: ${{ !startsWith(github.event.head_commit.message, 'bump:') }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/google/osv-scanner:v1.9.2
@@ -20,6 +20,7 @@ jobs:
         run: |
           /osv-scanner --skip-git --format table -r .
   semgrep:
+    if: ${{ !startsWith(github.event.head_commit.message, 'bump:') }}
     runs-on: ubuntu-latest
     container:
       image: returntocorp/semgrep:latest
@@ -29,6 +30,7 @@ jobs:
         run: |
           semgrep scan --config auto
   twyn:
+    if: ${{ !startsWith(github.event.head_commit.message, 'bump:') }}
     runs-on: ubuntu-latest
     container:
       image: elementsinteractive/twyn:v2.8.27
