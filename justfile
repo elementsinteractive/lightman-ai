@@ -52,10 +52,6 @@ lint report="false": venv
     {{ run }} ruff check {{ target_dirs }} {{ if report == "true" { "--output-format gitlab > tests/gl-code-quality-report.json" } else { "" } }}
     {{ run }} mypy {{ target_dirs }}
 
-# Serve the documentation in a local server.
-docs: venv
-    {{ run }} mkdocs serve
-
 # Runs pre-commit with the given arguments (defaults to install).
 pre-commit *precommit-args="install": venv
     {{ run }} pre-commit {{ precommit-args }}

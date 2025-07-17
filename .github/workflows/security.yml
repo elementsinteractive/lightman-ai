@@ -1,0 +1,41 @@
+# This workflow will run security checks against our project
+
+name: Security
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  osv-scanner:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    container:
+      image: ghcr.io/google/osv-scanner:v1.9.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run OSV Scanner
+        run: |
+          /osv-scanner --skip-git --format table -r .
+  semgrep:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    container:
+      image: returntocorp/semgrep:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Semgrep
+        run: |
+          semgrep scan --config auto
+  twyn:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    container:
+      image: elementsinteractive/twyn:v2.8.28
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Twyn against our dependencies
+        run: |
+          twyn run -vv
