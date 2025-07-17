@@ -34,9 +34,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=$POETRY_VERSION python3
-
-RUN poetry self add poetry-plugin-export==${POETRY_PLUGIN_EXPORT_VERSION}
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=$POETRY_VERSION python3 && \
+    poetry self add poetry-plugin-export==${POETRY_PLUGIN_EXPORT_VERSION}
 
 # Copy all the needed files, without write permissions
 COPY poetry.lock pyproject.toml ./
