@@ -1,3 +1,9 @@
+## v0.16.6 (2025-07-17)
+
+### CI
+
+- Group poetry steps to improve caching (#29)
+
 ## v0.16.5 (2025-07-17)
 
 ### CI
