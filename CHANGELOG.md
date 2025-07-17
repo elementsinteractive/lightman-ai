@@ -1,3 +1,9 @@
+## v0.16.7 (2025-07-17)
+
+### CI
+
+- Add description to published pypi package (#30)
+
 ## v0.16.6 (2025-07-17)
 
 ### CI
