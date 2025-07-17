@@ -33,7 +33,6 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
 
   push_to_docker_hub:
-    needs: push_to_pypi
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     permissions:
