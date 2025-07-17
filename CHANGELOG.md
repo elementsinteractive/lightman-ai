@@ -1,3 +1,9 @@
+## v0.16.3 (2025-07-17)
+
+### CI
+
+- Make push_to_docker_hub not dependant on push_to_pypi (#26)
+
 ## v0.16.2 (2025-07-17)
 
 ### Fix
