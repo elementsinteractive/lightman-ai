@@ -1,3 +1,9 @@
+## v0.16.5 (2025-07-17)
+
+### CI
+
+- Make release_notes depend on all publish jobs (#28)
+
 ## v0.16.4 (2025-07-17)
 
 ### CI
