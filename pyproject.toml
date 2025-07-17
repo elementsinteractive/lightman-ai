@@ -3,6 +3,7 @@ name = "lightman_ai"
 version = "0.16.6"
 description = "Cybersecurity news aggregator."
 authors = ["sdn4z <imsdn4z@gmail.com>"]
+readme = "README.md"
 
 [tool.poetry.scripts]
 lightman = "lightman_ai.cli:entry_point"
