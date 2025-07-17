@@ -60,6 +60,7 @@ ENV PATH="${VENV_PATH}/bin:$PATH"
 COPY --from=build --chown=${USER}:${GROUP} ${VENV_PATH} ${VENV_PATH}
 COPY --from=build --chown=${USER}:${GROUP} ${WORKDIR}/pyproject.toml .
 
+COPY README.md README.md
 # Copy source code
 COPY src src
 
