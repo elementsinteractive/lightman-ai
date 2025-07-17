@@ -1,3 +1,9 @@
+## v0.16.2 (2025-07-17)
+
+### Fix
+
+- add missing permissions to docker job (#25)
+
 ## v0.16.1 (2025-07-17)
 
 ### CI
