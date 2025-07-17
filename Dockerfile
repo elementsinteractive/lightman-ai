@@ -30,9 +30,11 @@ ENV PATH="${POETRY_HOME}/bin:${PATH}"
 RUN python -m venv ${VENV_PATH} && \
     ${VENV_PATH}/bin/pip install --no-cache-dir --upgrade pip 
 
-# Install poetry and set up the virtualenv configs
-RUN apt-get update && apt-get install -y curl \
-    && curl -sSL https://install.python-poetry.org | POETRY_VERSION=$POETRY_VERSION python3
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=$POETRY_VERSION python3
 
 RUN poetry self add poetry-plugin-export==${POETRY_PLUGIN_EXPORT_VERSION}
 
