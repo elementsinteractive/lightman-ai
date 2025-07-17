@@ -1,0 +1,98 @@
+## v0.16.0 (2025-07-17)
+
+### Feat
+
+- --env-file flag
+- break: replace --model by --agent
+- break: remove iterations
+- rename
+- ServiceDesk integration
+- load prompts from prompt file
+- create prompts in toml file
+- allow config file in eval
+- rename --config and accept different configs per file
+- read config from file
+- add 95% confidence interval and F1 score to eval
+- filter out articles in python by its score
+- Gemini agent
+- introduce evaluator
+- introduce evaluator
+- allow to introduce the model thorugh the cli
+- run prompt multiple times and introduce pydantic settings
+- allow apikey to be introduced via envvars + refactor
+- first version
+
+### Fix
+
+- service desk env variables can be empty string
+- let pydantic validate iterations and score
+- update dependency click to v8.2.1
+- update dependency pydantic-ai to ^0.2.0
+- remove breakpoint
+- make implementation sync
+- update dependency pydantic-ai to ^0.1.0
+- update dependency httpx to ^0.28.0
+
+### Refactor
+
+- Refator eval
+- directly return SelectedArticles instead of selecting original Articles
+- move base agent tests to another directory
+- move OpenAI implementation to its directory
+
+### CI
+
+- Add GitHub workflows (#17)
+- Add lgtm to the pipeline
+
+### Docs
+
+- add README.md and update LICENSE
+
+### Technical
+
+- Update dependencies (#23)
+- bump the patch-updates group with 2 updates (#18)
+- CODEOWNERS (#13)
+- clean toml and results
+- inject context as system prompt
+- rename 'eval' prompt to 'development'
+- Create Dockerfile
+- change lgtm model
+- drop vcr usage
+- refine prompt
+- run calls in parallele when possible
+- update dependency ruff to v0.11.12
+- show score and why each article was selected
+- add the amount of time it takes to run an eval
+- update dependency commitizen to v4
+- Improve prompt and do a minor refactor
+- Abstract common method from OpenAI Agent to Base Agent
+- Allow to run multiple samples
+- refactor template
+- Create tooling for the agent to run multiple times
+- update dependency ruff to v0.11.10
+- change the way the agent is instantiated
+- switch to gemini for lgtm
+- Handle insufficient quota error
+- Use gpt-4.1 model
+- switch back to openai
+- swap openai for gemini
+- run poetry update
+- Articles have now number_of_tokens property
+- Delay subsequent calls to the model based on model response
+- Reduce number of tokens
+- update dependency pytest-asyncio to ^0.26.0
+- update dependency pytest-recording to v0.13.3
+- update dependency mkdocs-material to v9.6.12
+- update httpcore to get rid of vulnerability
+- Remove xml form prompt
+- add renovate
+- improve prompt and some minor improvements
+- bump to python 3.13
+- change to openai
+- remove unused dependency and gitlab stage
+
+### Tests
+
+- add test checking SD from cli
