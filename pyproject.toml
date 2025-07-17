@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lightman_ai"
-version = "0.16.7"
+version = "0.16.8"
 description = "Cybersecurity news aggregator."
 authors = ["sdn4z <imsdn4z@gmail.com>"]
 readme = "README.md"
@@ -140,7 +140,7 @@ exclude_lines = [
 [tool.commitizen]
 version_files = ["pyproject.toml:^version"]
 name = "cz_customize"
-version = "0.16.7"
+version = "0.16.8"
 tag_format = "v$version"
 
 [tool.commitizen.customize]
