@@ -1,8 +1,6 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import override
 
-import tiktoken
-from lightman_ai.core.settings import settings
 from pydantic import BaseModel
 
 
@@ -11,7 +9,6 @@ class BaseArticle(BaseModel, ABC):
 
     title: str
     link: str
-    _encoding: tiktoken.Encoding = tiktoken.get_encoding(settings.OPENAI_ENCODING)
 
     @override
     def __eq__(self, value: object) -> bool:
@@ -24,51 +21,15 @@ class BaseArticle(BaseModel, ABC):
     def __hash__(self) -> int:
         return hash(self.link.encode())
 
-    @property
-    @abstractmethod
-    def number_of_tokens(self) -> int: ...
-
 
 class SelectedArticle(BaseArticle):
     why_is_relevant: str
     relevance_score: int
 
-    @override
-    @property
-    def number_of_tokens(self) -> int:
-        """
-        Number of tokens that this Article has.
-
-        Worth taking into account that this is not the final number of tokens to be sent,
-        as pydantic-ai adds some extra characters.
-
-        It is a rough estimation of the total tokens to be sent for this Article.
-        """
-        tokens = self._encoding.encode(
-            f'"link": "{self.link}", "title": "{self.title}", "why_is_relevant": "{self.why_is_relevant}", "score_threshold": "{self.relevance_score}"'
-        )
-        return len(tokens)
-
 
 class Article(BaseArticle):
     title: str
     description: str
-
-    @override
-    @property
-    def number_of_tokens(self) -> int:
-        """
-        Number of tokens that this Article has.
-
-        Worth taking into account that this is not the final number of tokens to be sent,
-        as pydantic-ai adds some extra characters.
-
-        It is a rough estimation of the total tokens to be sent for this Article.
-        """
-        tokens = self._encoding.encode(
-            f'"title": "{self.title}", "description": "{self.description}", "link": "{self.link}"'
-        )
-        return len(tokens)
 
 
 class BaseArticlesList[TArticle: BaseArticle](BaseModel):
@@ -84,10 +45,6 @@ class BaseArticlesList[TArticle: BaseArticle](BaseModel):
     @property
     def links(self) -> list[str]:
         return [new.link for new in self.articles]
-
-    @property
-    def total_number_of_tokens(self) -> int:
-        return sum(article.number_of_tokens for article in self.articles)
 
 
 class SelectedArticlesList(BaseArticlesList[SelectedArticle]):
