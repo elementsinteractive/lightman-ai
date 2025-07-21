@@ -1,3 +1,14 @@
+## v0.16.12 (2025-07-21)
+
+### CI
+
+- bump osv-scanner version (#38)
+
+### Technical
+
+- migrate from poetry to uv (#37)
+- bump the minor-updates group with 5 updates (#35)
+
 ## v0.16.11 (2025-07-17)
 
 ### CI
