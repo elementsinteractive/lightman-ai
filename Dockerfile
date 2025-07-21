@@ -8,6 +8,7 @@ ARG USER=lightman
 ARG GROUP=lightman
 ARG WORKDIR=/app
 ARG VENV_PATH=${WORKDIR}/.venv
+ARG BIN_PATH=${VENV_PATH}/bin
 
 WORKDIR ${WORKDIR}
 
@@ -19,52 +20,46 @@ RUN groupadd -g 1001 ${GROUP} && \
 FROM base AS build
 
 # Define stage variables
-ARG POETRY_VERSION=2.1.2
-ARG POETRY_PLUGIN_EXPORT_VERSION=1.9.0
-
-# These should never change, define as ENV
-ENV POETRY_HOME="/opt/poetry"
-ENV PATH="${POETRY_HOME}/bin:${PATH}"
-
-# Create venv and upgrade pip
-RUN python -m venv ${VENV_PATH} && \
-    ${VENV_PATH}/bin/pip install --no-cache-dir --upgrade pip 
-
+ARG UV_VERSION 0.8.0
+# Install curl for uv installation
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install poetry==2.1.2
-RUN poetry self add poetry-plugin-export==${POETRY_PLUGIN_EXPORT_VERSION}
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
 
-# Copy all the needed files, without write permissions
-COPY poetry.lock pyproject.toml ./
+# Run the installer then remove it
+RUN curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | sh
 
-# Export dependencies to requirements.txt (no dev deps)
-RUN poetry export --without-hashes --only main -f requirements.txt > requirements.txt
+# Ensure the installed binary is on the `PATH`
+ENV PATH="/root/.local/bin/:$PATH"
 
-# Create and install dependencies in the virtual env
-RUN ${VENV_PATH}/bin/pip install --no-cache-dir -r requirements.txt
+# Copy dependency files
+COPY uv.lock pyproject.toml ./
 
+# Install dependencies using uv (only dependencies, not the project itself)
+RUN UV_PROJECT_ENVIRONMENT=${VENV_PATH} uv sync --frozen --no-install-project
+RUN ${BIN_PATH}/python -m ensurepip
 # --------------- `final` stage --------------- 
 FROM base AS final
 
 # Set non-root user and group
 USER ${USER}:${GROUP}
 
-# Copy over the virtual environment with all its dependencies and the project installed
-COPY --from=build ${WORKDIR}/requirements.txt requirements.txt
-ENV PATH="${VENV_PATH}/bin:$PATH"
-
-# Copy venv with all its dependencies along with pyproject.toml
+# Copy the virtual environment from build stage 
 COPY --from=build --chown=${USER}:${GROUP} ${VENV_PATH} ${VENV_PATH}
+
+# Set PATH to use the virtual environment
+ENV PATH="${BIN_PATH}:$PATH"
+
+# Copy pyproject.toml for package metadata
 COPY --from=build --chown=${USER}:${GROUP} ${WORKDIR}/pyproject.toml .
 
 COPY README.md README.md
 # Copy source code
 COPY src src
 
-# Install the CLI tool
-RUN $VENV_PATH/bin/pip install --no-cache-dir .
+# Install the CLI tool (dependencies already installed in venv)
+RUN ${BIN_PATH}/pip3 install --no-deps .
 
-ENTRYPOINT [ "lightman" ]
+ENTRYPOINT [ "lightman-ai" ]
