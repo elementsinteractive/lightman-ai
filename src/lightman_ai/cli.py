@@ -95,6 +95,6 @@ def run(
         project_key=config_from_file.service_desk_project_key,
         request_id_type=config_from_file.service_desk_request_id_type,
     )
-    relevant_articles_titles = [article.title for article in relevant_articles]
-    logger.warning("Found these articles: %s", "\n".join(relevant_articles_titles))
+    relevant_articles_metadata = [f"{article.title} ({article.link})" for article in relevant_articles]
+    logger.warning("Found these articles: \n- %s", "\n- ".join(relevant_articles_metadata))
     return 0

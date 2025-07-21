@@ -34,6 +34,7 @@ def _create_service_desk_issues(
                 description=article.link,
                 request_id_type=request_id_type,
             )
+            logger.info("Created issue for article %s", article.link)
         except Exception:
             logger.exception("Could not create ServiceDesk issue: %s, %s", article.title, article.link)
             raise
@@ -73,9 +74,9 @@ def lightman(
         score_threshold
     )
     if selected_articles:
-        logger.warning("Found these articles: %s", selected_articles)
+        logger.info("Found these articles: %s", selected_articles)
     else:
-        logger.warning("No articles found to be relevant. Total returned articles by AI %s", len(classified_articles))
+        logger.info("No articles found to be relevant. Total returned articles by AI %s", len(classified_articles))
 
     if not dry_run:
         if not project_key or not request_id_type:
