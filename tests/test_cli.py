@@ -1,4 +1,4 @@
-from unittest.mock import Mock, call, patch
+from unittest.mock import ANY, Mock, call, patch
 
 from click.testing import CliRunner
 from lightman_ai import cli
@@ -35,7 +35,6 @@ class TestCli:
 
         assert result.exit_code == 0
         assert m_lightman.call_count == 1
-        from unittest.mock import ANY
 
         assert m_lightman.call_args == call(
             agent="gemini",

@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     container:
-      image: ghcr.io/google/osv-scanner:v1.9.2
+      image: ghcr.io/google/osv-scanner:v2.1.0@sha256:9a1ba57d2a1506c9e9d0dfbeaf46346507e829745b70d47d77e12c38e66de8d7
     steps:
       - uses: actions/checkout@v4
       - name: Run OSV Scanner
         run: |
-          /osv-scanner --skip-git --format table -r .
+          /osv-scanner --format table -r .
   semgrep:
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
