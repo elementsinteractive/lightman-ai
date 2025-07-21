@@ -1,3 +1,9 @@
+## v0.16.13 (2025-07-21)
+
+### CI
+
+- Build image for arm64 and amd64 architechtures (#39)
+
 ## v0.16.12 (2025-07-21)
 
 ### CI
