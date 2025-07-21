@@ -789,7 +789,7 @@ wheels = [
 
 [[package]]
 name = "lightman-ai"
-version = "0.16.11"
+version = "0.16.12"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
