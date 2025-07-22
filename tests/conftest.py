@@ -2,11 +2,12 @@ import os
 from collections.abc import Generator, Iterator
 from contextlib import contextmanager
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 import stamina
-from lightman_ai.article.models import ArticlesList
+from lightman_ai.article.models import ArticlesList, SelectedArticle
+from lightman_ai.integrations.service_desk.integration import ServiceDeskIntegration
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 from stamina._core import _RetryContextIterator
 
@@ -26,6 +27,33 @@ def patch_service_desk_retry_wait_max() -> Generator[None, Any, None]:
 
     with patch("stamina.retry_context", new=patched_retry_context) as mock:
         yield mock
+
+
+@pytest.fixture
+def selected_articles() -> list[SelectedArticle]:
+    """Create test articles for service desk issue creation."""
+    return [
+        SelectedArticle(
+            title="Critical Security Vulnerability in Popular Library",
+            link="https://example.com/article1",
+            why_is_relevant="This affects our production systems",
+            relevance_score=9,
+        ),
+        SelectedArticle(
+            title="New Attack Vector Discovered",
+            link="https://example.com/article2",
+            why_is_relevant="Could impact our infrastructure",
+            relevance_score=8,
+        ),
+    ]
+
+
+@pytest.fixture
+def mock_service_desk() -> Mock:
+    """Create a mock ServiceDeskIntegration."""
+    mock = Mock(spec=ServiceDeskIntegration)
+    mock.create_request_of_type = AsyncMock(return_value="PROJ-123")
+    return mock
 
 
 @pytest.fixture

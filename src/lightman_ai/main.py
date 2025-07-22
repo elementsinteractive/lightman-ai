@@ -28,10 +28,11 @@ def _create_service_desk_issues(
 ) -> None:
     async def schedule_task(article: SelectedArticle) -> None:
         try:
+            description = f"*Why is relevant:*\n{article.why_is_relevant}\n\n*Source:* {article.link}\n\n*Score:* {article.relevance_score}/10"
             await service_desk_client.create_request_of_type(
                 project_key=project_key,
                 summary=article.title,
-                description=article.link,
+                description=description,
                 request_id_type=request_id_type,
             )
             logger.info("Created issue for article %s", article.link)
@@ -80,7 +81,7 @@ def lightman(
 
     if not dry_run:
         if not project_key or not request_id_type:
-            raise ValueError("Missing Service Desk's project key or issue id type")
+            raise ValueError("Missing Service Desk's project key or request id type")
 
         service_desk_client = ServiceDeskIntegration.from_env()
         _create_service_desk_issues(
