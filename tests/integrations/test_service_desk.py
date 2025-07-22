@@ -150,7 +150,7 @@ class TestServiceDeskIntegration:
                 project_key="PROJ", summary="summary", description="desc", request_id_type="REQ_TYPE"
             )
             post_mock.assert_called_once()
-            args, kwargs = post_mock.call_args
+            _, kwargs = post_mock.call_args
             assert kwargs["json"] == {
                 "serviceDeskId": "PROJ",
                 "requestTypeId": "REQ_TYPE",
