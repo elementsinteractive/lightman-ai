@@ -23,12 +23,13 @@ jobs:
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     container:
-      image: returntocorp/semgrep:1.128.1@sha256:144d315f7354c2b2c53021a76165a500f67252c47464be75e951b67050f54a9e
+      image: returntocorp/semgrep:1.128.1@sha256:fca58525689355641019c05ab49dcc5bc3a1eb7e044f35014ee39594b5aa4fc1
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Run Semgrep
         run: |
-          semgrep scan --config auto
+          semgrep scan --config auto --error
+
   twyn:
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
@@ -39,3 +40,4 @@ jobs:
       - name: Run twyn
         run: |
           twyn run -vv
+      
