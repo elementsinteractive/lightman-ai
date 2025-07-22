@@ -26,6 +26,7 @@ from eval.utils import EvalConfig, EvalFileConfig
     ),
 )
 @click.option("--prompt", type=str, help=("Which prompt to use."))
+@click.option("--model", type=str, default=None, help=("Which prompt to use."))
 @click.option(
     "--prompt-file",
     type=str,
@@ -55,6 +56,7 @@ def run(
     prompt_file: str,
     env_file: str,
     tag: str | None = None,
+    model: str | None = None,
 ) -> None:
     load_dotenv(env_file)
     config_from_file = EvalFileConfig.get_config_from_file(config_section=config, path=config_file)
@@ -65,6 +67,7 @@ def run(
             "prompt": prompt or config_from_file.prompt,
             "score_threshold": score or config_from_file.score_threshold,
             "samples": samples or config_from_file.samples,
+            "model": model or config_from_file.model,
         }
     )
 
@@ -76,6 +79,7 @@ def run(
         tag=tag,
         agent=eval_config.agent,
         prompt=configured_prompts.get_prompt(eval_config.prompt),
+        model=eval_config.model,
     )
 
 

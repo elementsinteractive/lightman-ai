@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 from lightman_ai.ai.base.agent import BaseAgent
-from lightman_ai.ai.utils import get_agent_instance_from_agent_name
+from lightman_ai.ai.utils import get_agent_class_from_agent_name
 from lightman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
 from lightman_ai.integrations.service_desk.integration import (
     ServiceDeskIntegration,
@@ -59,11 +59,12 @@ def lightman(
     project_key: str | None = None,
     request_id_type: str | None = None,
     dry_run: bool = False,
+    model: str | None = None,
 ) -> list[SelectedArticle]:
     articles: ArticlesList = _get_articles()
 
-    agent_class = get_agent_instance_from_agent_name(agent)
-    agent_instance = agent_class(prompt)
+    agent_class = get_agent_class_from_agent_name(agent)
+    agent_instance = agent_class(prompt, model, logger=logger)
     logger.info("Selected %s.", agent_instance)
 
     classified_articles = _classify_articles(

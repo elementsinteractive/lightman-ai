@@ -17,6 +17,7 @@ class ResultsFileBuilder:
         samples: int,
         prompt: str,
         score: int,
+        model: str,
         logger: logging.Logger | None = None,
     ) -> None:
         self.results_metrics = results_metrics
@@ -26,6 +27,7 @@ class ResultsFileBuilder:
         self.prompt = prompt
         self.score = score
         self.results_dir = Path(RESULTS_DIR)
+        self.model = model
         self.logger = logger or logging.getLogger("eval")
 
     @property
@@ -55,6 +57,7 @@ class ResultsFileBuilder:
 # Summary
 - Tag: {self.tag or "-"}
 - Agent: {self.agent}
+- Model: {self.model}
 - Samples: {self.samples}
 - Score threshold: {self.score}
 - Prompt: \n {self.prompt}

@@ -25,6 +25,7 @@ def entry_point() -> None:
     help=(f"Location of the config file containing the prompts. Defaults to `{DEFAULT_CONFIG_FILE}`."),
 )
 @click.option("--prompt", type=str, help=("Which prompt to use"))
+@click.option("--model", type=str, default=None, help=("Which model to use. Must be set in conjunction with --agent."))
 @click.option(
     "--score",
     type=int,
@@ -60,6 +61,7 @@ def run(
     agent: str,
     prompt: str,
     prompt_file: str,
+    model: str | None,
     score: int | None,
     config_file: str,
     config: str,
@@ -80,6 +82,7 @@ def run(
                 "agent": agent or config_from_file.agent,
                 "prompt": prompt or config_from_file.prompt,
                 "score_threshold": score or config_from_file.score_threshold,
+                "model": model or config_from_file.model,
             }
         )
 
@@ -94,6 +97,7 @@ def run(
         dry_run=dry_run,
         project_key=config_from_file.service_desk_project_key,
         request_id_type=config_from_file.service_desk_request_id_type,
+        model=final_config.model,
     )
     relevant_articles_metadata = [f"{article.title} ({article.link})" for article in relevant_articles]
     logger.warning("Found these articles: \n- %s", "\n- ".join(relevant_articles_metadata))
