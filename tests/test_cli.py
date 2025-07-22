@@ -2,7 +2,7 @@ from unittest.mock import ANY, Mock, call, patch
 
 from click.testing import CliRunner
 from lightman_ai import cli
-from lightman_ai.core.config import PromptConfig
+from lightman_ai.core.config import FileConfig, PromptConfig
 from tests.conftest import patch_config_file
 
 
@@ -14,6 +14,8 @@ class TestCli:
     def test_arguments(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
+        m_config.return_value = FileConfig()
+
         with patch_config_file():
             result = runner.invoke(
                 cli.run,
@@ -35,14 +37,14 @@ class TestCli:
 
         assert result.exit_code == 0
         assert m_lightman.call_count == 1
-
         assert m_lightman.call_args == call(
             agent="gemini",
             prompt="eval prompt",
             score_threshold=1,
             dry_run=False,
-            project_key=ANY,
-            request_id_type=ANY,
+            project_key=None,
+            request_id_type=None,
+            model=None,
         )
         assert m_config.call_count == 1
         assert m_config.call_args == call(config_section="my-config", path="config-path")
@@ -56,6 +58,7 @@ class TestCli:
     def test_custom_env_file(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
+        m_config.return_value = FileConfig()
         with patch_config_file():
             result = runner.invoke(
                 cli.run,
@@ -73,6 +76,45 @@ class TestCli:
 
         assert result.exit_code == 0
         assert m_load_dotenv.call_args == call("custom.env")
+
+    @patch("lightman_ai.cli.load_dotenv")
+    @patch("lightman_ai.cli.lightman")
+    @patch("lightman_ai.cli.FileConfig.get_config_from_file")
+    @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
+    def test_model_is_set_from_the_cli_when_set(
+        self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock
+    ) -> None:
+        runner = CliRunner()
+        m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
+        m_config.return_value = FileConfig(model="not picked up")
+        with patch_config_file():
+            result = runner.invoke(
+                cli.run,
+                [
+                    "--agent",
+                    "gemini",
+                    "--prompt",
+                    "eval",
+                    "--score",
+                    "1",
+                    "--env-file",
+                    "custom.env",
+                    "--model",
+                    "picked up",
+                ],
+            )
+
+        assert result.exit_code == 0
+        assert m_lightman.call_count == 1
+        assert m_lightman.call_args == call(
+            agent="gemini",
+            prompt="eval prompt",
+            score_threshold=1,
+            dry_run=False,
+            project_key=ANY,
+            request_id_type=ANY,
+            model="picked up",
+        )
 
     @patch("lightman_ai.cli.load_dotenv")
     def test_invalid_config(self, m_load_dotenv: Mock) -> None:
@@ -156,5 +198,6 @@ class TestCli:
             dry_run=True,
             project_key=None,
             request_id_type=None,
+            model=None,
         )
         assert m_config.call_count == 2

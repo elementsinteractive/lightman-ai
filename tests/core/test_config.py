@@ -73,6 +73,7 @@ class TestConfig:
         assert config.agent == "openai"
         assert config.score_threshold == 8
         assert config.prompt == "eval-prompt"
+        assert config.model is None
 
     def test_service_desk_fields_accept_str(self) -> None:
         config = FileConfig(
@@ -128,6 +129,20 @@ class TestConfig:
         assert config.service_desk_project_key is None
         assert config.service_desk_request_id_type is None
 
+    def test_model_parameter_can_be_set_in_config_file(self) -> None:
+        """Test that the model parameter can be set through the config file."""
+        content = """
+        [default]
+        agent = 'openai'
+        score_threshold = 8
+        prompt = 'eval-prompt'
+        model = 'gpt-4o-custom'
+        """
+        with patch_config_file(content=content):
+            config = FileConfig.get_config_from_file(config_section=DEFAULT_CONFIG_SECTION, path=DEFAULT_CONFIG_FILE)
+
+        assert config.model == "gpt-4o-custom"
+
 
 class TestFinalConfig:
     def test_init_error(self) -> None:
@@ -147,6 +162,23 @@ class TestFinalConfig:
                 }
             )
         assert "`score_threshold`: Input should be greater than 0" in exc.value.args[0]
+
+    def test_final_config_accepts_model_parameter(self) -> None:
+        """Test that FinalConfig now accepts a model parameter."""
+        config = FinalConfig.init_from_dict(
+            {"prompt": "test prompt", "agent": "openai", "score_threshold": 5, "model": "gpt-4o-custom"}
+        )
+
+        assert config.prompt == "test prompt"
+        assert config.agent == "openai"
+        assert config.score_threshold == 5
+        assert config.model == "gpt-4o-custom"
+
+    def test_final_config_model_parameter_is_optional(self) -> None:
+        """Test that the model parameter is optional and defaults to None."""
+        config = FinalConfig.init_from_dict({"prompt": "test prompt", "agent": "openai", "score_threshold": 5})
+
+        assert config.model is None
 
 
 class TestPromptConfig:

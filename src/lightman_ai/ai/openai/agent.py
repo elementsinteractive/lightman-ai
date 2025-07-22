@@ -11,8 +11,8 @@ from pydantic_ai.models.openai import OpenAIModel
 class OpenAIAgent(BaseAgent):
     """Class that provides an interface to operate with the OpenAI model."""
 
-    _model = OpenAIModel
-    _model_name = "gpt-4.1"
+    _class = OpenAIModel
+    _default_model_name = "gpt-4.1"
 
     def _execute_agent(self, prompt: str) -> AgentRunResult[SelectedArticlesList]:
         with map_openai_exceptions():

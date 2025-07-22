@@ -9,13 +9,13 @@ from pydantic_ai.models.openai import OpenAIModel
 
 
 class BaseAgent(ABC):
-    _model: type[OpenAIModel] | type[GoogleModel]
-    _model_name: str
+    _class: type[OpenAIModel] | type[GoogleModel]
+    _default_model_name: str
 
-    def __init__(self, system_prompt: str, logger: logging.Logger | None = None) -> None:
-        model = self._model(self._model_name)
+    def __init__(self, system_prompt: str, model: str | None = None, logger: logging.Logger | None = None) -> None:
+        agent_model = self._class(model or self._default_model_name)
         self.agent: Agent[Never, SelectedArticlesList] = Agent(
-            model=model, output_type=SelectedArticlesList, system_prompt=system_prompt
+            model=agent_model, output_type=SelectedArticlesList, system_prompt=system_prompt
         )
         self.logger = logger or logging.getLogger("lightman")
 

@@ -2,7 +2,6 @@
 agent = 'openai'
 score_threshold = 8
 prompt = 'classify'
-
 service_desk_project_key=''
 service_desk_request_id_type=''
 
@@ -11,6 +10,7 @@ agent = 'openai'
 score_threshold = 8
 prompt = 'classify'
 samples = 3
+model = 'gpt-4o'
 
 [prompts]
 classify = ""

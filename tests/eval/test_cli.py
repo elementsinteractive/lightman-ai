@@ -1,7 +1,7 @@
 from unittest.mock import Mock, call, patch
 
 from click.testing import CliRunner
-from lightman_ai.core.config import PromptConfig
+from lightman_ai.core.config import FileConfig, PromptConfig
 from tests.conftest import patch_config_file
 
 from eval import cli
@@ -15,7 +15,7 @@ class TestEvalCli:
     def test_env_file_parameter(self, m_prompt: Mock, m_config: Mock, m_load_dotenv: Mock, m_eval: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
-
+        m_config.return_value = FileConfig()
         with patch_config_file():
             result = runner.invoke(
                 cli.run,
@@ -43,7 +43,7 @@ class TestEvalCli:
     def test_default_env_file(self, m_prompt: Mock, m_config: Mock, m_load_dotenv: Mock, m_eval: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
-
+        m_config.return_value = FileConfig()
         with patch_config_file():
             result = runner.invoke(
                 cli.run,
