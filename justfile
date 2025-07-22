@@ -16,7 +16,7 @@ help:
 venv: 
     @if ! {{ venv-exists }}; \
     then \
-    uv sync --all-extras; \
+    uv sync --frozen --all-extras; \
     fi
 
 
