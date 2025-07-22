@@ -2,6 +2,8 @@
 venv := ".venv"
 python_version :="3.13"
 
+venv-exists := path_exists(venv)
+
 
 target_dirs := "src tests"
 
@@ -12,28 +14,30 @@ help:
 
 # Cleans all artifacts generated while running this project, including the virtualenv.
 venv: 
-    @uv sync --group test --group lint --group local
+    @if ! {{ venv-exists }}; \
+    then \
+    uv sync --all-extras; \
+    fi
 
 
 # Cleans all artifacts generated while running this project, including the virtualenv.
-clean:
+clean: 
     @rm -f .coverage*
     @rm -rf {{ venv }}
 
 # Runs the tests with the specified arguments (any path or pytest argument).
-test *test-args='': 
+test *test-args='': venv
     uv run pytest {{ test-args }} --no-cov 
 
 # Runs all tests including coverage report.
-test-all: 
+test-all: venv
     uv run pytest
 
 # Format all code in the project.
-format:  
+format:  venv
     uv run ruff check {{ target_dirs }} --fix
 
 # Lint all code in the project.
-lint: 
+lint: venv
     uv run ruff check {{ target_dirs }}
     uv run mypy {{ target_dirs }}
-
