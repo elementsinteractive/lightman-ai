@@ -40,7 +40,7 @@ test-all: venv
 
 # Format all code in the project.
 format:  venv
-    {{ run }} ruff format {{ target_dirs }}
+    {{ run }} ruff check {{ target_dirs }} --fix
 
 # Lint all code in the project.
 lint: venv
