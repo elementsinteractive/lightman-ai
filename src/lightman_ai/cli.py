@@ -6,6 +6,7 @@ from lightman_ai.ai.utils import AGENT_CHOICES
 from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION, DEFAULT_ENV_FILE
 from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
 from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
+from lightman_ai.core.sentry import configure_sentry
 from lightman_ai.main import lightman
 
 logger = logging.getLogger("lightman")
@@ -74,6 +75,7 @@ def run(
     Holds no logic. It calls the main method and returns 0 when succesful .
     """
     load_dotenv(env_file)
+    configure_sentry()
     try:
         prompt_config = PromptConfig.get_config_from_file(path=prompt_file)
         config_from_file = FileConfig.get_config_from_file(config_section=config, path=config_file)

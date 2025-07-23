@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 from lightman_ai.article.models import SelectedArticle, SelectedArticlesList
+from lightman_ai.core.sentry import configure_sentry
 from lightman_ai.main import _create_service_desk_issues, lightman
 from tests.utils import patch_agent
 
@@ -174,3 +175,62 @@ class TestCreateServiceDeskIssues:
             "Could not create ServiceDesk issue: New Attack Vector Discovered, https://example.com/article2"
             in caplog.text
         )
+
+
+class TestSentryIntegration:
+    """Tests for Sentry integration behavior."""
+
+    @patch.dict("os.environ", {}, clear=True)  # Clear all env vars
+    def test_sentry_skipped_when_dsn_not_set(self, caplog: pytest.LogCaptureFixture) -> None:
+        """Test that Sentry initialization is skipped when SENTRY_DSN is not set."""
+        with caplog.at_level(logging.INFO):
+            configure_sentry()
+
+        # Should log that Sentry is skipped
+        assert "SENTRY_DSN not configured, skipping Sentry initialization" in caplog.text
+
+    @patch.dict("os.environ", {"SENTRY_DSN": "https://test@sentry.io/123"})
+    @patch("lightman_ai.core.sentry.sentry_sdk.init")
+    def test_sentry_execution_continues_when_init_fails(
+        self, mock_sentry_init: Mock, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Test that execution continues when Sentry initialization fails."""
+        # Make sentry_sdk.init raise an exception
+        mock_sentry_init.side_effect = Exception("Sentry connection failed")
+
+        with caplog.at_level(logging.WARNING):
+            # This should not raise an exception
+            configure_sentry()
+
+        # Should log the warning and continue
+        assert "Could not instantiate Sentry! Sentry connection failed" in caplog.text
+        assert "Continuing with the execution" in caplog.text
+
+        # Verify that sentry_sdk.init was called (and failed)
+        mock_sentry_init.assert_called_once()
+
+    @patch.dict("os.environ", {"SENTRY_DSN": "https://test@sentry.io/123"})
+    @patch("lightman_ai.core.sentry.sentry_sdk.init")
+    @patch("lightman_ai.core.sentry.metadata.version")
+    def test_sentry_initializes_successfully(
+        self, mock_version: Mock, mock_sentry_init: Mock, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Test that Sentry initializes successfully when configured properly."""
+        # Mock the version lookup
+        mock_version.return_value = "1.0.0"
+
+        with caplog.at_level(logging.INFO):
+            configure_sentry()
+
+        # Should not log any warnings or errors
+        assert "Could not instantiate Sentry" not in caplog.text
+        assert "SENTRY_DSN not configured" not in caplog.text
+
+        # Verify that sentry_sdk.init was called with expected parameters
+        mock_sentry_init.assert_called_once()
+        call_kwargs = mock_sentry_init.call_args.kwargs
+        assert "release" in call_kwargs
+        assert "integrations" in call_kwargs
+
+        # Verify version was looked up
+        mock_version.assert_called_once_with("lightman-ai")
