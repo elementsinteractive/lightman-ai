@@ -40,12 +40,12 @@ jobs:
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     name: "Lint commit message"
+    container:
+      image: commitizen/commitizen:4.8.3@sha256:08a078c52b368f85f34257a66e10645ee74d8cbe9b471930b80b2b4e95a9bd4a
     steps:
       - name: Check out
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - name: Install commitizen
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install commitizen
       - name: Check commit message
-        run: cz check --rev-range HEAD
+        run: |
+          git config --global --add safe.directory /__w/lightman-ai/lightman-ai
+          cz check --rev-range HEAD
