@@ -1,3 +1,28 @@
+## v0.17.0 (2025-07-23)
+
+### Feat
+
+- allow to introduce any model for supported agents (#54)
+- Add more information in SD description (#44)
+
+### Refactor
+
+- remove number_of_tokens (#43)
+- format lightman output (#41)
+
+### CI
+
+- pin actions (#55)
+- cache mypy to speed up runs (#48)
+
+### Technical
+
+- compile libraries at installation time (#47)
+- do not update dependencies when installing venv (#46)
+- swap pydantic-ai with pydantic-ai-slim (#45)
+- automatically create venv (#42)
+- bump pdbpp from 0.11.6 to 0.11.7 in the patch-updates group (#40)
+
 ## v0.16.13 (2025-07-21)
 
 ### CI
