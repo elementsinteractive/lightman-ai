@@ -345,6 +345,13 @@ This approach ensures that performance metrics reflect real-world usage scenario
 
 **Make sure to fill in the `RELEVANT_ARTICLES` with the ones you classify as relevant, so that you can compare the accuracy after running the `eval` script.*** 
 
+## Sentry 
+
+- The application will automatically pick up and use environment variables if they are present in your environment or `.env` file.
+- To enable Sentry error monitoring, set the `SENTRY_DSN` environment variable. This is **mandatory** for Sentry to be enabled. If `SENTRY_DSN` is not set, Sentry will be skipped and the application will run normally.
+- If Sentry fails to initialize for any reason (e.g., network issues, invalid DSN), the application will log a warning and continue execution without error monitoring.
+- Sentry is **optional**: the application does not require it to function, and all features will work even if Sentry is not configured or fails to start.
+
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.

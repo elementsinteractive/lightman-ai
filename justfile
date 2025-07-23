@@ -40,9 +40,9 @@ test-all: venv
 
 # Format all code in the project.
 format:  venv
-    {{ run }} ruff check {{ target_dirs }}
+    {{ run }} ruff format {{ target_dirs }}
 
 # Lint all code in the project.
 lint: venv
-    {{ run }}  ruff check {{ target_dirs }}
-    {{ run }}  mypy {{ target_dirs }}
+    {{ run }} ruff check {{ target_dirs }}
+    {{ run }} mypy {{ target_dirs }}

@@ -15,6 +15,7 @@ dependencies = [
     "ruff>=0.12.4",
     "pydantic-ai-slim[google,openai]>=0.4.4",
     "logfire>=3.25.0",
+    "sentry-sdk>=2.21.0,<3.0.0",
 ]
 name = "lightman_ai"
 version = "0.17.0"
