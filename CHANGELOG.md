@@ -1,3 +1,9 @@
+## v0.18.2 (2025-07-23)
+
+### Technical
+
+- pin python version with its sha (#62)
+
 ## v0.18.1 (2025-07-23)
 
 ### CI
