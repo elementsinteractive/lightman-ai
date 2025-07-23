@@ -1,3 +1,13 @@
+## v0.18.1 (2025-07-23)
+
+### CI
+
+- pin commitizen version (#61)
+
+### Technical
+
+- fix justfile (#60)
+
 ## v0.18.0 (2025-07-23)
 
 ### Feat
