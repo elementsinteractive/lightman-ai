@@ -17,7 +17,7 @@ dependencies = [
     "sentry-sdk>=2.21.0,<3.0.0",
 ]
 name = "lightman_ai"
-version = "0.18.4"
+version = "0.18.5"
 description = "Cybersecurity news aggregator."
 readme = "README.md"
 
@@ -147,7 +147,7 @@ exclude_lines = [
 [tool.commitizen]
 version_files = ["pyproject.toml:^version"]
 name = "cz_customize"
-version = "0.18.4"
+version = "0.18.5"
 tag_format = "v$version"
 
 [tool.commitizen.customize]
