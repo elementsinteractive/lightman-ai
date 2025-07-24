@@ -22,8 +22,6 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.head_ref }}
-          # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
-          persist-credentials: false
 
       - name: Configure git
         run: |
