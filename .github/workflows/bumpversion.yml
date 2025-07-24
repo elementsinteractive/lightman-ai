@@ -7,6 +7,9 @@ jobs:
   bump_version:
     if: ${{ !startsWith(github.event.head_commit.message, 'bump:') && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    container:
+      image: commitizen/commitizen:4.8.3@sha256:08a078c52b368f85f34257a66e10645ee74d8cbe9b471930b80b2b4e95a9bd4a
+
     name: "Bump version and create changelog with commitizen"
     steps:
       - uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
@@ -21,10 +24,27 @@ jobs:
           ref: ${{ github.head_ref }}
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - id: cz
         name: Create bump and changelog
-        uses: commitizen-tools/commitizen-action@5b0848cd060263e24602d1eba03710e056ef7711 # 0.5.0
-        with:
-          github_token: ${{ steps.app-token.outputs.token }}
+        run: |
+          cz bump --yes
+          echo "version=$(cz version)" >> $GITHUB_OUTPUT
+
       - name: Print Version
         run: echo "Bumped to version ${{ steps.cz.outputs.version }}"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@7edac99f961f18b581bbd960d59d049f04c0002f # v6.4.1
+
+      - name: Update uv.lock with the latest project version
+        run: |
+          uv lock --upgrade-package lightman_ai
+          git add uv.lock
+          git commit --amend --no-edit
+          git push origin main --tags
