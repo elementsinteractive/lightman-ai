@@ -25,6 +25,7 @@ readme = "README.md"
 lightman-ai = "lightman_ai.cli:entry_point"
 
 [project.optional-dependencies]
+
 test = [
     "pytest<9.0.0,>=8.0.0",
     "pytest-cov<6.0.0,>=5.0.0",
