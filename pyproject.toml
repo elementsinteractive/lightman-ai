@@ -12,7 +12,6 @@ dependencies = [
     "pydantic-settings[dotenv]<3.0.0,>=2.9.1",
     "tiktoken<1.0.0,>=0.9.0",
     "tomlkit<1.0.0,>=0.13.3",
-    "ruff>=0.12.4",
     "pydantic-ai-slim[google,openai]>=0.4.4",
     "logfire>=3.25.0",
     "sentry-sdk>=2.21.0,<3.0.0",
@@ -42,7 +41,6 @@ local = [
     "commitizen<5.0.0,>=4.8.3",
     "codespell<3.0.0,>=2.2.4",
 ]
-
 
 [build-system]
 requires = ["pdm-backend"]
