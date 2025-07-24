@@ -73,7 +73,6 @@ jobs:
           --cache-to=type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max \
           -t docker.io/elementsinteractive/lightman-ai:latest \
           -t docker.io/elementsinteractive/lightman-ai:${{ steps.meta.outputs.version }} \
-          ${{ steps.meta.outputs.labels }}
           .
 
   release_notes:
