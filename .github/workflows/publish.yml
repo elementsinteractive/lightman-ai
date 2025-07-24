@@ -68,15 +68,7 @@ jobs:
         env:
           LABELS: ${{ steps.meta.outputs.labels }}
         run: |
-          docker buildx build \
-            --platform linux/amd64,linux/arm64 \
-            --push \
-            --cache-from=type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache \
-            --cache-to=type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max \
-            -t docker.io/elementsinteractive/lightman-ai:latest \
-            -t docker.io/elementsinteractive/lightman-ai:${{ steps.meta.outputs.version }} \
-            $LABELS \
-            .
+          docker buildx build --platform linux/amd64,linux/arm64 --push --cache-from=type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache --cache-to=type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max -t docker.io/elementsinteractive/lightman-ai:latest -t docker.io/elementsinteractive/lightman-ai:${{ steps.meta.outputs.version }} $LABELS .
   release_notes:
     runs-on: ubuntu-latest
     needs: [push_to_pypi, push_to_docker_hub]
