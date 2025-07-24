@@ -27,13 +27,14 @@ jobs:
 
       - name: Configure git
         run: |
+          git config --global --add safe.directory "*"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - id: cz
         name: Create bump and changelog
         run: |
-          cz bump --yes
+          cz bump --yes --changelog
           echo "version=$(cz version)" >> $GITHUB_OUTPUT
 
       - name: Print Version
@@ -47,4 +48,4 @@ jobs:
           uv lock --upgrade-package lightman_ai
           git add uv.lock
           git commit --amend --no-edit
-          git push origin main --tags
+          git push --tags
