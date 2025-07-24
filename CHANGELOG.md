@@ -1,3 +1,15 @@
+## v0.18.4 (2025-07-24)
+
+### Fix
+
+- push commits together with tags (#67)
+- Allow bump job to push commits (#66)
+- fix bump job (#65)
+
+### CI
+
+- udpate package dependency after bump (#64)
+
 ## v0.18.2 (2025-07-23)
 
 ### Technical
