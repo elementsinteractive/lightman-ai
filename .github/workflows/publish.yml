@@ -65,17 +65,16 @@ jobs:
           images: elementsinteractive/lightman-ai
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5.4.0
-        with:
-          images: docker.io/elementsinteractive/lightman-ai
-          context: .
-          file: ./Dockerfile
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache
-          cache-to: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max
+        run: |
+          docker buildx build \                                                                                                  
+          --platform linux/amd64,linux/arm64 \
+          --push \
+          --cache-from=type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache \
+          --cache-to=type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max \
+          -t docker.io/elementsinteractive/lightman-ai:latest \
+          -t docker.io/elementsinteractive/lightman-ai:${{ steps.meta.outputs.version }} \
+          ${{ steps.meta.outputs.labels }}
+          .
 
   release_notes:
     runs-on: ubuntu-latest
