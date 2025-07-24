@@ -46,4 +46,4 @@ jobs:
           uv lock --upgrade-package lightman_ai
           git add uv.lock
           git commit --amend --no-edit
-          git push --tags
+          git push --follow-tags
