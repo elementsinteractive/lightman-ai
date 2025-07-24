@@ -1,3 +1,9 @@
+## v0.18.12 (2025-07-24)
+
+### CI
+
+- Have a separate cache for each architechture (#74)
+
 ## v0.18.11 (2025-07-24)
 
 ### CI
