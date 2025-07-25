@@ -1,3 +1,9 @@
+## v0.18.9 (2025-07-25)
+
+### Fix
+
+- give proper permissions to the token (#80)
+
 ## v0.18.8 (2025-07-25)
 
 ### Fix
