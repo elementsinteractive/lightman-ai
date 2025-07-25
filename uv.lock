@@ -487,7 +487,6 @@ wheels = [
 
 [[package]]
 name = "lightman-ai"
-version = "0.18.6"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
