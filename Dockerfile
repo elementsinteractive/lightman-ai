@@ -37,14 +37,14 @@ ENV PATH="/root/.local/bin/:$PATH"
 # Copy dependency files
 COPY uv.lock pyproject.toml ./
 
+# Create a fake VERSION file, so that we don't break the cache because of a mismatch in that file
+RUN echo "v0.0.0" > VERSION
+
 # Install dependencies using uv (only dependencies, not the project itself)
 RUN UV_PROJECT_ENVIRONMENT=${VENV_PATH} uv sync --frozen --no-install-project --compile-bytecode
 RUN ${BIN_PATH}/python -m ensurepip
 # --------------- `final` stage --------------- 
 FROM base AS final
-
-# Set non-root user and group
-USER ${USER}:${GROUP}
 
 # Copy the virtual environment from build stage 
 COPY --from=build --chown=${USER}:${GROUP} ${VENV_PATH} ${VENV_PATH}
@@ -52,14 +52,21 @@ COPY --from=build --chown=${USER}:${GROUP} ${VENV_PATH} ${VENV_PATH}
 # Set PATH to use the virtual environment
 ENV PATH="${BIN_PATH}:$PATH"
 
-# Copy pyproject.toml for package metadata
+# Copy needed files to install the package
 COPY --from=build --chown=${USER}:${GROUP} ${WORKDIR}/pyproject.toml .
+COPY --chown=${USER}:${GROUP} README.md README.md
+COPY --chown=${USER}:${GROUP} src src
 
-COPY README.md README.md
-# Copy source code
-COPY src src
-
-# Install the CLI tool (dependencies already installed in venv)
+# Install the CLI tool (dependencies already installed in venv) 
+# the project will be installed in the venv with version 0.0.0, because we don't have the VERSION file at this stage yet.
+# We will. include the version file later on, this is done so we don't break the cache after every bump. 
+# The builds that will benefit from this are mostly "ci" PRs. 
+# It's still a good trade-off, since the correct version will be in VERSION anyways
 RUN ${BIN_PATH}/pip3 install --no-deps .
+
+USER ${USER}:${GROUP}
+
+# Copy the real VERSION file
+COPY --chown=${USER}:${GROUP} VERSION .
 
 ENTRYPOINT [ "lightman-ai" ]
