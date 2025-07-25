@@ -1,3 +1,9 @@
+## v0.18.8 (2025-07-25)
+
+### Fix
+
+- configure git in update_uv_lock (#79)
+
 ## v0.18.7 (2025-07-25)
 
 ### Fix
