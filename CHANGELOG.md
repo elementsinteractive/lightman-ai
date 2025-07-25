@@ -1,3 +1,9 @@
+## v0.18.6 (2025-07-25)
+
+### CI
+
+- delete old docker cache entries (#76)
+
 ## v0.18.5 (2025-07-24)
 
 ### Fix
