@@ -1,7 +1,7 @@
 # VARIABLE DEFINITIONS
 venv := ".venv"
 python_version :="3.13"
-run := "poetry run"
+run := "uv run"
 eval_path := "eval/cli.py"
 
 venv-exists := path_exists(venv)
