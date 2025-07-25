@@ -108,6 +108,19 @@ jobs:
         run: |
           uv lock --upgrade-package lightman_ai
           git add uv.lock
+
+      - uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        id: app-token
+        with:
+          app-id: ${{ vars.ELEMENTSINTERACTIVE_BOT_APP_ID }}
+          private-key: ${{ secrets.ELEMENTSINTERACTIVE_BOT_PRIVATE_KEY }}
+
+      - name: Configure git
+        run: |
+          git config --global --add safe.directory "*"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Update the latest commit with the newest additions
         run: |
           git commit --amend --no-edit
