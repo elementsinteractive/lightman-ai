@@ -1,3 +1,9 @@
+## v0.18.7 (2025-07-25)
+
+### Fix
+
+- use VERSION file to prevent cache misses (#78)
+
 ## v0.18.6 (2025-07-25)
 
 ### CI
