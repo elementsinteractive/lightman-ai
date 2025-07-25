@@ -52,17 +52,18 @@ COPY --from=build --chown=${USER}:${GROUP} ${VENV_PATH} ${VENV_PATH}
 # Set PATH to use the virtual environment
 ENV PATH="${BIN_PATH}:$PATH"
 
-# Copy needed files for installing the package
+# Copy needed files to install the package
+COPY --from=build --chown=${USER}:${GROUP} VERSION .
 COPY --from=build --chown=${USER}:${GROUP} ${WORKDIR}/pyproject.toml .
 COPY --chown=${USER}:${GROUP} README.md README.md
 COPY --chown=${USER}:${GROUP} src src
-
-# Copy the real VERSION file
-COPY --chown=${USER}:${GROUP} VERSION .
 
 # Install the CLI tool (dependencies already installed in venv) 
 RUN ${BIN_PATH}/pip3 install --no-deps .
 
 USER ${USER}:${GROUP}
+
+# Copy the real VERSION file
+COPY --chown=${USER}:${GROUP} VERSION .
 
 ENTRYPOINT [ "lightman-ai" ]

@@ -129,5 +129,5 @@ jobs:
           TAG=$(git tag -l | tail -n 1)
           git tag -d $TAG
           git tag $TAG
-          git push origin HEAD:main
-          git push origin --tags
+          git push origin HEAD:main -f
+          git push origin --tags -f
