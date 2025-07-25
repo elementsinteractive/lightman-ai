@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 import click
 from dotenv import load_dotenv
@@ -12,7 +13,17 @@ from lightman_ai.main import lightman
 logger = logging.getLogger("lightman")
 
 
+def get_version() -> str:
+    """Read version from VERSION file."""
+    try:
+        version_file = Path(__file__).resolve().parents[2] / "VERSION"
+        return version_file.read_text().strip()
+    except FileNotFoundError:
+        return "unknown"
+
+
 @click.group()
+@click.version_option(version=get_version(), prog_name="lightman-ai")
 def entry_point() -> None:
     pass
 
