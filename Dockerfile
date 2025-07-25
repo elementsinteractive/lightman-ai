@@ -53,7 +53,7 @@ COPY --from=build --chown=${USER}:${GROUP} ${VENV_PATH} ${VENV_PATH}
 ENV PATH="${BIN_PATH}:$PATH"
 
 # Copy needed files to install the package
-COPY --from=build --chown=${USER}:${GROUP} VERSION .
+COPY --from=build --chown=${USER}:${GROUP} ${WORKDIR}/VERSION .
 COPY --from=build --chown=${USER}:${GROUP} ${WORKDIR}/pyproject.toml .
 COPY --chown=${USER}:${GROUP} README.md README.md
 COPY --chown=${USER}:${GROUP} src src
