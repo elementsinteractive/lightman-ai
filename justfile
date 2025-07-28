@@ -55,7 +55,7 @@ lint: venv
 
 # Build the package using hatchling
 build: venv
-    {{ run }} python -m build
+    {{ run }} build
 
 # Install package in development mode
 install-dev: venv
