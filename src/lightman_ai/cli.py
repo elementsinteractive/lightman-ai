@@ -1,4 +1,5 @@
 import logging
+from importlib import metadata
 
 import click
 from dotenv import load_dotenv
@@ -12,7 +13,13 @@ from lightman_ai.main import lightman
 logger = logging.getLogger("lightman")
 
 
+def get_version() -> str:
+    """Read version from VERSION file."""
+    return metadata.version("lightman-ai")
+
+
 @click.group()
+@click.version_option(version=get_version(), prog_name="lightman-ai")
 def entry_point() -> None:
     pass
 
