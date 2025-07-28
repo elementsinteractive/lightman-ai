@@ -1,3 +1,9 @@
+## v0.20.0 (2025-07-28)
+
+### Feat
+
+- replace setuptools with hatchling (#92)
+
 ## v0.19.0 (2025-07-28)
 
 ### Feat
