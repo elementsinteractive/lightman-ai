@@ -57,16 +57,12 @@ COPY --from=build --chown=${USER}:${GROUP} ${WORKDIR}/pyproject.toml .
 COPY --chown=${USER}:${GROUP} README.md README.md
 COPY --chown=${USER}:${GROUP} src src
 
+# Copy the real VERSION file
+COPY --chown=${USER}:${GROUP} VERSION .
+
 # Install the CLI tool (dependencies already installed in venv) 
-# the project will be installed in the venv with version 0.0.0, because we don't have the VERSION file at this stage yet.
-# We will. include the version file later on, this is done so we don't break the cache after every bump. 
-# The builds that will benefit from this are mostly "ci" PRs. 
-# It's still a good trade-off, since the correct version will be in VERSION anyways
 RUN ${BIN_PATH}/pip3 install --no-deps .
 
 USER ${USER}:${GROUP}
-
-# Copy the real VERSION file
-COPY --chown=${USER}:${GROUP} VERSION .
 
 ENTRYPOINT [ "lightman-ai" ]
