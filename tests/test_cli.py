@@ -201,3 +201,10 @@ class TestCli:
             model=None,
         )
         assert m_config.call_count == 2
+
+    @patch("lightman_ai.cli.metadata.version")
+    def test_get_version_calls_metadata(self, mock_version: Mock) -> None:
+        mock_version.return_value = "1.2.3"
+
+        assert cli.get_version() == "1.2.3"
+        mock_version.assert_called_once_with("lightman-ai")

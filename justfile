@@ -1,7 +1,7 @@
 # VARIABLE DEFINITIONS
 venv := ".venv"
 python_version :="3.13"
-run := "poetry run"
+run := "uv run"
 eval_path := "eval/cli.py"
 
 venv-exists := path_exists(venv)
@@ -40,6 +40,7 @@ test-all: venv
 
 # Format all code in the project.
 format:  venv
+    {{ run }} ruff format {{ target_dirs }}
     {{ run }} ruff check {{ target_dirs }} --fix
 
 # Lint all code in the project.
