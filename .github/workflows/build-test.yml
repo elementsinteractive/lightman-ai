@@ -66,7 +66,7 @@ jobs:
     needs: [should-test-docker-build]
     name: Test Docker build
     runs-on: ubuntu-latest
-    if: needs.should-test-docker-build.outputs.docker == 'true' && !startsWith(github.event.head_commit.message, 'bump:')
+    if: needs.should-test-docker-build.outputs.docker == 'true'
     permissions:
       contents: read
       packages: read
@@ -93,11 +93,13 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5.4.0
         with:
-          images: docker.io/elementsinteractive/lightman-ai
           context: .
           file: ./Dockerfile
           push: false
-          platforms: linux/amd64,linux/arm64
+          load: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache
+
+      - name: Test image
+        run: |
+          docker run --rm ${{ steps.meta.outputs.tags }} --version
