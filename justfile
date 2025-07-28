@@ -29,6 +29,11 @@ eval *args: venv
 clean: 
     @rm -f .coverage*
     @rm -rf {{ venv }}
+    @rm -rf dist/
+    @rm -rf .mypy_cache/
+    @rm -rf .ruff_cache/
+    @rm -rf .pytest_cache/
+
 
 # Runs the tests with the specified arguments (any path or pytest argument).
 test *test-args='': venv
@@ -47,3 +52,11 @@ format:  venv
 lint: venv
     {{ run }} ruff check {{ target_dirs }}
     {{ run }} mypy {{ target_dirs }}
+
+# Build the package using hatchling
+build: venv
+    {{ run }} python -m build
+
+# Install package in development mode
+install-dev: venv
+    {{ run }} pip install -e .

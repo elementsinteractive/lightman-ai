@@ -41,15 +41,29 @@ local = [
     "pre-commit<4.0.0,>=3.2.2",
     "commitizen<5.0.0,>=4.8.3",
     "codespell<3.0.0,>=2.2.4",
+    "build<2.0.0,>=1.0.0",
 ]
 
 
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.setuptools.dynamic]
-version = {file = "VERSION"}
+[tool.hatch.version]
+path = "VERSION"
+pattern = "v(?P<version>[^\\s]+)"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lightman_ai"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/README.md",
+    "/LICENSE",
+    "/VERSION",
+    "/pyproject.toml",
+]
 
 [tool.pytest.ini_options]
 addopts = """
