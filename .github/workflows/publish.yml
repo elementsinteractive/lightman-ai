@@ -74,8 +74,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache
-          cache-to: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max
+          cache-from: |
+            type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache
+            type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:latest
+          cache-to: |
+            type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max,compression=zstd,force-compression=true,oci-mediatypes=true
       - name: Delete old cache entries
         env:
           GH_TOKEN: ${{ github.token }}
