@@ -44,7 +44,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
-    name: Check if should test docker build
+    name: Check if should `test_docker_build` run
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     steps:
