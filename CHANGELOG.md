@@ -1,3 +1,12 @@
+## v0.20.1 (2025-07-28)
+
+### CI
+
+- publish package with uv (#96)
+- test docker build (#94)
+- improve docker cache (#95)
+- test build in ci (#93)
+
 ## v0.20.0 (2025-07-28)
 
 ### Feat
