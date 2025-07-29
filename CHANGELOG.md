@@ -1,3 +1,10 @@
+## v0.21.2 (2025-07-29)
+
+### Docs
+
+- fix defaults in docs (#105)
+- Update readme with sentry and start-date changes (#104)
+
 ## v0.21.1 (2025-07-29)
 
 ### Fix
