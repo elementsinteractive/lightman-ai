@@ -1,14 +1,23 @@
 from abc import ABC
+from datetime import datetime
 from typing import override
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 
 
 class BaseArticle(BaseModel, ABC):
     """Base abstract class for all Articles."""
 
-    title: str
-    link: str
+    title: str = Field(..., min_length=1)
+    link: str = Field(..., min_length=1)
+    published_at: datetime = Field(..., description="Must be timezone aware")
+
+    @field_validator("published_at", mode="after")
+    @classmethod
+    def validate_timezone_aware(cls, v: datetime) -> datetime:
+        if v.tzinfo is None:
+            raise ValueError("published_at must be timezone aware")
+        return v
 
     @override
     def __eq__(self, value: object) -> bool:
@@ -28,8 +37,8 @@ class SelectedArticle(BaseArticle):
 
 
 class Article(BaseArticle):
-    title: str
-    description: str
+    title: str = Field(..., min_length=1)
+    description: str = Field(..., min_length=1)
 
 
 class BaseArticlesList[TArticle: BaseArticle](BaseModel):
@@ -40,11 +49,11 @@ class BaseArticlesList[TArticle: BaseArticle](BaseModel):
 
     @property
     def titles(self) -> list[str]:
-        return [new.title for new in self.articles]
+        return [article.title for article in self.articles]
 
     @property
     def links(self) -> list[str]:
-        return [new.link for new in self.articles]
+        return [article.link for article in self.articles]
 
 
 class SelectedArticlesList(BaseArticlesList[SelectedArticle]):

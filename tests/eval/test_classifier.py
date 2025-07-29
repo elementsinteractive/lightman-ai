@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from unittest.mock import Mock, patch
 
 from lightman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
@@ -9,13 +10,24 @@ from eval.constants import MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
 class TestClassifier:
     def transform_articles_to_selected_articles(self, articles: list[Article], score: int) -> list[SelectedArticle]:
         return [
-            SelectedArticle(title=article.title, link=article.link, why_is_relevant="", relevance_score=score)
+            SelectedArticle(
+                title=article.title,
+                link=article.link,
+                why_is_relevant="",
+                relevance_score=score,
+                published_at=article.published_at,
+            )
             for article in articles
         ]
 
     def test__get_false_negatives(self) -> None:
-        relevant_articles = [Article(title="", link=f"relevant {i}", description="") for i in range(2)]
-        non_relevant_articles = [Article(title="", link=f"non relevant {i}", description="") for i in range(2)]
+        now = datetime.now(UTC)
+        relevant_articles = [
+            Article(title="a", link=f"relevant {i}", description="b", published_at=now) for i in range(2)
+        ]
+        non_relevant_articles = [
+            Article(title="a", link=f"non relevant {i}", description="b", published_at=now) for i in range(2)
+        ]
 
         selected_articles_above_threshold = self.transform_articles_to_selected_articles(
             [relevant_articles[0]], score=7
@@ -45,14 +57,20 @@ class TestClassifier:
                 link=missed_article.link,
                 why_is_relevant=MISSED_ARTICLE_REASON,
                 relevance_score=MISSED_ARTICLE_RELEVANCE_SCORE,
+                published_at=missed_article.published_at,
             )
         }
 
     @patch("eval.classifier._classify_articles")
     @patch("eval.classifier.Classifier._can_run_in_parallel")
     def test__classify(self, mock_parallel: Mock, mock_classify: Mock) -> None:
-        relevant_articles = [Article(title="", link=f"relevant {i}", description="") for i in range(2)]
-        non_relevant_articles = [Article(title="", link=f"non relevant {i}", description="") for i in range(2)]
+        now = datetime.now(UTC)
+        relevant_articles = [
+            Article(title="a", link=f"relevant {i}", description="b", published_at=now) for i in range(2)
+        ]
+        non_relevant_articles = [
+            Article(title="a", link=f"non relevant {i}", description="b", published_at=now) for i in range(2)
+        ]
 
         selected_articles_above_threshold = self.transform_articles_to_selected_articles(
             [relevant_articles[0], non_relevant_articles[0]], score=7

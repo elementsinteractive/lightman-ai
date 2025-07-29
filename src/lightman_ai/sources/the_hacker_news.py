@@ -1,3 +1,5 @@
+import logging
+from datetime import datetime
 from typing import override
 from xml.etree import ElementTree
 
@@ -6,6 +8,10 @@ import stamina
 from httpx import Client
 from lightman_ai.article.models import Article, ArticlesList
 from lightman_ai.sources.base import BaseSource
+from lightman_ai.sources.exceptions import IncompleteArticleFromSourceError, MalformedSourceResponseError
+from pydantic import ValidationError
+
+logger = logging.getLogger("lightman")
 
 _RETRY_ON = httpx.TransportError
 _ATTEMPTS = 5
@@ -36,22 +42,37 @@ class TheHackerNewsSource(BaseSource):
         return hacker_news_feed.text
 
     def _xml_to_list_of_articles(self, xml: str) -> list[Article]:
-        root = ElementTree.fromstring(xml)
+        try:
+            root = ElementTree.fromstring(xml)
+        except ElementTree.ParseError as e:
+            raise MalformedSourceResponseError(f"Invalid XML format: {e}") from e
         channel = root.find("channel")
-        assert channel
+
+        if channel is None:
+            raise MalformedSourceResponseError("No channel element found in RSS feed")
         items = channel.findall("item")
 
         parsed = []
 
         for item in items:
-            title = item.findtext("title", default="").strip()
-            description = self._clean(item.findtext("description", default="").strip())
-            link = item.findtext("link", default="").strip()
+            try:
+                title = item.findtext("title", default="").strip()
+                description = self._clean(item.findtext("description", default="").strip())
+                link = item.findtext("link", default="").strip()
+                published_at_str = item.findtext("pubDate", default="").strip()
 
-            parsed.append(Article(title=title, description=description, link=link))
+                if not published_at_str:
+                    logger.exception("Missing publication date. link: `%s`", link)
+                    raise IncompleteArticleFromSourceError()
+                published_at = datetime.strptime(published_at_str, "%a, %d %b %Y %H:%M:%S %z")
+
+                parsed.append(Article(title=title, description=description, link=link, published_at=published_at))
+            except (ValidationError, ValueError) as e:
+                raise IncompleteArticleFromSourceError from e
+
         return parsed
 
     @staticmethod
     def _clean(text: str) -> str:
-        """Remove non-useful characters."""
+        """Remove non-useful characters. Helps cleaning the fields that will be sent to the Agent."""
         return text.replace("\\n", "").replace("       ", "")
