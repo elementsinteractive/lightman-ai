@@ -34,14 +34,14 @@ RUN curl -LsSf https://astral.sh/uv/${UV_VERSION}/install.sh | sh
 # Ensure the installed binary is on the `PATH`
 ENV PATH="/root/.local/bin/:$PATH"
 
-# Copy dependency files
-COPY uv.lock pyproject.toml ./
-
 # Create a fake VERSION file, so that we don't break the cache because of a mismatch in that file
 RUN echo "v0.0.0" > VERSION
 
+# Copy dependency files
+COPY uv.lock pyproject.toml ./
+
 # Install dependencies using uv (only dependencies, not the project itself)
-RUN UV_PROJECT_ENVIRONMENT=${VENV_PATH} uv sync --frozen --no-install-project --compile-bytecode
+RUN UV_PROJECT_ENVIRONMENT=${VENV_PATH} uv sync --frozen --all-extras --no-install-project --compile-bytecode
 RUN ${BIN_PATH}/python -m ensurepip
 # --------------- `final` stage --------------- 
 FROM base AS final

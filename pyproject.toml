@@ -9,41 +9,22 @@ dependencies = [
     "python-dotenv<2.0.0,>=1.1.1",
     "click<9.0.0,>=8.1.7",
     "stamina<26.0.0,>=25.1.0",
-    "pydantic-settings[dotenv]<3.0.0,>=2.9.1",
-    "tiktoken<1.0.0,>=0.9.0",
+    "pydantic-settings<3.0.0,>=2.9.1",
     "tomlkit<1.0.0,>=0.13.3",
     "pydantic-ai-slim[google,openai]>=0.4.4",
-    "logfire>=3.25.0",
-    "sentry-sdk>=2.21.0,<3.0.0",
 ]
 name = "lightman_ai"
-description = "Cybersecurity news aggregator."
+description = "LLM-powered cybersecurity news aggregator."
 readme = "README.md"
 dynamic = ["version"]
 
 [project.scripts]
 lightman-ai = "lightman_ai.cli:entry_point"
 
-
 [project.optional-dependencies]
-test = [
-    "pytest<9.0.0,>=8.0.0",
-    "pytest-cov<6.0.0,>=5.0.0",
-    "pytest-asyncio<1.0.0,>=0.26.0",
-    "freezegun>=1.5.3",
+sentry = [
+    "sentry-sdk>=2.21.0,<3.0.0",
 ]
-lint = [
-    "mypy<2.0.0,>=1.1.1",
-    "ruff<1.0.0,>=0.11.0",
-]
-local = [
-    "ipdb<1.0.0,>=0.13.13",
-    "pdbpp<1.0.0,>=0.11.6",
-    "pre-commit<4.0.0,>=3.2.2",
-    "commitizen<5.0.0,>=4.8.3",
-    "codespell<3.0.0,>=2.2.4",
-]
-
 
 [build-system]
 requires = ["hatchling"]
@@ -76,8 +57,6 @@ addopts = """
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
 
-[tool.logfire]
-ignore_no_config=true
 
 [tool.ruff]
 target-version = "py312"
@@ -159,4 +138,23 @@ exclude_lines = [
     "if TYPE_CHECKING:",
     "pragma: no cover",
     "raise NotImplementedError",
+]
+
+[dependency-groups]
+test = [
+    "pytest<9.0.0,>=8.0.0",
+    "pytest-cov<6.0.0,>=5.0.0",
+    "pytest-asyncio<1.0.0,>=0.26.0",
+    "freezegun>=1.5.3",
+]
+lint = [
+    "mypy<2.0.0,>=1.1.1",
+    "ruff<1.0.0,>=0.11.0",
+]
+local = [
+    "ipdb<1.0.0,>=0.13.13",
+    "pdbpp<1.0.0,>=0.11.6",
+    "pre-commit<4.0.0,>=3.2.2",
+    "commitizen<5.0.0,>=4.8.3",
+    "codespell<3.0.0,>=2.2.4",
 ]

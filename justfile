@@ -18,7 +18,7 @@ help:
 venv: 
     @if ! {{ venv-exists }}; \
     then \
-    uv sync --frozen --all-extras; \
+    uv sync --frozen --all-extras --all-groups; \
     fi
 
 # Runs the evaluation script
