@@ -118,6 +118,7 @@ class Classifier:
                         link=article.link,
                         why_is_relevant=MISSED_ARTICLE_REASON,
                         relevance_score=MISSED_ARTICLE_RELEVANCE_SCORE,
+                        published_at=article.published_at,
                     )
                 )
         return false_negatives

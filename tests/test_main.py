@@ -1,4 +1,5 @@
 import logging
+from datetime import UTC, datetime
 from typing import Any
 from unittest.mock import AsyncMock, Mock, patch
 
@@ -11,14 +12,15 @@ from tests.utils import patch_agent
 
 class TestHackerman:
     def test_lightman_and_service_desk_publish(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
+        now = datetime.now(UTC)
         relevant_article_1 = SelectedArticle(
-            title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8
+            title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8, published_at=now
         )
         relevant_article_2 = SelectedArticle(
-            title="article 3", link="https://article3.com", why_is_relevant="b", relevance_score=9
+            title="article 3", link="https://article3.com", why_is_relevant="b", relevance_score=9, published_at=now
         )
         not_relevant_article = SelectedArticle(
-            title="article 1", link="https://article1.com", why_is_relevant="a", relevance_score=5
+            title="article 1", link="https://article1.com", why_is_relevant="a", relevance_score=5, published_at=now
         )
         agent_response = SelectedArticlesList(articles=[relevant_article_1, relevant_article_2, not_relevant_article])
         with (
@@ -48,14 +50,15 @@ class TestHackerman:
         assert relevant_article_2.title in called_titles
 
     def test_lightman_no_publish_if_dry_run(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
+        now = datetime.now(UTC)
         relevant_article_1 = SelectedArticle(
-            title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8
+            title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8, published_at=now
         )
         relevant_article_2 = SelectedArticle(
-            title="article 3", link="https://article3.com", why_is_relevant="b", relevance_score=9
+            title="article 3", link="https://article3.com", why_is_relevant="b", relevance_score=9, published_at=now
         )
         not_relevant_article = SelectedArticle(
-            title="article 1", link="https://article1.com", why_is_relevant="a", relevance_score=5
+            title="article 1", link="https://article1.com", why_is_relevant="a", relevance_score=5, published_at=now
         )
         agent_response = SelectedArticlesList(articles=[relevant_article_1, relevant_article_2, not_relevant_article])
         with (

@@ -1,6 +1,7 @@
 import os
 from collections.abc import Generator, Iterator
 from contextlib import contextmanager
+from datetime import UTC, datetime
 from typing import Any
 from unittest.mock import AsyncMock, Mock, patch
 
@@ -32,18 +33,21 @@ def patch_service_desk_retry_wait_max() -> Generator[None, Any, None]:
 @pytest.fixture
 def selected_articles() -> list[SelectedArticle]:
     """Create test articles for service desk issue creation."""
+    now = datetime.now(UTC)
     return [
         SelectedArticle(
             title="Critical Security Vulnerability in Popular Library",
             link="https://example.com/article1",
             why_is_relevant="This affects our production systems",
             relevance_score=9,
+            published_at=now,
         ),
         SelectedArticle(
             title="New Attack Vector Discovered",
             link="https://example.com/article2",
             why_is_relevant="Could impact our infrastructure",
             relevance_score=8,
+            published_at=now,
         ),
     ]
 
