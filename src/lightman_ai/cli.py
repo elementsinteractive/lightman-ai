@@ -94,7 +94,8 @@ def run(
     if start_date and today:
         raise click.UsageError("--today and --start-date cannot be set at the same time.")
     elif today:
-        start_datetime = datetime.now(ZoneInfo(settings.TIME_ZONE))
+        now = datetime.now(ZoneInfo(settings.TIME_ZONE))
+        start_datetime = datetime.combine(now, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
     elif isinstance(start_date, date):
         start_datetime = datetime.combine(start_date, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
     else:

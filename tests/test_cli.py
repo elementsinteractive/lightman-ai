@@ -14,7 +14,7 @@ class TestCli:
     @patch("lightman_ai.cli.lightman")
     @patch("lightman_ai.cli.FileConfig.get_config_from_file")
     @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
-    @freeze_time("2025-07-29")
+    @freeze_time("2025-07-29 19:00:00")
     def test_arguments(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
