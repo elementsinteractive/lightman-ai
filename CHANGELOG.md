@@ -1,3 +1,13 @@
+## v0.21.0 (2025-07-29)
+
+### Feat
+
+- allow to retrieve articles from specific date onwards (#100)
+
+### Refactor
+
+- save publication date of the Articles (#99)
+
 ## v0.20.2 (2025-07-28)
 
 ### Fix
