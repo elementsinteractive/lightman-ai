@@ -19,14 +19,13 @@ jobs:
         uses: astral-sh/setup-uv@7edac99f961f18b581bbd960d59d049f04c0002f # v6.4.1
 
       - name: Install the project
-        run: uv sync --locked --extra lint --extra test
+        run: uv sync --locked --group lint --group test --all-extras
 
       - name: Cache mypy cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.1
         with:
           path: .mypy_cache
           key: mypy-${{ runner.os }}
-          retention-days: 30
           restore-keys: |
             mypy-${{ runner.os }}
 
