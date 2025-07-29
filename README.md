@@ -238,6 +238,8 @@ lightman run --dry-run --agent openai --score 9
 | `--env-file` | Path to environment variables file | `.env` |
 | `--dry-run` | Preview results without taking action | `false` |
 | `--prompt-file` | File containing prompt templates | `lightman.toml` |
+| `--start-date` | Start date to retrieve articles | cli |
+| `--today` | Retrieve articles from today | cli |
 
 ### Example Workflows
 
@@ -346,11 +348,17 @@ This approach ensures that performance metrics reflect real-world usage scenario
 **Make sure to fill in the `RELEVANT_ARTICLES` with the ones you classify as relevant, so that you can compare the accuracy after running the `eval` script.*** 
 
 ## Sentry 
+Sentry is **optional**: the application does not require it to function, and all features will work even if Sentry is not configured or fails to start.
+If you install the project via pip and want Sentry installed, run:
 
-- The application will automatically pick up and use environment variables if they are present in your environment or `.env` file.
-- To enable Sentry error monitoring, set the `SENTRY_DSN` environment variable. This is **mandatory** for Sentry to be enabled. If `SENTRY_DSN` is not set, Sentry will be skipped and the application will run normally.
-- If Sentry fails to initialize for any reason (e.g., network issues, invalid DSN), the application will log a warning and continue execution without error monitoring.
-- Sentry is **optional**: the application does not require it to function, and all features will work even if Sentry is not configured or fails to start.
+```bash
+   pip install lightman-ai[sentry]
+```
+Sentry comes by default with the Docker image. If you don't want to use it, simply do not set `SENTRY_DSN` env variable.
+
+The application will automatically pick up and use environment variables if they are present in your environment or `.env` file.
+To enable Sentry, set the `SENTRY_DSN` environment variable. This is **mandatory** for Sentry to be enabled. If `SENTRY_DSN` is not set, Sentry will be skipped and the application will run normally.
+If Sentry fails to initialize for any reason (e.g., network issues, invalid DSN), the application will log a warning and continue execution without error monitoring, and logging to stdout.
 
 ## 📄 License
 
