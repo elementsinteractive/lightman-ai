@@ -23,11 +23,14 @@ THN_URL = "https://feeds.feedburner.com/TheHackersNews"
 
 class TheHackerNewsSource(BaseSource):
     @override
-    def get_articles(self) -> ArticlesList:
+    def get_articles(self, date: datetime | None = None) -> ArticlesList:
         """Return the articles that are present in THN feed."""
         feed = self.get_feed()
         articles = self._xml_to_list_of_articles(feed)
-        return ArticlesList(articles=articles)
+        if date:
+            return ArticlesList.get_articles_from_date_onwards(articles=articles, start_date=date)
+        else:
+            return ArticlesList(articles=articles)
 
     def get_feed(self) -> str:
         """Retrieve the TheHackerNews' RSS Feed."""

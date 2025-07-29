@@ -1,7 +1,8 @@
 from abc import ABC
 from datetime import datetime
-from typing import override
+from typing import Self, override
 
+from lightman_ai.article.exceptions import NoTimeZoneError
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -16,7 +17,7 @@ class BaseArticle(BaseModel, ABC):
     @classmethod
     def validate_timezone_aware(cls, v: datetime) -> datetime:
         if v.tzinfo is None:
-            raise ValueError("published_at must be timezone aware")
+            raise NoTimeZoneError("published_at must be timezone aware")
         return v
 
     @override
@@ -37,7 +38,6 @@ class SelectedArticle(BaseArticle):
 
 
 class Article(BaseArticle):
-    title: str = Field(..., min_length=1)
     description: str = Field(..., min_length=1)
 
 
@@ -54,6 +54,13 @@ class BaseArticlesList[TArticle: BaseArticle](BaseModel):
     @property
     def links(self) -> list[str]:
         return [article.link for article in self.articles]
+
+    @classmethod
+    def get_articles_from_date_onwards(cls, articles: list[TArticle], start_date: datetime) -> Self:
+        if not start_date.tzinfo:
+            raise NoTimeZoneError("A timezone is needed for filtering articles")
+        articles = [article for article in articles if article.published_at >= start_date]
+        return cls(articles=articles)
 
 
 class SelectedArticlesList(BaseArticlesList[SelectedArticle]):

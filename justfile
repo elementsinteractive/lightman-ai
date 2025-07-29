@@ -33,6 +33,7 @@ clean:
     @rm -rf .mypy_cache/
     @rm -rf .ruff_cache/
     @rm -rf .pytest_cache/
+    @find . -type d -name '__pycache__' -exec rm -r {} +
 
 
 # Runs the tests with the specified arguments (any path or pytest argument).
@@ -50,6 +51,7 @@ format:  venv
 
 # Lint all code in the project.
 lint: venv
+    {{ run }} ruff format --check src tests eval
     {{ run }} ruff check {{ target_dirs }}
     {{ run }} mypy {{ target_dirs }}
 

@@ -1,8 +1,9 @@
-from collections.abc import Iterator
+from collections.abc import Generator, Iterator
 from contextlib import contextmanager
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
-from lightman_ai.article.models import SelectedArticlesList
+from lightman_ai.article.models import Article, SelectedArticlesList
 
 
 @contextmanager
@@ -12,6 +13,13 @@ def patch_agent(response: SelectedArticlesList) -> Iterator[Mock]:
         mock_result.output = response
         mock_run.return_value = mock_result
         yield mock_run
+
+
+@contextmanager
+def patch_get_articles_from_xml(articles: list[Article]) -> Generator[Any, Mock, Any]:
+    with patch("lightman_ai.sources.the_hacker_news.TheHackerNewsSource._xml_to_list_of_articles") as mock:
+        mock.return_value = articles
+        yield mock
 
 
 @contextmanager

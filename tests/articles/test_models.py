@@ -1,6 +1,7 @@
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 import pytest
+from lightman_ai.article.exceptions import NoTimeZoneError
 from lightman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
 from pydantic import ValidationError
 
@@ -26,7 +27,7 @@ class TestBaseArticle:
 
     def test_published_at_does_not_accept_naive_datetime(self) -> None:
         naive_time = datetime.now()
-        with pytest.raises(ValidationError, match="timezone aware"):
+        with pytest.raises(NoTimeZoneError, match="timezone aware"):
             Article(title="Test", description="Desc", link="https://example.com", published_at=naive_time)
 
     def test_title_cannot_be_empty(self) -> None:
@@ -49,7 +50,7 @@ class TestSelectedArticlesList:
             link="link1", relevance_score=5, title="Test", why_is_relevant="Reason", published_at=now
         )
         article_no_match = SelectedArticle(
-            link="link2", relevance_score=1, title="Test", why_is_relevant="Reason", published_at=now
+            link="link2", relevance_score=4, title="Test", why_is_relevant="Reason", published_at=now
         )
 
         result = SelectedArticlesList(articles=[article_match, article_no_match]).get_articles_with_score_gte_threshold(
@@ -61,3 +62,20 @@ class TestSelectedArticlesList:
     def test_score_threshold_must_be_positive(self) -> None:
         with pytest.raises(ValueError, match="score threshold must be > 0."):
             SelectedArticlesList(articles=[]).get_articles_with_score_gte_threshold(0)
+
+    def test_get_articles_from_date_onwards(self) -> None:
+        start_date = datetime.now(UTC)
+        article_match = SelectedArticle(
+            link="link1", relevance_score=5, title="Test", why_is_relevant="Reason", published_at=datetime.now(UTC)
+        )
+        article_no_match = SelectedArticle(
+            link="link2",
+            relevance_score=4,
+            title="Test",
+            why_is_relevant="Reason",
+            published_at=datetime.now(UTC) - timedelta(days=1),
+        )
+
+        result = SelectedArticlesList.get_articles_from_date_onwards([article_match, article_no_match], start_date)
+
+        assert result.articles == [article_match]
