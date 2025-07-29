@@ -238,8 +238,8 @@ lightman run --dry-run --agent openai --score 9
 | `--env-file` | Path to environment variables file | `.env` |
 | `--dry-run` | Preview results without taking action | `false` |
 | `--prompt-file` | File containing prompt templates | `lightman.toml` |
-| `--start-date` | Start date to retrieve articles | cli |
-| `--today` | Retrieve articles from today | cli |
+| `--start-date` | Start date to retrieve articles | None |
+| `--today` | Retrieve articles from today | None |
 
 ### Example Workflows
 
