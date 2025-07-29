@@ -1,3 +1,9 @@
+## v0.21.1 (2025-07-29)
+
+### Fix
+
+- replace time when running with --today (#103)
+
 ## v0.21.0 (2025-07-29)
 
 ### Feat

@@ -1,6 +1,6 @@
 
 [tool.commitizen]
-version = "0.21.0"
+version = "0.21.1"
 version_files = [
     "VERSION",
 ]
