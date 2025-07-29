@@ -1,5 +1,7 @@
 import logging
+from datetime import date, datetime, time
 from importlib import metadata
+from zoneinfo import ZoneInfo
 
 import click
 from dotenv import load_dotenv
@@ -8,6 +10,7 @@ from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION, D
 from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
 from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
 from lightman_ai.core.sentry import configure_sentry
+from lightman_ai.core.settings import settings
 from lightman_ai.main import lightman
 
 logger = logging.getLogger("lightman")
@@ -65,6 +68,8 @@ def entry_point() -> None:
         "When set, runs the script without publishing the results to the integrated services, just shows them in stdout."
     ),
 )
+@click.option("--start-date", type=click.DateTime(formats=["%Y-%m-%d"]), help="Start date to retrieve articles")
+@click.option("--today", is_flag=True, help="Retrieve articles from today.")
 def run(
     agent: str,
     prompt: str,
@@ -75,6 +80,8 @@ def run(
     config: str,
     env_file: str,
     dry_run: bool,
+    start_date: date | None,
+    today: bool,
 ) -> int:
     """
     Entrypoint of the application.
@@ -83,6 +90,16 @@ def run(
     """
     load_dotenv(env_file)
     configure_sentry()
+
+    if start_date and today:
+        raise click.UsageError("--today and --start-date cannot be set at the same time.")
+    elif today:
+        start_datetime = datetime.now(ZoneInfo(settings.TIME_ZONE))
+    elif isinstance(start_date, date):
+        start_datetime = datetime.combine(start_date, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
+    else:
+        start_datetime = None
+
     try:
         prompt_config = PromptConfig.get_config_from_file(path=prompt_file)
         config_from_file = FileConfig.get_config_from_file(config_section=config, path=config_file)
@@ -107,6 +124,7 @@ def run(
         project_key=config_from_file.service_desk_project_key,
         request_id_type=config_from_file.service_desk_request_id_type,
         model=final_config.model,
+        start_date=start_datetime,
     )
     relevant_articles_metadata = [f"{article.title} ({article.link})" for article in relevant_articles]
     logger.warning("Found these articles: \n- %s", "\n- ".join(relevant_articles_metadata))

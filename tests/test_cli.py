@@ -1,6 +1,9 @@
+from datetime import datetime
 from unittest.mock import ANY, Mock, call, patch
+from zoneinfo import ZoneInfo
 
 from click.testing import CliRunner
+from freezegun import freeze_time
 from lightman_ai import cli
 from lightman_ai.core.config import FileConfig, PromptConfig
 from tests.conftest import patch_config_file
@@ -11,6 +14,7 @@ class TestCli:
     @patch("lightman_ai.cli.lightman")
     @patch("lightman_ai.cli.FileConfig.get_config_from_file")
     @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
+    @freeze_time("2025-07-29")
     def test_arguments(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
@@ -32,6 +36,7 @@ class TestCli:
                     "config-path",
                     "--config",
                     "my-config",
+                    "--today",
                 ],
             )
 
@@ -45,6 +50,53 @@ class TestCli:
             project_key=None,
             request_id_type=None,
             model=None,
+            start_date=datetime(2025, 7, 29, 0, 0, tzinfo=ZoneInfo(key="UTC")),
+        )
+        assert m_config.call_count == 1
+        assert m_config.call_args == call(config_section="my-config", path="config-path")
+        assert m_prompt.call_args == call(path="prompt file")
+        assert m_load_dotenv.call_args == call(".env")  # Default env file
+
+    @patch("lightman_ai.cli.load_dotenv")
+    @patch("lightman_ai.cli.lightman")
+    @patch("lightman_ai.cli.FileConfig.get_config_from_file")
+    @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
+    def test_start_date(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
+        runner = CliRunner()
+        m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
+        m_config.return_value = FileConfig()
+
+        with patch_config_file():
+            result = runner.invoke(
+                cli.run,
+                [
+                    "--agent",
+                    "gemini",
+                    "--prompt",
+                    "eval",
+                    "--prompt-file",
+                    "prompt file",
+                    "--score",
+                    "1",
+                    "--config-file",
+                    "config-path",
+                    "--config",
+                    "my-config",
+                    "--start-date",
+                    "2025-07-29",
+                ],
+            )
+        assert result.exit_code == 0
+        assert m_lightman.call_count == 1
+        assert m_lightman.call_args == call(
+            agent="gemini",
+            prompt="eval prompt",
+            score_threshold=1,
+            dry_run=False,
+            project_key=None,
+            request_id_type=None,
+            model=None,
+            start_date=datetime(2025, 7, 29, 0, 0, tzinfo=ZoneInfo(key="UTC")),
         )
         assert m_config.call_count == 1
         assert m_config.call_args == call(config_section="my-config", path="config-path")
@@ -114,6 +166,7 @@ class TestCli:
             project_key=ANY,
             request_id_type=ANY,
             model="picked up",
+            start_date=None,
         )
 
     @patch("lightman_ai.cli.load_dotenv")
@@ -199,6 +252,7 @@ class TestCli:
             project_key=None,
             request_id_type=None,
             model=None,
+            start_date=None,
         )
         assert m_config.call_count == 2
 

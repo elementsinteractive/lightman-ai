@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from datetime import datetime
 
 from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.utils import get_agent_class_from_agent_name
@@ -12,8 +13,8 @@ from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 logger = logging.getLogger("lightman")
 
 
-def _get_articles() -> ArticlesList:
-    return TheHackerNewsSource().get_articles()
+def _get_articles_from_source(start_date: datetime | None = None) -> ArticlesList:
+    return TheHackerNewsSource().get_articles(start_date)
 
 
 def _classify_articles(articles: ArticlesList, agent: BaseAgent) -> SelectedArticlesList:
@@ -60,8 +61,9 @@ def lightman(
     request_id_type: str | None = None,
     dry_run: bool = False,
     model: str | None = None,
+    start_date: datetime | None = None,
 ) -> list[SelectedArticle]:
-    articles: ArticlesList = _get_articles()
+    articles: ArticlesList = _get_articles_from_source(start_date)
 
     agent_class = get_agent_class_from_agent_name(agent)
     agent_instance = agent_class(prompt, model, logger=logger)

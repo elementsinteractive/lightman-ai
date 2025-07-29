@@ -1,16 +1,61 @@
 import logging
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
-from lightman_ai.article.models import SelectedArticle, SelectedArticlesList
+from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
 from lightman_ai.core.sentry import configure_sentry
-from lightman_ai.main import _create_service_desk_issues, lightman
-from tests.utils import patch_agent
+from lightman_ai.main import _create_service_desk_issues, _get_articles_from_source, lightman
+from tests.utils import patch_agent, patch_get_articles_from_xml
 
 
 class TestHackerman:
+    def test_lightman_retrieve_from_date_onwards(self, caplog: Any) -> None:
+        now = datetime.now(UTC)
+        new_article = Article(title="article 2", link="https://article2.com", description="d", published_at=now)
+        old_article = Article(
+            title="article 1",
+            link="https://article1.com",
+            description="d",
+            published_at=datetime.now(UTC) - timedelta(days=1),
+        )
+
+        feed_articles = [new_article, old_article]
+
+        with (
+            caplog.at_level(logging.INFO),
+            patch("httpx.get"),
+            patch_get_articles_from_xml(feed_articles),
+        ):
+            result = _get_articles_from_source(start_date=now)
+        # Check lightman result
+        assert isinstance(result, ArticlesList)
+        assert len(result) == 1
+        assert new_article in result.articles
+        assert old_article not in result.articles
+
+    def test_lightman_no_date_specified(self, caplog: Any, test_prompt: str) -> None:
+        now = datetime.now(UTC)
+        new_article = Article(title="article 2", link="https://article2.com", description="d", published_at=now)
+        old_article = Article(
+            title="article 1",
+            link="https://article1.com",
+            description="d",
+            published_at=datetime.now(UTC) - timedelta(days=1),
+        )
+
+        feed_articles = [new_article, old_article]
+        with (
+            caplog.at_level(logging.INFO),
+            patch("httpx.get"),
+            patch_get_articles_from_xml(feed_articles),
+        ):
+            result = _get_articles_from_source()
+        # Check lightman result
+        assert isinstance(result, ArticlesList)
+        assert result.articles == feed_articles
+
     def test_lightman_and_service_desk_publish(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
         now = datetime.now(UTC)
         relevant_article_1 = SelectedArticle(
