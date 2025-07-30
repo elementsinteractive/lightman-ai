@@ -93,8 +93,8 @@ def run(
     load_dotenv(env_file)
     configure_sentry()
 
-    mutually_exclusive_fields_set = [x for x in [start_date, today, yesterday] if x]
-    if len(mutually_exclusive_fields_set) > 1:
+    mutually_exclusive_date_fields = [x for x in [start_date, today, yesterday] if x]
+    if len(mutually_exclusive_date_fields) > 1:
         raise click.UsageError("--today, --yesterday and --start-date are mutually exclusive. Set one at a time.")
     elif today:
         now = datetime.now(ZoneInfo(settings.TIME_ZONE))

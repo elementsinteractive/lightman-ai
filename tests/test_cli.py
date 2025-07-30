@@ -2,6 +2,7 @@ from datetime import datetime
 from unittest.mock import ANY, Mock, call, patch
 from zoneinfo import ZoneInfo
 
+import pytest
 from click.testing import CliRunner
 from freezegun import freeze_time
 from lightman_ai import cli
@@ -56,6 +57,37 @@ class TestCli:
         assert m_config.call_args == call(config_section="my-config", path="config-path")
         assert m_prompt.call_args == call(path="prompt file")
         assert m_load_dotenv.call_args == call(".env")  # Default env file
+
+    @pytest.mark.parametrize(
+        ("field1", "field2", "field3"),
+        [
+            ("--today", "--yesterday", ""),
+            ("--today", "--start-date", "2025-07-29"),
+            ("--yesterday", "--start-date", "2025-07-29"),
+        ],
+    )
+    @patch("lightman_ai.cli.lightman")
+    def test_today_yesterday_start_date_mutualle_exlusive(
+        self,
+        m_lightman: Mock,
+        field1: str,
+        field2: str,
+        field3: str,
+    ) -> None:
+        runner = CliRunner()
+
+        args = [field1, field2]
+        if field3:
+            args.append(field3)
+        with patch_config_file():
+            result = runner.invoke(
+                cli.run,
+                args,
+            )
+
+        assert result.exit_code == 2
+        assert "--today, --yesterday and --start-date are mutually exclusive. Set one at a time." in result.output
+        assert m_lightman.call_count == 0
 
     @patch("lightman_ai.cli.load_dotenv")
     @patch("lightman_ai.cli.lightman")
