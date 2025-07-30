@@ -240,6 +240,7 @@ lightman run --dry-run --agent openai --score 9
 | `--prompt-file` | File containing prompt templates | `lightman.toml` |
 | `--start-date` | Start date to retrieve articles | None |
 | `--today` | Retrieve articles from today | None |
+| `--yesterday` | Retrieve articles from yesterday | None |
 
 ### Example Workflows
 

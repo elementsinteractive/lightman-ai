@@ -1,5 +1,5 @@
 import logging
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 from importlib import metadata
 from zoneinfo import ZoneInfo
 
@@ -70,6 +70,7 @@ def entry_point() -> None:
 )
 @click.option("--start-date", type=click.DateTime(formats=["%Y-%m-%d"]), help="Start date to retrieve articles")
 @click.option("--today", is_flag=True, help="Retrieve articles from today.")
+@click.option("--yesterday", is_flag=True, help="Retrieve articles from yesterday.")
 def run(
     agent: str,
     prompt: str,
@@ -82,6 +83,7 @@ def run(
     dry_run: bool,
     start_date: date | None,
     today: bool,
+    yesterday: bool,
 ) -> int:
     """
     Entrypoint of the application.
@@ -91,11 +93,15 @@ def run(
     load_dotenv(env_file)
     configure_sentry()
 
-    if start_date and today:
-        raise click.UsageError("--today and --start-date cannot be set at the same time.")
+    mutually_exclusive_fields_set = [x for x in [start_date, today, yesterday] if x]
+    if len(mutually_exclusive_fields_set) > 1:
+        raise click.UsageError("--today, --yesterday and --start-date are mutually exclusive. Set one at a time.")
     elif today:
         now = datetime.now(ZoneInfo(settings.TIME_ZONE))
         start_datetime = datetime.combine(now, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
+    elif yesterday:
+        yesterday_date = datetime.now(ZoneInfo(settings.TIME_ZONE)) - timedelta(days=1)
+        start_datetime = datetime.combine(yesterday_date, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
     elif isinstance(start_date, date):
         start_datetime = datetime.combine(start_date, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
     else:
