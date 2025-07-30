@@ -1,6 +1,6 @@
 # 🔍 Lightman AI
 
-> **AI-Powered Cybersecurity News Intelligence Platform*
+> LLM-Powered Cybersecurity News Intelligence Platform
 
 ---
 
@@ -31,7 +31,9 @@ Lightman AI is an intelligent cybersecurity news aggregation and risk assessment
 
 ## 🚀 Quick Start
 
-### pip
+### Installation
+
+#### pip
 
 1. **Install Lightman AI**:
    ```bash
@@ -60,10 +62,13 @@ Lightman AI is an intelligent cybersecurity news aggregation and risk assessment
    ```bash
    lightman run
    ```
+#### Docker
+1. **Pull the image**
+   ```bash
+   docker pull elementsinteractive/lightman-ai:latest
+   ```
 
-### Docker
-
-1. **Create configuration file**:
+2. **Create configuration file**:
    ```bash
    echo '[default]
    agent = "openai"
@@ -74,7 +79,7 @@ Lightman AI is an intelligent cybersecurity news aggregation and risk assessment
    development = "Analyze cybersecurity news for relevance to our organization."' > lightman.toml
    ```
 
-2. **Run with Docker**:
+3. **Run with Docker**:
    ```bash
    docker run --rm \
      -v $(pwd)/lightman.toml:/app/lightman.toml \
@@ -83,54 +88,36 @@ Lightman AI is an intelligent cybersecurity news aggregation and risk assessment
      lightman run --config-file /app/lightman.toml --score 7
    ```
 
-4. **View results**: Lightman will analyze cybersecurity news and output relevant articles that meet your score threshold.
+## 🔧 Usage
 
-## 📥 Installation
+### CLI Options
 
-### Docker
-Lightman AI has an available Docker image on Docker Hub:
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--agent` | AI agent to use (`openai`, `gemini`) | From config file |
+| `--score` | Minimum relevance score (1-10) | From config file |
+| `--prompt` | Prompt template name | From config file |
+| `--config-file` | Path to configuration file | `lightman.toml` |
+| `--config` | Configuration section to use | `default` |
+| `--env-file` | Path to environment variables file | `.env` |
+| `--dry-run` | Preview results without taking action | `false` |
+| `--prompt-file` | File containing prompt templates | `lightman.toml` |
+| `--start-date` | Start date to retrieve articles | False |
+| `--today` | Retrieve articles from today | False |
+| `--yesterday` | Retrieve articles from yesterday | False |
 
-```bash
-# Pull the latest image
-docker pull elementsinteractive/lightman-ai:latest
+### Environment Variables:
+lightman-ai uses the following environment variables:
 
-# Create your configuration file
-
-   echo '[default]
-   agent = "openai"
-   score_threshold = 8
-   prompt = "development"
-   
-   [prompts]
-   development = "Analyze cybersecurity news for relevance to our organization."' > lightman.toml
-   ```
-
-
-# Run with mounted configuration
-```bash
-docker run -d \
-  --name lightman-ai \
-  -v $(pwd)/lightman.toml:/app/lightman.toml \
-  -e OPENAI_API_KEY="your-api-key" \
-  elementsinteractive/lightman-ai:latest \
-  lightman run --config-file /app/lightman.toml
-```
-
-**Docker Environment Variables:**
 - `OPENAI_API_KEY` - Your OpenAI API key
 - `GOOGLE_API_KEY` - Your Google Gemini API key
 - `SERVICE_DESK_URL` - Service desk instance URL (optional)
 - `SERVICE_DESK_USER` - Service desk username (optional)
 - `SERVICE_DESK_TOKEN` - Service desk API token (optional)
+- `TIME_ZONE` - Your time zone (optional, defaults to UTC. i.e. "Europe/Amsterdam".)
 
+By default, it will try to load a `.env` file. You can also specify a different path with the `--env-file` option.
 
-
-### Development Installation
-```bash
-git clone git@github.com:elementsinteractive/lightman-ai.git
-cd lightman_ai
-just venv  # Creates virtual environment and installs dependencies
-```
 
 ## ⚙️ Configuration
 
@@ -185,30 +172,8 @@ custom_prompt = """
 Your custom analysis prompt here...
 """
 ```
-### Environment Variables
 
-Set up your AI provider credentials:
-
-```bash
-# For OpenAI
-export OPENAI_API_KEY="your-openai-api-key"
-
-# For Google Gemini
-export GOOGLE_API_KEY="your-google-api-key"
-
-# Optional: Service desk integration
-export SERVICE_DESK_URL="https://your-company.atlassian.net"
-export SERVICE_DESK_USER="your-username"
-export SERVICE_DESK_TOKEN="your-api-token"
-
-```
-You can also specify a different path for your .env file with the `--env-file` option
-
-
-## 🔧 Usage
-
-### Basic Usage
-
+### Examples
 ```bash
 # Run with default settings
 lightman run
@@ -224,69 +189,29 @@ lightman run --env-file production.env --agent openai --score 8
 
 # Dry run (preview results without creating service desk tickets)
 lightman run --dry-run --agent openai --score 9
+
+# Retrieve all the news from today
+lightman run --agent openai --score 8 --prompt security_critical --today
+
+# Retrieve all the news from yesterday
+lightman run --agent openai --score 8 --prompt security_critical --yesterday
 ```
 
-### Command Line Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--agent` | AI agent to use (`openai`, `gemini`) | From config file |
-| `--score` | Minimum relevance score (1-10) | From config file |
-| `--prompt` | Prompt template name | From config file |
-| `--config-file` | Path to configuration file | `lightman.toml` |
-| `--config` | Configuration section to use | `default` |
-| `--env-file` | Path to environment variables file | `.env` |
-| `--dry-run` | Preview results without taking action | `false` |
-| `--prompt-file` | File containing prompt templates | `lightman.toml` |
-| `--start-date` | Start date to retrieve articles | None |
-| `--today` | Retrieve articles from today | None |
-| `--yesterday` | Retrieve articles from yesterday | None |
+### Development Installation
+In order to fully use the provided setup for local development and testing, this project requires the following dependencies:
+- Python 3.13
+- [just](https://github.com/casey/just)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-### Example Workflows
-
-**Daily Security Monitoring**:
+Then simply:
 ```bash
-# Local installation
-lightman run --agent openai --score 8 --prompt security_critical
-
-# With custom environment file
-lightman run --env-file production.env --agent openai --score 8
-
-# Docker 
-docker run --rm \
-  -v $(pwd)/lightman.toml:/app/lightman.toml \
-  -e OPENAI_API_KEY="$OPENAI_API_KEY" \
-  elementsinteractive/lightman-ai:latest \
-  lightman run --config-file /app/lightman.toml --score 8
+git clone git@github.com:elementsinteractive/lightman-ai.git
+cd lightman_ai
+just venv  # Creates virtual environment and installs dependencies
+just test  # Runs the tests
+just eval  # Runs the evaluation framework
 ```
-
-
-**Weekly Risk Assessment**:
-```bash
-# Local installation
-lightman run --agent gemini --score 6 --prompt weekly_assessment
-
-# With environment-specific settings
-lightman run --env-file weekly.env --agent gemini --score 6
-
-# Docker 
-docker run --rm \
-  -v $(pwd)/lightman.toml:/app/lightman.toml \
-  -e GOOGLE_API_KEY="$GOOGLE_API_KEY" \
-  elementsinteractive/lightman-ai:latest \
-  lightman run --config-file /app/lightman.toml --agent gemini --score 6
-```
-
-**Integration Testing**:
-```bash
-# Test configuration without creating tickets
-lightman run --dry-run --config testing
-
-# Test with staging environment
-lightman run --env-file staging.env --dry-run --config testing
-```
-
-
 
 ## 📊 Evaluation & Testing
 
