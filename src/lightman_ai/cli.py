@@ -1,7 +1,6 @@
 import logging
-from datetime import date, datetime, time, timedelta
+from datetime import date
 from importlib import metadata
-from zoneinfo import ZoneInfo
 
 import click
 from dotenv import load_dotenv
@@ -10,8 +9,10 @@ from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION, D
 from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
 from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
 from lightman_ai.core.sentry import configure_sentry
-from lightman_ai.core.settings import settings
+from lightman_ai.core.settings import Settings
+from lightman_ai.exceptions import MultipleDateSourcesError
 from lightman_ai.main import lightman
+from lightman_ai.utils import get_start_date
 
 logger = logging.getLogger("lightman")
 
@@ -58,7 +59,7 @@ def entry_point() -> None:
 @click.option(
     "--env-file",
     type=str,
-    default=DEFAULT_ENV_FILE,
+    default=None,
     help=(f"Path to the environment file. Defaults to `{DEFAULT_ENV_FILE}`."),
 )
 @click.option(
@@ -79,7 +80,7 @@ def run(
     score: int | None,
     config_file: str,
     config: str,
-    env_file: str,
+    env_file: str | None,
     dry_run: bool,
     start_date: date | None,
     today: bool,
@@ -88,37 +89,28 @@ def run(
     """
     Entrypoint of the application.
 
-    Holds no logic. It calls the main method and returns 0 when succesful .
+    Holds no logic. It loads the configuration, calls the main method and returns 0 when succesful .
     """
-    load_dotenv(env_file)
+    load_dotenv(env_file or DEFAULT_ENV_FILE)  # TODO refs: #112
     configure_sentry()
 
-    mutually_exclusive_date_fields = [x for x in [start_date, today, yesterday] if x]
-    if len(mutually_exclusive_date_fields) > 1:
-        raise click.UsageError("--today, --yesterday and --start-date are mutually exclusive. Set one at a time.")
-    elif today:
-        now = datetime.now(ZoneInfo(settings.TIME_ZONE))
-        start_datetime = datetime.combine(now, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
-    elif yesterday:
-        yesterday_date = datetime.now(ZoneInfo(settings.TIME_ZONE)) - timedelta(days=1)
-        start_datetime = datetime.combine(yesterday_date, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
-    elif isinstance(start_date, date):
-        start_datetime = datetime.combine(start_date, time(0, 0), tzinfo=ZoneInfo(settings.TIME_ZONE))
-    else:
-        start_datetime = None
+    settings = Settings.try_load_from_file(env_file)
+    try:
+        start_datetime = get_start_date(settings, yesterday, today, start_date)
+    except MultipleDateSourcesError as e:
+        raise click.UsageError(e.args[0]) from e
 
     try:
         prompt_config = PromptConfig.get_config_from_file(path=prompt_file)
         config_from_file = FileConfig.get_config_from_file(config_section=config, path=config_file)
         final_config = FinalConfig.init_from_dict(
             data={
-                "agent": agent or config_from_file.agent,
+                "agent": agent or config_from_file.agent or settings.AGENT,
                 "prompt": prompt or config_from_file.prompt,
-                "score_threshold": score or config_from_file.score_threshold,
+                "score_threshold": score or config_from_file.score_threshold or settings.SCORE,
                 "model": model or config_from_file.model,
             }
         )
-
         prompt_text = prompt_config.get_prompt(final_config.prompt)
     except (InvalidConfigError, PromptNotFoundError, ConfigNotFoundError) as err:
         raise click.BadParameter(err.args[0]) from None
@@ -128,8 +120,8 @@ def run(
         prompt=prompt_text,
         score_threshold=final_config.score_threshold,
         dry_run=dry_run,
-        project_key=config_from_file.service_desk_project_key,
-        request_id_type=config_from_file.service_desk_request_id_type,
+        service_desk_project_key=config_from_file.service_desk_project_key,
+        service_desk_request_id_type=config_from_file.service_desk_request_id_type,
         model=final_config.model,
         start_date=start_datetime,
     )

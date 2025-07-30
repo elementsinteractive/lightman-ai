@@ -7,7 +7,7 @@ from click.testing import CliRunner
 from freezegun import freeze_time
 from lightman_ai import cli
 from lightman_ai.core.config import FileConfig, PromptConfig
-from tests.conftest import patch_config_file
+from tests.conftest import patch_config_file, patch_settings
 
 
 class TestCli:
@@ -20,8 +20,7 @@ class TestCli:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
         m_config.return_value = FileConfig()
-
-        with patch_config_file():
+        with patch_config_file(), patch_settings():
             result = runner.invoke(
                 cli.run,
                 [
@@ -48,15 +47,15 @@ class TestCli:
             prompt="eval prompt",
             score_threshold=1,
             dry_run=False,
-            project_key=None,
-            request_id_type=None,
+            service_desk_project_key=None,
+            service_desk_request_id_type=None,
             model=None,
             start_date=datetime(2025, 7, 29, 0, 0, tzinfo=ZoneInfo(key="UTC")),
         )
         assert m_config.call_count == 1
         assert m_config.call_args == call(config_section="my-config", path="config-path")
         assert m_prompt.call_args == call(path="prompt file")
-        assert m_load_dotenv.call_args == call(".env")  # Default env file
+        assert m_load_dotenv.call_args == call(".env")
 
     @pytest.mark.parametrize(
         ("field1", "field2", "field3"),
@@ -66,10 +65,12 @@ class TestCli:
             ("--yesterday", "--start-date", "2025-07-29"),
         ],
     )
+    @patch("lightman_ai.cli.load_dotenv")
     @patch("lightman_ai.cli.lightman")
-    def test_today_yesterday_start_date_mutualle_exlusive(
+    def test_today_yesterday_start_date_mutually_exlusive(
         self,
         m_lightman: Mock,
+        m_dotenv: Mock,
         field1: str,
         field2: str,
         field3: str,
@@ -79,7 +80,7 @@ class TestCli:
         args = [field1, field2]
         if field3:
             args.append(field3)
-        with patch_config_file():
+        with patch_config_file(), patch_settings():
             result = runner.invoke(
                 cli.run,
                 args,
@@ -93,93 +94,11 @@ class TestCli:
     @patch("lightman_ai.cli.lightman")
     @patch("lightman_ai.cli.FileConfig.get_config_from_file")
     @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
-    def test_start_date(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
-        runner = CliRunner()
-        m_config.return_value = FileConfig()
-
-        with patch_config_file():
-            result = runner.invoke(
-                cli.run,
-                [
-                    "--agent",
-                    "gemini",
-                    "--prompt",
-                    "eval",
-                    "--prompt-file",
-                    "prompt file",
-                    "--score",
-                    "1",
-                    "--config-file",
-                    "config-path",
-                    "--config",
-                    "my-config",
-                    "--start-date",
-                    "2025-07-29",
-                ],
-            )
-        assert result.exit_code == 0
-        assert m_lightman.call_count == 1
-        assert m_lightman.call_args == call(
-            agent=ANY,
-            prompt=ANY,
-            score_threshold=ANY,
-            dry_run=ANY,
-            project_key=ANY,
-            request_id_type=ANY,
-            model=ANY,
-            start_date=datetime(2025, 7, 29, 0, 0, tzinfo=ZoneInfo(key="UTC")),
-        )
-
-    @patch("lightman_ai.cli.load_dotenv")
-    @patch("lightman_ai.cli.lightman")
-    @patch("lightman_ai.cli.FileConfig.get_config_from_file")
-    @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
-    @freeze_time("2025-07-29 19:00:00")
-    def test_yesterday(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
-        runner = CliRunner()
-        m_config.return_value = FileConfig()
-
-        with patch_config_file():
-            result = runner.invoke(
-                cli.run,
-                [
-                    "--agent",
-                    "gemini",
-                    "--prompt",
-                    "eval",
-                    "--prompt-file",
-                    "prompt file",
-                    "--score",
-                    "1",
-                    "--config-file",
-                    "config-path",
-                    "--config",
-                    "my-config",
-                    "--yesterday",
-                ],
-            )
-        assert result.exit_code == 0
-        assert m_lightman.call_count == 1
-        assert m_lightman.call_args == call(
-            agent=ANY,
-            prompt=ANY,
-            score_threshold=ANY,
-            dry_run=ANY,
-            project_key=ANY,
-            request_id_type=ANY,
-            model=ANY,
-            start_date=datetime(2025, 7, 28, 0, 0, tzinfo=ZoneInfo(key="UTC")),
-        )
-
-    @patch("lightman_ai.cli.load_dotenv")
-    @patch("lightman_ai.cli.lightman")
-    @patch("lightman_ai.cli.FileConfig.get_config_from_file")
-    @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
     def test_custom_env_file(self, m_prompt: Mock, m_config: Mock, m_lightman: Mock, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
         m_config.return_value = FileConfig()
-        with patch_config_file():
+        with patch_config_file(), patch_settings():
             result = runner.invoke(
                 cli.run,
                 [
@@ -207,7 +126,7 @@ class TestCli:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
         m_config.return_value = FileConfig(model="not picked up")
-        with patch_config_file():
+        with patch_config_file(), patch_settings():
             result = runner.invoke(
                 cli.run,
                 [
@@ -231,36 +150,20 @@ class TestCli:
             prompt="eval prompt",
             score_threshold=1,
             dry_run=False,
-            project_key=ANY,
-            request_id_type=ANY,
+            service_desk_project_key=ANY,
+            service_desk_request_id_type=ANY,
             model="picked up",
             start_date=None,
         )
 
     @patch("lightman_ai.cli.load_dotenv")
-    def test_invalid_config(self, m_load_dotenv: Mock) -> None:
-        runner = CliRunner()
-        config_content = """
-        [prompts]
-        eval = 'eval prompt'"""
-        with patch("lightman_ai.cli.lightman") as m_lightman, patch_config_file(content=config_content) as m_config:
-            result = runner.invoke(
-                cli.run,
-                ["--prompt", "eval"],
-            )
-        assert result.exit_code == 2
-        assert (
-            "Invalid value: Invalid configuration provided: "
-            "[`agent`: Input should be a valid string,"
-            "`score_threshold`: Input should be a valid integer]" in result.output
-        )
-        assert m_lightman.call_count == 0
-        assert m_config.call_count == 2
-
-    @patch("lightman_ai.cli.load_dotenv")
     def test_invalid_prompt(self, m_load_dotenv: Mock) -> None:
         runner = CliRunner()
-        with patch("lightman_ai.cli.lightman") as m_lightman, patch_config_file(content="") as m_config:
+        with (
+            patch("lightman_ai.cli.lightman") as m_lightman,
+            patch_config_file(content="") as m_config,
+            patch_settings(),
+        ):
             result = runner.invoke(
                 cli.run,
                 [
@@ -272,6 +175,7 @@ class TestCli:
                     "1",
                 ],
             )
+
         assert result.exit_code == 2
         assert "Invalid value: prompt `eval` not found in config file" in result.output
         assert m_lightman.call_count == 0
@@ -303,7 +207,11 @@ class TestCli:
         [prompts]
         classify = 'Analyze security threats'
         """
-        with patch("lightman_ai.cli.lightman") as m_lightman, patch_config_file(content=config_content) as m_config:
+        with (
+            patch("lightman_ai.cli.lightman") as m_lightman,
+            patch_config_file(content=config_content) as m_config,
+            patch_settings(),
+        ):
             result = runner.invoke(
                 cli.run,
                 [
@@ -317,8 +225,8 @@ class TestCli:
             prompt="Analyze security threats",
             score_threshold=8,
             dry_run=True,
-            project_key=None,
-            request_id_type=None,
+            service_desk_project_key=None,
+            service_desk_request_id_type=None,
             model=None,
             start_date=None,
         )

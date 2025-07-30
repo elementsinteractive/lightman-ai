@@ -8,6 +8,7 @@ from unittest.mock import AsyncMock, Mock, patch
 import pytest
 import stamina
 from lightman_ai.article.models import ArticlesList, SelectedArticle
+from lightman_ai.core.settings import Settings
 from lightman_ai.integrations.service_desk.integration import ServiceDeskIntegration
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 from stamina._core import _RetryContextIterator
@@ -575,7 +576,35 @@ def test_prompt() -> str:
 
 @contextmanager
 def patch_config_file(content: str = "", exists: bool = True) -> Iterator[Any]:
+    """Patch lightman.toml file."""
     with patch("pathlib.Path.read_text") as m_content, patch("pathlib.Path.exists") as m_exists:
         m_content.return_value = content
         m_exists.return_value = exists
         yield m_content
+
+
+@contextmanager
+def patch_settings() -> Iterator[Any]:
+    with patch("lightman_ai.core.settings.Settings.try_load_from_file") as m:
+        m.return_value = Settings()
+        yield m
+
+
+@contextmanager
+def patch_env_variables(data: dict[str, Any]) -> Iterator[Any]:
+    previous_env_vars = {}
+    # Save previously set env variables
+    for key in data:
+        previous_env_vars[key] = os.environ.get(key)
+
+    # Set new values
+    for key, value in data.items():
+        os.environ[key] = value
+    yield
+
+    # Restore values
+    for key, value in previous_env_vars.items():
+        if value is not None:
+            os.environ[key] = value
+        else:
+            del os.environ[key]

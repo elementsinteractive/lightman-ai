@@ -2,10 +2,10 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from typing import Any
 
-from lightman_ai.core.exceptions import BaseHackermanError
+from lightman_ai.core.exceptions import BaseLightmanError
 
 
-class BaseGeminiError(BaseHackermanError): ...
+class BaseGeminiError(BaseLightmanError): ...
 
 
 class GeminiError(BaseGeminiError): ...

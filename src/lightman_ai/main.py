@@ -24,17 +24,17 @@ def _classify_articles(articles: ArticlesList, agent: BaseAgent) -> SelectedArti
 def _create_service_desk_issues(
     selected_articles: list[SelectedArticle],
     service_desk_client: ServiceDeskIntegration,
-    project_key: str,
-    request_id_type: str,
+    service_desk_project_key: str,
+    service_desk_request_id_type: str,
 ) -> None:
     async def schedule_task(article: SelectedArticle) -> None:
         try:
             description = f"*Why is relevant:*\n{article.why_is_relevant}\n\n*Source:* {article.link}\n\n*Score:* {article.relevance_score}/10"
             await service_desk_client.create_request_of_type(
-                project_key=project_key,
+                project_key=service_desk_project_key,
                 summary=article.title,
                 description=description,
-                request_id_type=request_id_type,
+                request_id_type=service_desk_request_id_type,
             )
             logger.info("Created issue for article %s", article.link)
         except Exception:
@@ -57,8 +57,8 @@ def lightman(
     agent: str,
     prompt: str,
     score_threshold: int,
-    project_key: str | None = None,
-    request_id_type: str | None = None,
+    service_desk_project_key: str | None = None,
+    service_desk_request_id_type: str | None = None,
     dry_run: bool = False,
     model: str | None = None,
     start_date: datetime | None = None,
@@ -83,15 +83,15 @@ def lightman(
         logger.info("No articles found to be relevant. Total returned articles by AI %s", len(classified_articles))
 
     if not dry_run:
-        if not project_key or not request_id_type:
+        if not service_desk_project_key or not service_desk_request_id_type:
             raise ValueError("Missing Service Desk's project key or request id type")
 
         service_desk_client = ServiceDeskIntegration.from_env()
         _create_service_desk_issues(
             selected_articles=selected_articles,
             service_desk_client=service_desk_client,
-            project_key=project_key,
-            request_id_type=request_id_type,
+            service_desk_project_key=service_desk_project_key,
+            service_desk_request_id_type=service_desk_request_id_type,
         )
 
     return selected_articles

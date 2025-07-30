@@ -77,7 +77,9 @@ class TestHackerman:
             m_thn.return_value = thn_xml
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
-            result = lightman("openai", test_prompt, score_threshold=8, project_key="4", request_id_type="2")
+            result = lightman(
+                "openai", test_prompt, score_threshold=8, service_desk_project_key="4", service_desk_request_id_type="2"
+            )
 
         assert isinstance(result, list)
         assert len(result) == 2
@@ -130,8 +132,8 @@ class TestCreateServiceDeskIssues:
             _create_service_desk_issues(
                 selected_articles=selected_articles,
                 service_desk_client=mock_service_desk,
-                project_key="TEST",
-                request_id_type="10001",
+                service_desk_project_key="TEST",
+                service_desk_request_id_type="10001",
             )
 
         assert mock_service_desk.create_request_of_type.call_count == 2
@@ -168,8 +170,8 @@ class TestCreateServiceDeskIssues:
             _create_service_desk_issues(
                 selected_articles=selected_articles,
                 service_desk_client=mock_service_desk,
-                project_key="TEST",
-                request_id_type="10001",
+                service_desk_project_key="TEST",
+                service_desk_request_id_type="10001",
             )
 
         assert mock_service_desk.create_request_of_type.call_count == 2
@@ -190,8 +192,8 @@ class TestCreateServiceDeskIssues:
             _create_service_desk_issues(
                 selected_articles=selected_articles,
                 service_desk_client=mock_service_desk,
-                project_key="TEST",
-                request_id_type="10001",
+                service_desk_project_key="TEST",
+                service_desk_request_id_type="10001",
             )
 
         assert mock_service_desk.create_request_of_type.call_count == 2

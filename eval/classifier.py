@@ -6,10 +6,9 @@ from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.gemini.agent import GeminiAgent
 from lightman_ai.ai.openai.agent import OpenAIAgent
 from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
-from lightman_ai.core.settings import settings
 from lightman_ai.main import _classify_articles
 
-from eval.constants import EVAL_WORKERS, MAX_WORKERS, MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
+from eval.constants import MAX_WORKERS, MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
 from eval.utils import ClassifiedArticleResults
 
 logger = logging.getLogger("eval")
@@ -24,13 +23,14 @@ class Classifier:
         relevant_articles: set[Article],
         non_relevant_articles: set[Article],
         samples: int,
+        workers: int,
     ) -> None:
         self.agent = agent
         self.score = score
         self.relevant_articles = relevant_articles
         self.non_relevant_articles = non_relevant_articles
         self.samples = samples
-
+        self.workers = workers
         if overlapping_articles := self.relevant_articles & self.non_relevant_articles:
             raise RuntimeError("These articles are in both relevant and non-relevant sets! %s" % overlapping_articles)
 
@@ -137,10 +137,10 @@ class Classifier:
         raise RuntimeError(f"No information about if it is possible to run `{agent}` in parallel.")
 
     def _parallel_run(self) -> list[ClassifiedArticleResults]:
-        if EVAL_WORKERS + settings.PARALLEL_WORKERS > MAX_WORKERS:
+        if self.workers > MAX_WORKERS:  # noqa: F821
             raise RuntimeError("Too many workers specified while running `eval`.")
 
-        with ThreadPoolExecutor(max_workers=EVAL_WORKERS) as executor:
+        with ThreadPoolExecutor(max_workers=self.workers) as executor:
             futures = [executor.submit(self._classify) for _ in range(self.samples)]
             return [f.result() for f in futures]
 

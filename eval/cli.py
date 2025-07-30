@@ -7,7 +7,7 @@ from lightman_ai.core.config import PromptConfig
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
 from eval.constants import DEFAULT_EVAL_CONFIG_SECTION
 from eval.evaluator import eval
-from eval.utils import EvalConfig, EvalFileConfig
+from eval.utils import EvalConfig, EvalFileConfig, init_eval_settings
 
 
 @click.command()
@@ -59,13 +59,14 @@ def run(
     model: str | None = None,
 ) -> None:
     load_dotenv(env_file)
+    settings = init_eval_settings(env_file)
     config_from_file = EvalFileConfig.get_config_from_file(config_section=config, path=config_file)
     configured_prompts = PromptConfig.get_config_from_file(path=prompt_file)
     eval_config = EvalConfig.init_from_dict(
         {
-            "agent": agent or config_from_file.agent,
+            "agent": agent or config_from_file.agent or settings.AGENT,
             "prompt": prompt or config_from_file.prompt,
-            "score_threshold": score or config_from_file.score_threshold,
+            "score_threshold": score or config_from_file.score_threshold or settings.SCORE,
             "samples": samples or config_from_file.samples,
             "model": model or config_from_file.model,
         }
@@ -80,6 +81,7 @@ def run(
         agent=eval_config.agent,
         prompt=configured_prompts.get_prompt(eval_config.prompt),
         model=eval_config.model,
+        parallel_workers=settings.PARALLEL_WORKERS,
     )
 
 
