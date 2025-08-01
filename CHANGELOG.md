@@ -1,3 +1,22 @@
+## v0.22.0 (2025-08-01)
+
+### Feat
+
+- provide settings with default values (#111)
+- --yesterday flag (#106)
+
+### Fix
+
+- rename breaking to BREAKING CHANGE in conventional-label workflow (#108)
+
+### Docs
+
+- update README.md (#110)
+
+### Tests
+
+- add test for mutually exclusive fields (#107)
+
 ## v0.21.2 (2025-07-29)
 
 ### Docs
