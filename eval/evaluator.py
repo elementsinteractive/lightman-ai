@@ -20,6 +20,7 @@ def eval(
     tag: str | None,
     agent: str,
     model: str | None,
+    parallel_workers: int = 1,
 ) -> None:
     agent_class = get_agent_class_from_agent_name(agent)
     classified_articles = Classifier(
@@ -28,6 +29,7 @@ def eval(
         relevant_articles=relevant_articles,
         non_relevant_articles=non_relevant_articles,
         samples=samples,
+        workers=parallel_workers,
     ).run()
 
     results_metrics = ResultsMetrics(raw_results=classified_articles)

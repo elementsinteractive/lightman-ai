@@ -48,6 +48,7 @@ class TestClassifier:
             relevant_articles=set(relevant_articles),
             non_relevant_articles=set(non_relevant_articles),
             samples=1,
+            workers=1,
         )._get_false_negatives(correctly_classified_articles, agent_results)
 
         missed_article = relevant_articles[1]
@@ -89,6 +90,7 @@ class TestClassifier:
             relevant_articles=set(relevant_articles),
             non_relevant_articles=set(non_relevant_articles),
             samples=1,
+            workers=1,
         ).run()
         assert classified_articles[0].total_results == 2
 

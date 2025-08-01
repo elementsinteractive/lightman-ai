@@ -1,4 +1,3 @@
-EVAL_WORKERS = 5
 MAX_WORKERS = 10
 
 MISSED_ARTICLE_REASON = "MISSED ARTICLE!. This article was not returned by the AI!"

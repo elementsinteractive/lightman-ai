@@ -4,12 +4,12 @@ from contextlib import asynccontextmanager
 from typing import Any
 
 import httpx
-from lightman_ai.core.exceptions import BaseHackermanError
+from lightman_ai.core.exceptions import BaseLightmanError
 
 logger = logging.getLogger("lightman")
 
 
-class BaseServiceDeskError(BaseHackermanError):
+class BaseServiceDeskError(BaseLightmanError):
     """Base exception for all SERVICE_DESK integration errors."""
 
 

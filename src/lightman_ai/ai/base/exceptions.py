@@ -1,4 +1,4 @@
-from lightman_ai.core.exceptions import BaseHackermanError
+from lightman_ai.core.exceptions import BaseLightmanError
 
 
-class BaseAgentError(BaseHackermanError): ...
+class BaseAgentError(BaseLightmanError): ...

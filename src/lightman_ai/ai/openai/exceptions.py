@@ -4,13 +4,13 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from typing import Any, override
 
-from lightman_ai.core.exceptions import BaseHackermanError
+from lightman_ai.core.exceptions import BaseLightmanError
 from pydantic_ai.exceptions import ModelHTTPError
 
 from openai import RateLimitError
 
 
-class BaseOpenAIError(BaseHackermanError): ...
+class BaseOpenAIError(BaseLightmanError): ...
 
 
 class UnknownOpenAIError(BaseOpenAIError): ...
