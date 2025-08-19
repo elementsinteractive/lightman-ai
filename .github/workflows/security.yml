@@ -29,3 +29,13 @@ jobs:
       - name: Run Semgrep
         run: |
           semgrep scan --config auto
+  twyn:
+    runs-on: ubuntu-latest
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    container:
+      image: elementsinteractive/twyn:2.9.0@sha256:71dc5d45bc42756282dc7adf511e6c015c05b69ef28e2b5556cd155650c3519a
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Run twyn
+        run: |
+          twyn run -vv
