@@ -1,3 +1,17 @@
+## v1.0.0 (2025-08-22)
+
+### Feat
+
+- open source release (#115)
+
+### CI
+
+- Run twyn in our pipelines (#113)
+
+### Technical
+
+- run ensurepip before copying dependency files (#114)
+
 ## v0.22.0 (2025-08-01)
 
 ### Feat
