@@ -1,3 +1,9 @@
+## v1.0.1 (2025-08-22)
+
+### CI
+
+- Create docker-build action (#116)
+
 ## v1.0.0 (2025-08-22)
 
 ### Feat
