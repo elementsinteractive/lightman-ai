@@ -2,6 +2,7 @@
 [project]
 authors = [
     {name = "sdn4z", email = "imsdn4z@gmail.com"},
+    {name = "scastlara", email = "s.cast.lara@gmail.com"}
 ]
 requires-python = "<4,>=3.13"
 dependencies = [
