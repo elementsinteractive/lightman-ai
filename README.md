@@ -80,13 +80,30 @@ Lightman AI is an intelligent cybersecurity news aggregation and risk assessment
    ```
 
 3. **Run with Docker**:
+
    ```bash
    docker run --rm \
      -v $(pwd)/lightman.toml:/app/lightman.toml \
      -e OPENAI_API_KEY="your-api-key" \
      elementsinteractive/lightman-ai:latest \
-     lightman run --config-file /app/lightman.toml --score 7
+     run --config-file /app/lightman.toml --score 8 --agent openai
    ```
+   
+   You use a .env file instead of setting the environment variables through the cli
+   
+   ```bash
+      cp .env.example .env
+   ```
+   
+   Fill it with your values and run:
+   
+   ```bash
+   docker run --rm \
+     -v $(pwd)/lightman.toml:/app/lightman.toml \
+     --env-file .env \
+     elementsinteractive/lightman-ai:latest \
+     run --config-file /app/lightman.toml --score 8 --agent openai
+   ``` 
 
 ## 🔧 Usage
 
@@ -133,17 +150,33 @@ prompt = 'development'        # Prompt template to use
 service_desk_project_key = "SEC"
 service_desk_request_id_type = "incident"
 
+# alternative configuration
+[malware]
+agent = 'openai'              # AI agent to use (openai, gemini)
+score_threshold = 8           # Minimum relevance score (1-10)
+prompt = 'malware'            # Prompt template to use
+
+# Optional: Service desk integration
+service_desk_project_key = "SEC"
+service_desk_request_id_type = "incident"
+
 [prompts]
 development = """
 Analyze the following cybersecurity news articles and determine their relevance to our organization.
 Rate each article from 1-10 based on potential impact and urgency.
-Focus on: data breaches, malware, vulnerabilities, and threat intelligence.
-"""
+Focus on vulnerabilities."""
+
+malware = """
+Analyze the following cybersecurity news articles and determine their relevance to our organization.
+Rate each article from 1-10 based on potential impact and urgency.
+Focus on malware."""
 
 custom_prompt = """
 Your custom analysis prompt here...
 """
 ```
+Note how it supports different configurations and prompts.
+
 
 It also supports having separate files for your prompts and your configuration settings. Specify the path with `--prompt`.
 
@@ -200,7 +233,7 @@ lightman run --agent openai --score 8 --prompt security_critical --yesterday
 
 ### Development Installation
 In order to fully use the provided setup for local development and testing, this project requires the following dependencies:
-- Python 3.13
+- [Python 3.13](https://www.python.org/downloads/release/python-3130/)
 - [just](https://github.com/casey/just)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 
