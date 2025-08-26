@@ -91,7 +91,7 @@ def run(
 
     Holds no logic. It loads the configuration, calls the main method and returns 0 when succesful .
     """
-    load_dotenv(env_file or DEFAULT_ENV_FILE)  # TODO refs: #112
+    load_dotenv(env_file or DEFAULT_ENV_FILE)
     configure_sentry()
 
     settings = Settings.try_load_from_file(env_file)
