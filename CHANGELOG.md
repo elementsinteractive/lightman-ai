@@ -1,3 +1,26 @@
+## v1.0.2 (2025-09-08)
+
+### CI
+
+- preview-version-bump job (#127)
+- update actions through dependabot (#117)
+
+### Docs
+
+- add more examples (#124)
+
+### Technical
+
+- includes badges in README.md (#128)
+- bump pydantic-ai to v1 (#126)
+- bump the patch-updates group with 2 updates (#125)
+- add scastlara as author (#123)
+- bump dependabot/fetch-metadata from 1.1.1 to 2.4.0 (#121)
+- bump actions/create-github-app-token from 1.12.0 to 2.1.1 (#120)
+- bump actions/checkout from 4.2.2 to 5.0.0 (#122)
+- bump astral-sh/setup-uv in the minor-updates group (#119)
+- bump actions/cache from 4.2.3 to 4.2.4 in the patch-updates group (#118)
+
 ## v1.0.1 (2025-08-22)
 
 ### CI
