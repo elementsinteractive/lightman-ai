@@ -1,10 +1,9 @@
 from datetime import UTC, datetime
 from unittest.mock import Mock, patch
 
-from lightman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
-
 from eval.classifier import Classifier
 from eval.constants import MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
+from lightman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
 
 
 class TestClassifier:

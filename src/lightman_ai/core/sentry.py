@@ -8,8 +8,8 @@ logger = logging.getLogger("lightman")
 def configure_sentry() -> None:
     """Configure Sentry for error tracking."""
     try:
-        import sentry_sdk
-        from sentry_sdk.integrations.logging import LoggingIntegration
+        import sentry_sdk  # noqa: PLC0415
+        from sentry_sdk.integrations.logging import LoggingIntegration  # noqa: PLC0415
     except ImportError:
         logger.warning(
             "Could not initialize sentry, it is not installed! Add it by installing the project with `lightman-ai[sentry]`."
