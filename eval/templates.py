@@ -1,9 +1,12 @@
 import logging
 from datetime import date
-from decimal import Decimal
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from eval.utils import ClassifiedArticleResults, ResultsMetrics
+if TYPE_CHECKING:
+    from decimal import Decimal
+
+    from eval.utils import ClassifiedArticleResults, ResultsMetrics
 
 RESULTS_DIR = "eval/results/"
 

@@ -1,12 +1,14 @@
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Self, cast
+from typing import TYPE_CHECKING, Any, Self, cast
 
 import tomlkit
 from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
 from pydantic import BaseModel, ConfigDict, PositiveInt, ValidationError, field_validator
-from pydantic_core.core_schema import FieldValidationInfo
+
+if TYPE_CHECKING:
+    from pydantic_core.core_schema import FieldValidationInfo
 
 PROMPTS_SECTION = "prompts"
 logger = logging.getLogger("lightman")

@@ -1,13 +1,16 @@
 import inspect
-from collections.abc import Iterable
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from lightman_ai.article.models import SelectedArticle
 from lightman_ai.core.config import FileConfig, FinalConfig
 from lightman_ai.core.settings import Settings
-from pydantic import PositiveInt
+from pydantic import PositiveInt  # noqa: TC002
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from lightman_ai.article.models import SelectedArticle
 
 
 class EvalSettings(Settings):

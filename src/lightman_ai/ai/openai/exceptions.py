@@ -1,13 +1,15 @@
 import math
 import re
-from collections.abc import Generator
 from contextlib import contextmanager
-from typing import Any, override
+from typing import TYPE_CHECKING, Any, override
 
 from lightman_ai.core.exceptions import BaseLightmanError
 from pydantic_ai.exceptions import ModelHTTPError
 
 from openai import RateLimitError
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 
 class BaseOpenAIError(BaseLightmanError): ...

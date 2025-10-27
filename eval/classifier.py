@@ -1,8 +1,8 @@
 import logging
 import time
 from concurrent.futures import ThreadPoolExecutor
+from typing import TYPE_CHECKING
 
-from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.gemini.agent import GeminiAgent
 from lightman_ai.ai.openai.agent import OpenAIAgent
 from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
@@ -10,6 +10,9 @@ from lightman_ai.main import _classify_articles
 
 from eval.constants import MAX_WORKERS, MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
 from eval.utils import ClassifiedArticleResults
+
+if TYPE_CHECKING:
+    from lightman_ai.ai.base.agent import BaseAgent
 
 logger = logging.getLogger("eval")
 

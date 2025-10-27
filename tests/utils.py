@@ -1,9 +1,11 @@
-from collections.abc import Generator, Iterator
 from contextlib import contextmanager
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 
-from lightman_ai.article.models import Article, SelectedArticlesList
+if TYPE_CHECKING:
+    from collections.abc import Generator, Iterator
+
+    from lightman_ai.article.models import Article, SelectedArticlesList
 
 
 @contextmanager

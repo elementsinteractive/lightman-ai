@@ -1,6 +1,6 @@
 import logging
-from datetime import date
 from importlib import metadata
+from typing import TYPE_CHECKING
 
 import click
 from dotenv import load_dotenv
@@ -13,6 +13,9 @@ from lightman_ai.core.settings import Settings
 from lightman_ai.exceptions import MultipleDateSourcesError
 from lightman_ai.main import lightman
 from lightman_ai.utils import get_start_date
+
+if TYPE_CHECKING:
+    from datetime import date
 
 logger = logging.getLogger("lightman")
 

@@ -1,10 +1,12 @@
 import logging
-from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import httpx
 from lightman_ai.core.exceptions import BaseLightmanError
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
 
 logger = logging.getLogger("lightman")
 

@@ -1,11 +1,14 @@
 import logging
+from typing import TYPE_CHECKING
 
 from lightman_ai.ai.utils import get_agent_class_from_agent_name
-from lightman_ai.article.models import Article
 
 from eval.classifier import Classifier
 from eval.templates import ResultsFileBuilder
 from eval.utils import ResultsMetrics
+
+if TYPE_CHECKING:
+    from lightman_ai.article.models import Article
 
 logger = logging.getLogger("eval")
 

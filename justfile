@@ -1,6 +1,6 @@
 # VARIABLE DEFINITIONS
 venv := ".venv"
-python_version :="3.13"
+python_version :="3.14"
 run := "uv run"
 eval_path := "eval/cli.py"
 

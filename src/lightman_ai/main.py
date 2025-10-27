@@ -1,14 +1,18 @@
 import asyncio
 import logging
-from datetime import datetime
+from typing import TYPE_CHECKING
 
-from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.utils import get_agent_class_from_agent_name
-from lightman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
 from lightman_ai.integrations.service_desk.integration import (
     ServiceDeskIntegration,
 )
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
+
+if TYPE_CHECKING:
+    from datetime import datetime
+
+    from lightman_ai.ai.base.agent import BaseAgent
+    from lightman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
 
 logger = logging.getLogger("lightman")
 

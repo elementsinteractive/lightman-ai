@@ -1,8 +1,11 @@
 from datetime import date, datetime, time, timedelta
+from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
-from lightman_ai.core.settings import Settings
 from lightman_ai.exceptions import MultipleDateSourcesError
+
+if TYPE_CHECKING:
+    from lightman_ai.core.settings import Settings
 
 
 def get_start_date(settings: Settings, yesterday: bool, today: bool, start_date: date | None) -> datetime | None:

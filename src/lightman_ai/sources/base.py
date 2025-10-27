@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
-from datetime import datetime
+from typing import TYPE_CHECKING
 
-from lightman_ai.article.models import ArticlesList
+if TYPE_CHECKING:
+    from datetime import datetime
+
+    from lightman_ai.article.models import ArticlesList
 
 
 class BaseSource(ABC):

@@ -1,6 +1,10 @@
-from lightman_ai.ai.base.agent import BaseAgent
+from typing import TYPE_CHECKING
+
 from lightman_ai.ai.gemini.agent import GeminiAgent
 from lightman_ai.ai.openai.agent import OpenAIAgent
+
+if TYPE_CHECKING:
+    from lightman_ai.ai.base.agent import BaseAgent
 
 AGENT_MAPPING = {"openai": OpenAIAgent, "gemini": GeminiAgent}
 

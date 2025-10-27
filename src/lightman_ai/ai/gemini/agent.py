@@ -1,9 +1,11 @@
-from typing import override
+from typing import TYPE_CHECKING, override
 
 from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.gemini.exceptions import map_gemini_exceptions
-from lightman_ai.article.models import SelectedArticlesList
 from pydantic_ai.models.google import GoogleModel
+
+if TYPE_CHECKING:
+    from lightman_ai.article.models import SelectedArticlesList
 
 
 class GeminiAgent(BaseAgent):

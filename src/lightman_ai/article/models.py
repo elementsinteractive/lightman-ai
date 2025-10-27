@@ -1,5 +1,5 @@
 from abc import ABC
-from datetime import datetime
+from datetime import datetime  # noqa: TC003
 from typing import Self, override
 
 from lightman_ai.article.exceptions import NoTimeZoneError

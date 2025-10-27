@@ -1,4 +1,4 @@
-import pathlib
+from typing import TYPE_CHECKING
 
 import pytest
 from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
@@ -6,6 +6,9 @@ from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
 from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
 from pydantic import ValidationError
 from tests.conftest import patch_config_file
+
+if TYPE_CHECKING:
+    import pathlib
 
 
 class TestConfig:

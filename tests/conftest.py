@@ -1,8 +1,7 @@
 import os
-from collections.abc import Generator, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
@@ -11,7 +10,11 @@ from lightman_ai.article.models import ArticlesList, SelectedArticle
 from lightman_ai.core.settings import Settings
 from lightman_ai.integrations.service_desk.integration import ServiceDeskIntegration
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
-from stamina._core import _RetryContextIterator
+
+if TYPE_CHECKING:
+    from collections.abc import Generator, Iterator
+
+    from stamina._core import _RetryContextIterator
 
 
 def pytest_configure() -> None:
@@ -20,7 +23,7 @@ def pytest_configure() -> None:
 
 
 @pytest.fixture
-def patch_service_desk_retry_wait_max() -> Generator[None, Any, None]:
+def patch_service_desk_retry_wait_max() -> Generator[None, Any]:
     original_retry_context = stamina.retry_context
 
     def patched_retry_context(*args: Any, **kwargs: Any) -> _RetryContextIterator:
