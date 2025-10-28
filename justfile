@@ -4,7 +4,7 @@ python_version :="3.13"
 run := "uv run"
 eval_path := "eval/cli.py"
 
-venv-exists := path_exists(venv)
+venv_exists := path_exists(venv)
 
 
 target_dirs := "src tests eval"
@@ -16,9 +16,9 @@ help:
 
 # Cleans all artifacts generated while running this project, including the virtualenv.
 venv: 
-    @if ! {{ venv-exists }}; \
+    @if ! {{ venv_exists }}; \
     then \
-    uv sync --frozen --all-extras --all-groups; \
+    uv sync --frozen --all-extras --all-groups --python {{ python_version }}; \
     fi
 
 # Runs the evaluation script

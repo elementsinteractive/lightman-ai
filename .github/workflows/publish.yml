@@ -24,7 +24,7 @@ jobs:
         uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
       - name: Publish to pypi
         run: |
-          uv build
+          uv build --python 3.13
           uv publish
 
   push_to_docker_hub:
@@ -59,8 +59,8 @@ jobs:
           context: .
           image-name: elementsinteractive/lightman-ai
           cache-from: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache
-          cache-to: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max,compression=zstd,force-compression=true,oci-mediatypes=true      
-      
+          cache-to: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache,mode=max,compression=zstd,force-compression=true,oci-mediatypes=true
+
       - name: Delete old cache entries
         env:
           GH_TOKEN: ${{ github.token }}

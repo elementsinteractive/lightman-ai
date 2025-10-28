@@ -13,6 +13,8 @@ jobs:
     name: Test package build
     runs-on: ubuntu-latest
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    env:
+      PYTHON_VERSION: 3.13
     steps:
       - name: Check out the repo
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -21,14 +23,14 @@ jobs:
         uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6.8.0
 
       - name: Build the package
-        run: uv build
+        run: uv build --python $PYTHON_VERSION
 
       - name: List built artifacts
         run: ls -la dist/
 
       - name: Install the built wheel
         run: |
-          uv venv
+          uv venv --python $PYTHON_VERSION
           # Find the wheel file and install it
           WHEEL_FILE=$(ls dist/*.whl | head -1)
           echo "Installing wheel: $WHEEL_FILE"
@@ -64,7 +66,6 @@ jobs:
       docker: ${{ steps.docker-changes.outputs.docker }}
       workflow: ${{ steps.docker-changes.outputs.workflow }}
 
-
   test-docker-build:
     needs: [should-test-docker-build]
     name: Test Docker build
@@ -92,4 +93,3 @@ jobs:
           push: false
           platforms: linux/amd64,linux/arm64
           cache-from: type=registry,ref=ghcr.io/elementsinteractive/lightman-ai:buildcache
-       
