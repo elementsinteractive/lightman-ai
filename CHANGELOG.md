@@ -1,3 +1,23 @@
+## v1.0.3 (2025-10-30)
+
+### CI
+
+- pin python version in ci jobs (#142)
+- periodically scan for vulnerabilities (#132)
+- adapt to breaking change in lgtm-ai (#129)
+
+### Technical
+
+- Bump dependencies (#143)
+- bump astral-sh/setup-uv from 6.8.0 to 7.1.2 (#140)
+- bump softprops/action-gh-release from 2.3.4 to 2.4.1 (#138)
+- bump softprops/action-gh-release from 2.3.3 to 2.3.4 in the patch-updates group (#135)
+- bump astral-sh/setup-uv from 6.7.0 to 6.8.0 (#136)
+- bump docker/login-action from 3.5.0 to 3.6.0 (#134)
+- bump actions/cache from 4.2.4 to 4.3.0 (#133)
+- bump actions/create-github-app-token from 2.1.1 to 2.1.4 in the patch-updates group (#131)
+- bump astral-sh/setup-uv from 6.6.1 to 6.7.0 in the minor-updates group (#130)
+
 ## v1.0.2 (2025-09-08)
 
 ### CI
