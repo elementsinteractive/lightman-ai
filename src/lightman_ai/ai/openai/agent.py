@@ -5,13 +5,13 @@ from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.openai.exceptions import LimitTokensExceededError, map_openai_exceptions
 from lightman_ai.article.models import SelectedArticlesList
 from pydantic_ai.agent import AgentRunResult
-from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.models.openai import OpenAIChatModel
 
 
 class OpenAIAgent(BaseAgent):
     """Class that provides an interface to operate with the OpenAI model."""
 
-    _class = OpenAIModel
+    _class = OpenAIChatModel
     _default_model_name = "gpt-4.1"
 
     def _execute_agent(self, prompt: str) -> AgentRunResult[SelectedArticlesList]:
