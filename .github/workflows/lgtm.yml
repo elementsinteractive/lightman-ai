@@ -5,14 +5,16 @@ on:
     types: [created]
 
 jobs:
-  lgtm-review:
+  check-permission:
     if: |
       github.event.issue.pull_request &&
       startsWith(github.event.comment.body, '/lgtm review')
     runs-on: ubuntu-latest
+    outputs:
+      has-permission: ${{ steps.check.outputs.has-permission }}
     steps:
       - name: Check if commenter has write access
-        id: check-permission
+        id: check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -23,27 +25,25 @@ jobs:
             | jq -r '.permission')
 
           if [[ "$PERMISSION" == "admin" || "$PERMISSION" == "maintain" || "$PERMISSION" == "write" ]]; then
-            echo "HAS_PERMISSION=true" >> $GITHUB_ENV
+            echo "has-permission=true" >> $GITHUB_OUTPUT
           else
-            echo "HAS_PERMISSION=false" >> $GITHUB_ENV
+            echo "has-permission=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Fail if unauthorized
-        if: env.HAS_PERMISSION == 'false'
-        run: |
-          echo "User ${{ github.event.comment.user.login }} is not authorized to trigger this workflow."
-          exit 1
-
+  lgtm-review:
+    needs: check-permission
+    if: needs.check-permission.outputs.has-permission == 'true'
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout PR code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        uses: actions/checkout@v4
         with:
           ref: refs/pull/${{ github.event.issue.number }}/merge
 
       - name: Run LGTM Review
-        run: |
-          docker run --rm elementsinteractive/lgtm-ai \
-          review \
-          --git-api-key "${{ secrets.GITHUB_TOKEN }}" \
-          --ai-api-key "${{ secrets.AI_API_TOKEN }}" \
-          -vv \
-          "https://github.com/${{ github.repository }}/pull/${{ github.event.issue.number }}"
+        uses: elementsinteractive/lgtm-ai-action@v1.0.0
+        with:
+          ai-api-key: ${{ secrets.AI_API_TOKEN }}
+          git-api-key: ${{ secrets.GITHUB_TOKEN }}
+          pr-number: ${{ github.event.issue.number }}
+          verbose: "true"
