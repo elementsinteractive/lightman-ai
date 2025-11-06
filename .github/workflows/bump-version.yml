@@ -36,8 +36,9 @@ jobs:
 
           VERSION=$(cz version -p)
           PINNED_MAJOR=v${VERSION%%.*}
-          git tag -d $PINNED_MAJOR || true # Delete previous major version tag
-          git tag  $PINNED_MAJOR HEAD
+          git tag -d $PINNED_MAJOR || echo "Tag $PINNED_MAJOR does not exist locally."
+          git push origin --delete $PINNED_MAJOR ||  echo "Tag $PINNED_MAJOR does not exist on remote."
+          git tag  $PINNED_MAJOR HEAD || echo "Could not add tag $PINNED_MAJOR."
 
           git push origin HEAD:main
           git push origin --tags
