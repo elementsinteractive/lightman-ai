@@ -1,3 +1,14 @@
+## v1.1.1 (2025-11-06)
+
+### CI
+
+- fix non valid syntax on GH action (#149)
+- Create major version tag (#148)
+
+### Technical
+
+- minor changes (#147)
+
 ## v1.1.0 (2025-11-06)
 
 ### Feat
