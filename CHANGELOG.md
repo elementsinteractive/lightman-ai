@@ -1,3 +1,17 @@
+## v1.1.0 (2025-11-06)
+
+### Feat
+
+- add `-v` option and improve logging (#146)
+
+### Refactor
+
+- update default gemini model and replace deprecated OpenAIModel class usage (#144)
+
+### CI
+
+- use lgtm github action (#145)
+
 ## v1.0.3 (2025-10-30)
 
 ### CI
