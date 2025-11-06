@@ -11,15 +11,16 @@ from pydantic_ai.models.openai import OpenAIChatModel
 class OpenAIAgent(BaseAgent):
     """Class that provides an interface to operate with the OpenAI model."""
 
-    _class = OpenAIChatModel
-    _default_model_name = "gpt-4.1"
+    _AGENT_CLASS = OpenAIChatModel
+    _DEFAULT_MODEL_NAME = "gpt-4.1"
+    _AGENT_NAME = "OpenAI"
 
     def _execute_agent(self, prompt: str) -> AgentRunResult[SelectedArticlesList]:
         with map_openai_exceptions():
             return self.agent.run_sync(prompt)
 
     @override
-    def _run_prompt(self, prompt: str) -> SelectedArticlesList:
+    def run_prompt(self, prompt: str) -> SelectedArticlesList:
         try:
             result = self._execute_agent(prompt)
         except LimitTokensExceededError as err:

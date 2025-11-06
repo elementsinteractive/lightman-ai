@@ -11,7 +11,7 @@ class TestAgent:
         """Test that we can run a prompt and receive a SelectedArticlesList."""
         with patch("lightman_ai.ai.openai.agent.OpenAIAgent._execute_agent") as mock:
             mock.return_value.output = SelectedArticlesList(articles=[])
-            result = self.agent._run_prompt(test_prompt)
+            result = self.agent.run_prompt(test_prompt)
 
         assert mock.call_count == 1
         assert isinstance(result, SelectedArticlesList)

@@ -41,7 +41,7 @@ def eval(
         prompt=prompt,
         score=score_threshold,
         logger=logger,
-        model=model or agent_class._default_model_name,
+        model=model or agent_class._DEFAULT_MODEL_NAME,
     )
 
     results_template.save()

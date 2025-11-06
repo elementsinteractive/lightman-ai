@@ -7,7 +7,7 @@ from click.testing import CliRunner
 from freezegun import freeze_time
 from lightman_ai import cli
 from lightman_ai.core.config import FileConfig, PromptConfig
-from tests.conftest import patch_config_file, patch_settings
+from tests.conftest import patch_config_file
 
 
 class TestCli:
@@ -20,7 +20,7 @@ class TestCli:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
         m_config.return_value = FileConfig()
-        with patch_config_file(), patch_settings():
+        with patch_config_file():
             result = runner.invoke(
                 cli.run,
                 [
@@ -80,7 +80,7 @@ class TestCli:
         args = [field1, field2]
         if field3:
             args.append(field3)
-        with patch_config_file(), patch_settings():
+        with patch_config_file():
             result = runner.invoke(
                 cli.run,
                 args,
@@ -98,7 +98,7 @@ class TestCli:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
         m_config.return_value = FileConfig()
-        with patch_config_file(), patch_settings():
+        with patch_config_file():
             result = runner.invoke(
                 cli.run,
                 [
@@ -126,7 +126,7 @@ class TestCli:
         runner = CliRunner()
         m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
         m_config.return_value = FileConfig(model="not picked up")
-        with patch_config_file(), patch_settings():
+        with patch_config_file():
             result = runner.invoke(
                 cli.run,
                 [
@@ -162,7 +162,6 @@ class TestCli:
         with (
             patch("lightman_ai.cli.lightman") as m_lightman,
             patch_config_file(content="") as m_config,
-            patch_settings(),
         ):
             result = runner.invoke(
                 cli.run,
@@ -210,7 +209,6 @@ class TestCli:
         with (
             patch("lightman_ai.cli.lightman") as m_lightman,
             patch_config_file(content=config_content) as m_config,
-            patch_settings(),
         ):
             result = runner.invoke(
                 cli.run,

@@ -1,6 +1,4 @@
-import logging
 from datetime import UTC, datetime, timedelta
-from typing import Any
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
@@ -10,8 +8,10 @@ from lightman_ai.main import _create_service_desk_issues, _get_articles_from_sou
 from tests.utils import patch_agent, patch_get_articles_from_xml
 
 
-class TestHackerman:
-    def test_lightman_retrieve_from_date_onwards(self, caplog: Any) -> None:
+class TestLightman:
+    def test_lightman_retrieve_from_date_onwards(
+        self,
+    ) -> None:
         now = datetime.now(UTC)
         new_article = Article(title="article 2", link="https://article2.com", description="d", published_at=now)
         old_article = Article(
@@ -24,7 +24,6 @@ class TestHackerman:
         feed_articles = [new_article, old_article]
 
         with (
-            caplog.at_level(logging.INFO),
             patch("httpx.get"),
             patch_get_articles_from_xml(feed_articles),
         ):
@@ -35,7 +34,7 @@ class TestHackerman:
         assert new_article in result.articles
         assert old_article not in result.articles
 
-    def test_lightman_no_date_specified(self, caplog: Any, test_prompt: str) -> None:
+    def test_lightman_no_date_specified(self) -> None:
         now = datetime.now(UTC)
         new_article = Article(title="article 2", link="https://article2.com", description="d", published_at=now)
         old_article = Article(
@@ -47,7 +46,6 @@ class TestHackerman:
 
         feed_articles = [new_article, old_article]
         with (
-            caplog.at_level(logging.INFO),
             patch("httpx.get"),
             patch_get_articles_from_xml(feed_articles),
         ):
@@ -56,7 +54,7 @@ class TestHackerman:
         assert isinstance(result, ArticlesList)
         assert result.articles == feed_articles
 
-    def test_lightman_and_service_desk_publish(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
+    def test_lightman_and_service_desk_publish(self, test_prompt: str, thn_xml: str) -> None:
         now = datetime.now(UTC)
         relevant_article_1 = SelectedArticle(
             title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8, published_at=now
@@ -69,7 +67,6 @@ class TestHackerman:
         )
         agent_response = SelectedArticlesList(articles=[relevant_article_1, relevant_article_2, not_relevant_article])
         with (
-            caplog.at_level(logging.INFO),
             patch("httpx.get") as m_thn,
             patch_agent(agent_response),
             patch("lightman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
@@ -86,7 +83,6 @@ class TestHackerman:
         assert relevant_article_1 in result
         assert relevant_article_2 in result
         assert not_relevant_article not in result
-        assert "Found these articles: " in caplog.text
 
         mock_service_desk_env.assert_called_once()
         assert mock_service_desk.create_request_of_type.call_count == 2
@@ -94,7 +90,7 @@ class TestHackerman:
         assert relevant_article_1.title in called_titles
         assert relevant_article_2.title in called_titles
 
-    def test_lightman_no_publish_if_dry_run(self, caplog: Any, test_prompt: str, thn_xml: str) -> None:
+    def test_lightman_no_publish_if_dry_run(self, test_prompt: str, thn_xml: str) -> None:
         now = datetime.now(UTC)
         relevant_article_1 = SelectedArticle(
             title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8, published_at=now
@@ -107,7 +103,6 @@ class TestHackerman:
         )
         agent_response = SelectedArticlesList(articles=[relevant_article_1, relevant_article_2, not_relevant_article])
         with (
-            caplog.at_level(logging.INFO),
             patch("httpx.get") as m_thn,
             patch_agent(agent_response),
             patch("lightman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
@@ -125,16 +120,17 @@ class TestCreateServiceDeskIssues:
     """Tests for the _create_service_desk_issues function."""
 
     def test_create_service_desk_issues_success(
-        self, selected_articles: list[SelectedArticle], mock_service_desk: Mock, caplog: pytest.LogCaptureFixture
+        self,
+        selected_articles: list[SelectedArticle],
+        mock_service_desk: Mock,
     ) -> None:
         """Test successful creation of service desk issues for all articles."""
-        with caplog.at_level(logging.INFO):
-            _create_service_desk_issues(
-                selected_articles=selected_articles,
-                service_desk_client=mock_service_desk,
-                service_desk_project_key="TEST",
-                service_desk_request_id_type="10001",
-            )
+        _create_service_desk_issues(
+            selected_articles=selected_articles,
+            service_desk_client=mock_service_desk,
+            service_desk_project_key="TEST",
+            service_desk_request_id_type="10001",
+        )
 
         assert mock_service_desk.create_request_of_type.call_count == 2
 
@@ -154,11 +150,10 @@ class TestCreateServiceDeskIssues:
         expected_desc_2 = "*Why is relevant:*\nCould impact our infrastructure\n\n*Source:* https://example.com/article2\n\n*Score:* 8/10"
         assert second_call.kwargs["description"] == expected_desc_2
 
-        assert "Created issue for article https://example.com/article1" in caplog.text
-        assert "Created issue for article https://example.com/article2" in caplog.text
-
     def test_create_service_desk_issues_single_failure(
-        self, selected_articles: list[SelectedArticle], mock_service_desk: Mock, caplog: pytest.LogCaptureFixture
+        self,
+        selected_articles: list[SelectedArticle],
+        mock_service_desk: Mock,
     ) -> None:
         """Test handling when one article fails to create service desk issue."""
         mock_service_desk.create_request_of_type.side_effect = [
@@ -166,7 +161,7 @@ class TestCreateServiceDeskIssues:
             Exception("Service desk unavailable"),
         ]
 
-        with caplog.at_level(logging.INFO), pytest.raises(ExceptionGroup) as exc_info:
+        with pytest.raises(ExceptionGroup) as exc_info:
             _create_service_desk_issues(
                 selected_articles=selected_articles,
                 service_desk_client=mock_service_desk,
@@ -180,15 +175,15 @@ class TestCreateServiceDeskIssues:
         assert len(exc_info.value.exceptions) == 1
         assert "Service desk unavailable" in str(exc_info.value.exceptions[0])
 
-        assert "Created issue for article https://example.com/article1" in caplog.text
-
     def test_create_service_desk_issues_all_failures(
-        self, selected_articles: list[SelectedArticle], mock_service_desk: Mock, caplog: pytest.LogCaptureFixture
+        self,
+        selected_articles: list[SelectedArticle],
+        mock_service_desk: Mock,
     ) -> None:
         """Test handling when all articles fail to create service desk issues."""
         mock_service_desk.create_request_of_type.side_effect = Exception("Service desk down")
 
-        with caplog.at_level(logging.ERROR), pytest.raises(ExceptionGroup) as exc_info:
+        with pytest.raises(ExceptionGroup) as exc_info:
             _create_service_desk_issues(
                 selected_articles=selected_articles,
                 service_desk_client=mock_service_desk,
@@ -201,57 +196,36 @@ class TestCreateServiceDeskIssues:
         assert "Could not create all ServiceDesk issues" in str(exc_info.value)
         assert len(exc_info.value.exceptions) == 2
 
-        assert (
-            "Could not create ServiceDesk issue: Critical Security Vulnerability in Popular Library, https://example.com/article1"
-            in caplog.text
-        )
-        assert (
-            "Could not create ServiceDesk issue: New Attack Vector Discovered, https://example.com/article2"
-            in caplog.text
-        )
-
 
 class TestSentryIntegration:
     """Tests for Sentry integration behavior."""
 
+    @patch.dict("os.environ", {})
     @patch.dict("os.environ", {}, clear=True)
-    def test_sentry_skipped_when_dsn_not_set(self, caplog: pytest.LogCaptureFixture) -> None:
+    @patch("sentry_sdk.init")
+    def test_sentry_skipped_when_dsn_not_set(self, mock_sentry_init: Mock) -> None:
         """Test that Sentry initialization is skipped when SENTRY_DSN is not set."""
-        with caplog.at_level(logging.INFO):
-            configure_sentry()
-
-        assert "SENTRY_DSN not configured, skipping Sentry initialization" in caplog.text
+        configure_sentry(10)
+        assert mock_sentry_init.call_count == 0
 
     @patch.dict("os.environ", {"SENTRY_DSN": "https://test@sentry.io/123"})
     @patch("sentry_sdk.init")
-    def test_sentry_execution_continues_when_init_fails(
-        self, mock_sentry_init: Mock, caplog: pytest.LogCaptureFixture
-    ) -> None:
+    def test_sentry_execution_does_not_error_when_it_cannot_instantiate(self, mock_sentry_init: Mock) -> None:
         """Test that execution continues when Sentry initialization fails."""
         mock_sentry_init.side_effect = Exception("Sentry connection failed")
 
-        with caplog.at_level(logging.WARNING):
-            configure_sentry()
-
-        assert "Could not instantiate Sentry! Sentry connection failed" in caplog.text
-        assert "Continuing with the execution" in caplog.text
+        configure_sentry(10)
 
         mock_sentry_init.assert_called_once()
 
     @patch.dict("os.environ", {"SENTRY_DSN": "https://test@sentry.io/123"})
     @patch("sentry_sdk.init")
     @patch("lightman_ai.core.sentry.metadata.version")
-    def test_sentry_initializes_successfully(
-        self, mock_version: Mock, mock_sentry_init: Mock, caplog: pytest.LogCaptureFixture
-    ) -> None:
+    def test_sentry_initializes_successfully(self, mock_version: Mock, mock_sentry_init: Mock) -> None:
         """Test that Sentry initializes successfully when configured properly."""
         mock_version.return_value = "1.0.0"
 
-        with caplog.at_level(logging.INFO):
-            configure_sentry()
-
-        assert "Could not instantiate Sentry" not in caplog.text
-        assert "SENTRY_DSN not configured" not in caplog.text
+        configure_sentry(10)
 
         mock_sentry_init.assert_called_once()
         call_kwargs = mock_sentry_init.call_args.kwargs

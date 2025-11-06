@@ -11,6 +11,7 @@ from lightman_ai.integrations.service_desk.integration import (
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 
 logger = logging.getLogger("lightman")
+logger.addHandler(logging.NullHandler())
 
 
 def _get_articles_from_source(start_date: datetime | None = None) -> ArticlesList:
@@ -18,7 +19,7 @@ def _get_articles_from_source(start_date: datetime | None = None) -> ArticlesLis
 
 
 def _classify_articles(articles: ArticlesList, agent: BaseAgent) -> SelectedArticlesList:
-    return agent.get_prompt_result(prompt=str(articles))
+    return agent.run_prompt(prompt=str(articles))
 
 
 def _create_service_desk_issues(
@@ -67,7 +68,6 @@ def lightman(
 
     agent_class = get_agent_class_from_agent_name(agent)
     agent_instance = agent_class(prompt, model, logger=logger)
-    logger.info("Selected %s.", agent_instance)
 
     classified_articles = _classify_articles(
         articles=articles,
@@ -77,10 +77,6 @@ def lightman(
     selected_articles: list[SelectedArticle] = classified_articles.get_articles_with_score_gte_threshold(
         score_threshold
     )
-    if selected_articles:
-        logger.info("Found these articles: %s", selected_articles)
-    else:
-        logger.info("No articles found to be relevant. Total returned articles by AI %s", len(classified_articles))
 
     if not dry_run:
         if not service_desk_project_key or not service_desk_request_id_type:
