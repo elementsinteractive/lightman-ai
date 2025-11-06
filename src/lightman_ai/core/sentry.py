@@ -13,7 +13,7 @@ def configure_sentry(log_level: int) -> None:
     except ImportError:
         if os.getenv("SENTRY_DSN"):
             logger.warning(
-                "Could not initialize sentry, it is not installed! Add it by installing the project with `lightman-ai[sentry]`."
+                "Could not initialize sentry, it is not installed! Install lightman with `pip install lightman-ai[sentry]` to solve it."
             )
         return
 
