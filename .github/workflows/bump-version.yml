@@ -34,7 +34,8 @@ jobs:
         run: |
           cz bump --yes --changelog
 
-          PINNED_MAJOR=v${$(cz version -p)%%.*}
+          VERSION=$(cz version -p)
+          PINNED_MAJOR=v${VERSION%%.*}
           git tag -d $PINNED_MAJOR || true # Delete previous major version tag
           git tag  $PINNED_MAJOR HEAD
 
