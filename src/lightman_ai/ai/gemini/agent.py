@@ -10,7 +10,7 @@ class GeminiAgent(BaseAgent):
     """Class that provides an interface to operate with the Gemini model."""
 
     _class = GoogleModel
-    _default_model_name = "gemini-2.5-pro-preview-05-06"
+    _default_model_name = "gemini-2.5-pro"
 
     @override
     def _run_prompt(self, prompt: str) -> SelectedArticlesList:

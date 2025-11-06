@@ -5,11 +5,11 @@ from typing import Never
 from lightman_ai.article.models import SelectedArticlesList
 from pydantic_ai import Agent
 from pydantic_ai.models.google import GoogleModel
-from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.models.openai import OpenAIChatModel
 
 
 class BaseAgent(ABC):
-    _class: type[OpenAIModel] | type[GoogleModel]
+    _class: type[OpenAIChatModel] | type[GoogleModel]
     _default_model_name: str
 
     def __init__(self, system_prompt: str, model: str | None = None, logger: logging.Logger | None = None) -> None:
