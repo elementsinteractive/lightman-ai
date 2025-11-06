@@ -25,8 +25,10 @@ class TheHackerNewsSource(BaseSource):
     @override
     def get_articles(self, date: datetime | None = None) -> ArticlesList:
         """Return the articles that are present in THN feed."""
+        logger.info("Downloading articles from %s", THN_URL)
         feed = self.get_feed()
         articles = self._xml_to_list_of_articles(feed)
+        logger.info("Articles properly downloaded and parsed.")
         if date:
             return ArticlesList.get_articles_from_date_onwards(articles=articles, start_date=date)
         else:

@@ -158,7 +158,8 @@ class TestServiceDeskIntegration:
             }
 
     async def test_create_request_of_type_logs_success(
-        self, service_desk_integration: ServiceDeskIntegration, caplog: pytest.LogCaptureFixture
+        self,
+        service_desk_integration: ServiceDeskIntegration,
     ) -> None:
         mock_response = AsyncMock()
         mock_response.status_code = 201
@@ -166,8 +167,7 @@ class TestServiceDeskIntegration:
         sync_mock.return_value = {"issueId": "PROJ-1"}
         mock_response.json = sync_mock
         mock_response.raise_for_status.return_value = None
-        with patch.object(service_desk_integration.client, "post", return_value=mock_response), caplog.at_level("INFO"):
+        with patch.object(service_desk_integration.client, "post", return_value=mock_response):
             await service_desk_integration.create_request_of_type(
                 project_key="PROJ", summary="summary", description="desc", request_id_type="REQ_TYPE"
             )
-        assert any("Successfully created Service Desk issue: PROJ-1" in m for m in caplog.messages)

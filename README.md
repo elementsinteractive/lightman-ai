@@ -81,6 +81,7 @@ Lightman AI is an intelligent cybersecurity news aggregation and risk assessment
    agent = "openai"
    score_threshold = 8
    prompt = "development"
+   log_level = "INFO"
    
    [prompts]
    development = "Analyze cybersecurity news for relevance to our organization."' > lightman.toml
@@ -129,6 +130,8 @@ Lightman AI is an intelligent cybersecurity news aggregation and risk assessment
 | `--start-date` | Start date to retrieve articles | False |
 | `--today` | Retrieve articles from today | False |
 | `--yesterday` | Retrieve articles from yesterday | False |
+| `-v` | Be more verbose on output | False |
+
 
 ### Environment Variables:
 lightman-ai uses the following environment variables:

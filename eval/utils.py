@@ -2,23 +2,12 @@ import inspect
 from collections.abc import Iterable
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Any
 
 from lightman_ai.article.models import SelectedArticle
 from lightman_ai.core.config import FileConfig, FinalConfig
-from lightman_ai.core.settings import Settings
 from pydantic import PositiveInt
 
-
-class EvalSettings(Settings):
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-
-    PARALLEL_WORKERS: int = 5
-
-
-def init_eval_settings(env_file: str | None = None) -> EvalSettings:
-    return EvalSettings(_env_file=env_file)
+PARALLEL_WORKERS: int = 5
 
 
 class EvalConfig(FinalConfig):

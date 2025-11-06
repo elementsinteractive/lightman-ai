@@ -8,10 +8,6 @@ from lightman_ai.exceptions import MultipleDateSourcesError
 from lightman_ai.utils import get_start_date
 
 
-class FakeSettings:
-    TIME_ZONE = "UTC"
-
-
 class TestUtils:
     @pytest.mark.parametrize(
         ("today", "yesterday", "start_date", "expected"),
@@ -26,8 +22,7 @@ class TestUtils:
     def test_get_start_date(
         self, today: bool, yesterday: bool, start_date: datetime.date, expected: datetime.datetime
     ) -> None:
-        settings = FakeSettings()
-        start_date_time = get_start_date(settings, yesterday, today, start_date)  # type: ignore[arg-type]
+        start_date_time = get_start_date("UTC", yesterday, today, start_date)
         assert start_date_time == expected
 
     @pytest.mark.parametrize(

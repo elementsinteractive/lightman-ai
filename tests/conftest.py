@@ -8,7 +8,6 @@ from unittest.mock import AsyncMock, Mock, patch
 import pytest
 import stamina
 from lightman_ai.article.models import ArticlesList, SelectedArticle
-from lightman_ai.core.settings import Settings
 from lightman_ai.integrations.service_desk.integration import ServiceDeskIntegration
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 from stamina._core import _RetryContextIterator
@@ -581,13 +580,6 @@ def patch_config_file(content: str = "", exists: bool = True) -> Iterator[Any]:
         m_content.return_value = content
         m_exists.return_value = exists
         yield m_content
-
-
-@contextmanager
-def patch_settings() -> Iterator[Any]:
-    with patch("lightman_ai.core.settings.Settings.try_load_from_file") as m:
-        m.return_value = Settings()
-        yield m
 
 
 @contextmanager
