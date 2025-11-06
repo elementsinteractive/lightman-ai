@@ -33,6 +33,11 @@ jobs:
         name: Create bump and changelog
         run: |
           cz bump --yes --changelog
+
+          PINNED_MAJOR=v${$(cz version -p)%%.*}
+          git tag -d $PINNED_MAJOR || true # Delete previous major version tag
+          git tag  $PINNED_MAJOR HEAD
+
           git push origin HEAD:main
           git push origin --tags
 
