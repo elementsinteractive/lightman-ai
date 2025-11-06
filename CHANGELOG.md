@@ -1,3 +1,10 @@
+## v1.1.4 (2025-11-06)
+
+### CI
+
+- Do not tag with major version (#154)
+- only tag once with latest (#152)
+
 ## v1.1.3 (2025-11-06)
 
 ### CI
