@@ -1,3 +1,9 @@
+## v1.1.3 (2025-11-06)
+
+### CI
+
+- delete remote major tag (#151)
+
 ## v1.1.2 (2025-11-06)
 
 ### Technical
