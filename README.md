@@ -81,7 +81,6 @@ Lightman AI is an intelligent cybersecurity news aggregation and risk assessment
    agent = "openai"
    score_threshold = 8
    prompt = "development"
-   log_level = "INFO"
    
    [prompts]
    development = "Analyze cybersecurity news for relevance to our organization."' > lightman.toml
