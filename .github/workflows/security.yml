@@ -34,10 +34,12 @@ jobs:
   twyn:
     if: github.event_name != 'schedule' && !startsWith(github.event.head_commit.message, 'bump:')
     runs-on: ubuntu-latest
-    container:
-      image: elementsinteractive/twyn:2.9.0@sha256:71dc5d45bc42756282dc7adf511e6c015c05b69ef28e2b5556cd155650c3519a
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Run twyn
-        run: |
-          twyn run -vv
+        uses: elementsinteractive/twyn-action@v1
+        id: app-token
+        with:
+          publish: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version: v6
