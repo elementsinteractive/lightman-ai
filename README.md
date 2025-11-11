@@ -2,7 +2,7 @@
 ![Build Status](https://github.com/elementsinteractive/lightman-ai/actions/workflows/test.yml/badge.svg)
 [![PyPI version](https://img.shields.io/pypi/v/lightman-ai)](https://pypi.org/project/lightman-ai/)
 [![Docker version](https://img.shields.io/docker/v/elementsinteractive/lightman-ai?label=DockerHub&logo=docker&logoColor=f5f5f5)](https://hub.docker.com/r/elementsinteractive/lightman-ai)
-[![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue?logo=python&logoColor=yellow)](https://pypi.org/project/lightman-ai/)
+[![Python Version](https://img.shields.io/badge/python-3.13%20%7C%203.14-blue?logo=python&logoColor=yellow)](https://pypi.org/project/lightman-ai/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![License](https://img.shields.io/github/license/elementsinteractive/lightman-ai)](LICENSE)
 
