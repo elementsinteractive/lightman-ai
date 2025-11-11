@@ -1,3 +1,14 @@
+## v1.2.0 (2025-11-11)
+
+### Docs
+
+- fix supported python version in badge (#156)
+
+### Technical
+
+- update dependencies (#157)
+- bump softprops/action-gh-release from 2.4.1 to 2.4.2 in the patch-updates group (#155)
+
 ## v1.1.4 (2025-11-06)
 
 ### CI
