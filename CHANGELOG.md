@@ -1,3 +1,22 @@
+## v1.2.1 (2026-01-12)
+
+### CI
+
+- use twyn action (#158)
+
+### Technical
+
+- bump actions/cache from 4.3.0 to 5.0.1 (#165)
+- bump dependabot/fetch-metadata from 2.4.0 to 2.5.0 (#166)
+- bump astral-sh/setup-uv from 7.1.6 to 7.2.0 (#167)
+- bump dependencies (#168)
+- bump softprops/action-gh-release from 2.4.2 to 2.5.0 (#163)
+- bump the patch-updates group with 3 updates (#162)
+- bump deps (#164)
+- bump actions/checkout from 5.0.0 to 6.0.0 (#161)
+- bump actions/create-github-app-token from 2.1.4 to 2.2.0 (#160)
+- bump astral-sh/setup-uv from 7.1.2 to 7.1.4 in the patch-updates group (#159)
+
 ## v1.2.0 (2025-11-11)
 
 ### Docs
