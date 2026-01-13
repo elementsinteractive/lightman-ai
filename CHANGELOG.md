@@ -1,3 +1,9 @@
+## v1.2.2 (2026-01-13)
+
+### Fix
+
+- docker build requires persist-credentials false (#170)
+
 ## v1.2.1 (2026-01-12)
 
 ### CI
