@@ -144,7 +144,7 @@ exclude_lines = [
 [dependency-groups]
 test = [
     "pytest<9.0.0,>=8.0.0",
-    "pytest-cov<6.0.0,>=5.0.0",
+    "pytest-cov>=5.0.0,<8.0.0",
     "pytest-asyncio>=0.26.0,<2.0.0",
     "freezegun>=1.5.3",
 ]
