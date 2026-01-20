@@ -1,3 +1,15 @@
+## v1.2.3 (2026-01-20)
+
+### Technical
+
+- bump pytest-cov from 5.0.0 to 7.0.0 (#175)
+- bump pre-commit from 3.8.0 to 4.5.1 (#176)
+- bump tomlkit from 0.13.3 to 0.14.0 (#177)
+- bump pytest-asyncio from 0.26.0 to 1.3.0 (#174)
+- bump the patch-updates group with 2 updates (#173)
+- bump actions/cache from 5.0.1 to 5.0.2 in the patch-updates group (#172)
+- bump pyasn1 from 0.6.1 to 0.6.2 (#171)
+
 ## v1.2.2 (2026-01-13)
 
 ### Fix
