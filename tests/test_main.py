@@ -4,7 +4,9 @@ from unittest.mock import AsyncMock, Mock, patch
 import pytest
 from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
 from lightman_ai.core.sentry import configure_sentry
+from lightman_ai.exceptions import NoSourcesError
 from lightman_ai.main import _create_service_desk_issues, _get_articles_from_source, lightman
+from lightman_ai.sources.utils import SOURCE_CHOICES
 from tests.utils import patch_agent, patch_get_articles_from_xml
 
 
@@ -27,7 +29,7 @@ class TestLightman:
             patch("httpx.get"),
             patch_get_articles_from_xml(feed_articles),
         ):
-            result = _get_articles_from_source(start_date=now)
+            result = _get_articles_from_source(SOURCE_CHOICES[0], start_date=now)
 
         assert isinstance(result, ArticlesList)
         assert len(result) == 1
@@ -49,7 +51,7 @@ class TestLightman:
             patch("httpx.get"),
             patch_get_articles_from_xml(feed_articles),
         ):
-            result = _get_articles_from_source()
+            result = _get_articles_from_source(SOURCE_CHOICES[0])
 
         assert isinstance(result, ArticlesList)
         assert result.articles == feed_articles
@@ -75,7 +77,12 @@ class TestLightman:
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
             result = lightman(
-                "openai", test_prompt, score_threshold=8, service_desk_project_key="4", service_desk_request_id_type="2"
+                "openai",
+                test_prompt,
+                sources=SOURCE_CHOICES,
+                score_threshold=8,
+                service_desk_project_key="4",
+                service_desk_request_id_type="2",
             )
 
         assert isinstance(result, list)
@@ -110,10 +117,32 @@ class TestLightman:
             m_thn.return_value = thn_xml
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
-            lightman("openai", test_prompt, score_threshold=8, dry_run=True)
+            lightman("openai", test_prompt, sources=SOURCE_CHOICES, score_threshold=8, dry_run=True)
 
         mock_service_desk_env.assert_not_called()
         assert mock_service_desk.create_request_of_type.call_count == 0
+
+    def test_lightman_raises_error_when_no_sources_provided(self) -> None:
+        """Test that lightman raises NoSourcesError when no sources are provided."""
+        with pytest.raises(NoSourcesError):
+            lightman(
+                agent="openai",
+                prompt="test prompt",
+                score_threshold=5,
+                sources=[],  # Empty sources list
+                dry_run=True,
+            )
+
+    def test_lightman_raises_error_when_sources_is_none(self) -> None:
+        """Test that lightman raises NoSourcesError when sources is None."""
+        with pytest.raises(NoSourcesError):
+            lightman(
+                agent="openai",
+                prompt="test prompt",
+                score_threshold=5,
+                sources=None,  # None sources
+                dry_run=True,
+            )
 
 
 class TestCreateServiceDeskIssues:

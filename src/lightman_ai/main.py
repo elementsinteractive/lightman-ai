@@ -5,17 +5,20 @@ from datetime import datetime
 from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.utils import get_agent_class_from_agent_name
 from lightman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
+from lightman_ai.exceptions import NoSourcesError
 from lightman_ai.integrations.service_desk.integration import (
     ServiceDeskIntegration,
 )
-from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
+from lightman_ai.sources.utils import get_source_class_from_source_name
 
 logger = logging.getLogger("lightman")
 logger.addHandler(logging.NullHandler())
 
 
-def _get_articles_from_source(start_date: datetime | None = None) -> ArticlesList:
-    return TheHackerNewsSource().get_articles(start_date)
+def _get_articles_from_source(source_name: str, start_date: datetime | None = None) -> ArticlesList:
+    source_class = get_source_class_from_source_name(source_name)
+    source_instance = source_class()
+    return source_instance.get_articles(start_date)
 
 
 def _classify_articles(articles: ArticlesList, agent: BaseAgent) -> SelectedArticlesList:
@@ -58,13 +61,19 @@ def lightman(
     agent: str,
     prompt: str,
     score_threshold: int,
+    sources: list[str] | None = None,
     service_desk_project_key: str | None = None,
     service_desk_request_id_type: str | None = None,
     dry_run: bool = False,
     model: str | None = None,
     start_date: datetime | None = None,
 ) -> list[SelectedArticle]:
-    articles: ArticlesList = _get_articles_from_source(start_date)
+    if not sources:
+        raise NoSourcesError
+
+    articles = ArticlesList()
+    for source in sources:
+        articles += _get_articles_from_source(source, start_date)
 
     agent_class = get_agent_class_from_agent_name(agent)
     agent_instance = agent_class(prompt, model, logger=logger)

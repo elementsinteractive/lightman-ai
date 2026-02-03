@@ -26,7 +26,7 @@ from eval.utils import PARALLEL_WORKERS, EvalConfig, EvalFileConfig
     ),
 )
 @click.option("--prompt", type=str, help=("Which prompt to use."))
-@click.option("--model", type=str, default=None, help=("Which prompt to use."))
+@click.option("--model", type=str, default=None, help=("Which model to use."))
 @click.option(
     "--prompt-file",
     type=str,
@@ -69,6 +69,7 @@ def run(
             "score_threshold": score or config_from_file.score_threshold or DEFAULT_SCORE,
             "samples": samples or config_from_file.samples,
             "model": model or config_from_file.model,
+            "sources": [],
         }
     )
 
@@ -82,6 +83,7 @@ def run(
         prompt=configured_prompts.get_prompt(eval_config.prompt),
         model=eval_config.model,
         parallel_workers=PARALLEL_WORKERS,
+        sources=eval_config.sources,
     )
 
 

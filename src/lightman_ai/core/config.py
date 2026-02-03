@@ -45,6 +45,7 @@ class FileConfig(BaseModel):
     service_desk_project_key: str | None = None
     service_desk_request_id_type: str | None = None
     model: str | None = None
+    sources: list[str] = []
 
     model_config = ConfigDict(extra="forbid")
 
@@ -78,7 +79,10 @@ class FinalConfig(BaseModel):
     prompt: str
     agent: str
     score_threshold: PositiveInt
+    sources: list[str]
     model: str | None = None
+
+    model_config = ConfigDict(extra="forbid")
 
     @classmethod
     def init_from_dict(cls, data: dict[str, Any]) -> Self:

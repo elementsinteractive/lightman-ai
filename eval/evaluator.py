@@ -21,6 +21,7 @@ def eval(
     agent: str,
     model: str | None,
     parallel_workers: int = 1,
+    sources: list[str] | None = None,
 ) -> None:
     agent_class = get_agent_class_from_agent_name(agent)
     classified_articles = Classifier(
@@ -38,6 +39,7 @@ def eval(
         tag=tag,
         agent=agent,
         samples=samples,
+        sources=sources or ["predefined_articles"],
         prompt=prompt,
         score=score_threshold,
         logger=logger,

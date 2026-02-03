@@ -2,7 +2,7 @@ from abc import ABC
 from datetime import datetime
 from typing import Self, override
 
-from lightman_ai.article.exceptions import NoTimeZoneError
+from lightman_ai.article.exceptions import DifferentArticleClassesError, NoTimeZoneError
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -42,10 +42,17 @@ class Article(BaseArticle):
 
 
 class BaseArticlesList[TArticle: BaseArticle](BaseModel):
-    articles: list[TArticle]
+    articles: list[TArticle] = Field(default_factory=list)
 
     def __len__(self) -> int:
         return len(self.articles)
+
+    def __iadd__(self, other: "BaseArticlesList[TArticle]") -> Self:
+        """Enable += operator to combine two BaseArticlesList objects."""
+        if not isinstance(other, self.__class__):
+            raise DifferentArticleClassesError(f"Cannot add {type(other)} to {self.__class__}")
+        self.articles.extend(other.articles)
+        return self
 
     @property
     def titles(self) -> list[str]:

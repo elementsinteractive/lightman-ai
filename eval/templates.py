@@ -18,6 +18,7 @@ class ResultsFileBuilder:
         prompt: str,
         score: int,
         model: str,
+        sources: list[str] | None = None,
         logger: logging.Logger | None = None,
     ) -> None:
         self.results_metrics = results_metrics
@@ -26,6 +27,7 @@ class ResultsFileBuilder:
         self.samples = samples
         self.prompt = prompt
         self.score = score
+        self.sources = sources or ["predefined_articles"]
         self.results_dir = Path(RESULTS_DIR)
         self.model = model
         self.logger = logger or logging.getLogger("eval")
@@ -53,11 +55,13 @@ class ResultsFileBuilder:
         self.logger.warning("\nSaved contents to file %s", self.file_name)
 
     def _get_summary(self) -> str:
+        sources_str = ", ".join(self.sources) if self.sources else "-"
         return f"""
 # Summary
 - Tag: {self.tag or "-"}
 - Agent: {self.agent}
 - Model: {self.model}
+- Sources: {sources_str}
 - Samples: {self.samples}
 - Score threshold: {self.score}
 - Prompt: \n {self.prompt}
