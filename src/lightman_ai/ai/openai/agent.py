@@ -15,16 +15,16 @@ class OpenAIAgent(BaseAgent):
     _DEFAULT_MODEL_NAME = "gpt-4.1"
     _AGENT_NAME = "OpenAI"
 
-    def _execute_agent(self, prompt: str) -> AgentRunResult[SelectedArticlesList]:
+    async def _execute_agent(self, prompt: str) -> AgentRunResult[SelectedArticlesList]:
         with map_openai_exceptions():
-            return self.agent.run_sync(prompt)
+            return await self.agent.run(prompt)
 
     @override
-    def run_prompt(self, prompt: str) -> SelectedArticlesList:
+    async def run_prompt(self, prompt: str) -> SelectedArticlesList:
         try:
-            result = self._execute_agent(prompt)
+            result = await self._execute_agent(prompt)
         except LimitTokensExceededError as err:
             self.logger.warning("waiting %s", err.wait_time)
             time.sleep(err.wait_time)
-            result = self._execute_agent(prompt)
+            result = await self._execute_agent(prompt)
         return result.output

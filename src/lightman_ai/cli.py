@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import os
@@ -154,16 +155,18 @@ def run(
     except (InvalidConfigError, PromptNotFoundError, ConfigNotFoundError) as err:
         raise click.BadParameter(err.args[0]) from None
 
-    relevant_articles = lightman(
-        agent=final_config.agent,
-        prompt=prompt_text,
-        score_threshold=final_config.score_threshold,
-        sources=final_config.sources,
-        dry_run=dry_run,
-        service_desk_project_key=config_from_file.service_desk_project_key,
-        service_desk_request_id_type=config_from_file.service_desk_request_id_type,
-        model=final_config.model,
-        start_date=start_datetime,
+    relevant_articles = asyncio.run(
+        lightman(
+            agent=final_config.agent,
+            prompt=prompt_text,
+            score_threshold=final_config.score_threshold,
+            sources=final_config.sources,
+            dry_run=dry_run,
+            service_desk_project_key=config_from_file.service_desk_project_key,
+            service_desk_request_id_type=config_from_file.service_desk_request_id_type,
+            model=final_config.model,
+            start_date=start_datetime,
+        )
     )
 
     if output_json:

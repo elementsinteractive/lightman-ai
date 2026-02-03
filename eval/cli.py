@@ -1,3 +1,5 @@
+import asyncio
+
 import click
 from dotenv import load_dotenv
 from lightman_ai.ai.utils import AGENT_CHOICES
@@ -73,17 +75,19 @@ def run(
         }
     )
 
-    eval(
-        score_threshold=eval_config.score_threshold,
-        relevant_articles=RELEVANT_ARTICLES,
-        non_relevant_articles=NON_RELEVANT_ARTICLES,
-        samples=eval_config.samples,
-        tag=tag,
-        agent=eval_config.agent,
-        prompt=configured_prompts.get_prompt(eval_config.prompt),
-        model=eval_config.model,
-        parallel_workers=PARALLEL_WORKERS,
-        sources=eval_config.sources,
+    asyncio.run(
+        eval(
+            score_threshold=eval_config.score_threshold,
+            relevant_articles=RELEVANT_ARTICLES,
+            non_relevant_articles=NON_RELEVANT_ARTICLES,
+            samples=eval_config.samples,
+            tag=tag,
+            agent=eval_config.agent,
+            prompt=configured_prompts.get_prompt(eval_config.prompt),
+            model=eval_config.model,
+            parallel_workers=PARALLEL_WORKERS,
+            sources=eval_config.sources,
+        )
     )
 
 

@@ -9,8 +9,7 @@ tag_format = "v$version"
 
 [tool.commitizen.customize]
 message_template = "{{prefix}}{% if scope %}({{scope}}){% endif %}: {{subject}}{% if body %}\n\n{{body}}{% endif %}{% if is_breaking_change %}\n\nBREAKING CHANGE: {{footer}}{% else %}\n\n{{footer}}{% endif %}"
-
-bump_pattern = "^(BREAKING[\\-\\ ]CHANGE|feat|fix|refactor|perf|ci|docs|style|test|chore|revert|build)(\\(.+\\))?(!)?"
+bump_pattern = "^((BREAKING[\\-\\ ]CHANGE|feat|fix|refactor|perf|ci|docs|style|test|chore|revert|build)(\\(.+\\))?(!)?)"
 change_type_order = [
     "BREAKING CHANGE",
     "Feat",
@@ -27,7 +26,8 @@ schema = "<type>(<scope>): <subject>\n<BLANK LINE>\n<body>\n<BLANK LINE>\n(BREAK
 schema_pattern = "(?s)(build|ci|docs|feat|fix|perf|refactor|style|test|chore|revert|bump)(\\(\\S+\\))?!?:( [^\\n\\r]+)((\\n\\n.*)|(\\s*))?$"
 commit_parser = "^(?P<change_type>feat|fix|refactor|perf|BREAKING CHANGE|ci|docs|style|test|chore|revert|build)(?:\\((?P<scope>[^()\\r\\n]*)\\)|\\()?(?P<breaking>!)?:\\s(?P<message>.*)?"
 version_parser = "(?P<version>([0-9]+)\\.([0-9]+)\\.([0-9]+)(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?(?:\\+[0-9A-Za-z-]+)?(\\w+)?)"
-changelog_pattern = "^(BREAKING[\\-\\ ]CHANGE|feat|fix|refactor|perf|ci|docs|style|test|chore|revert|build)(\\(.+\\))?(!)?" # same as bump_pattern
+changelog_pattern = "^((BREAKING[\\-\\ ]CHANGE|feat|fix|refactor|perf|ci|docs|style|test|chore|revert|build)(\\(.+\\))?(!)?)"  # same as bump_pattern
+
 [tool.commitizen.customize.bump_map]
 "^.+!$" = "MAJOR"
 "^BREAKING[\\-\\ ]CHANGE" = "MAJOR"

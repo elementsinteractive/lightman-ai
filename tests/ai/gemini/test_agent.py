@@ -10,15 +10,15 @@ from tests.utils import patch_agent_raise_exception
 class TestGeminiAgent:
     agent = GeminiAgent(system_prompt="Test system prompt")
 
-    def test__run_prompt(self, test_prompt: str) -> None:
+    async def test__run_prompt(self, test_prompt: str) -> None:
         """Test that we can run a prompt and receive a SelectedArticlesList."""
-        with patch.object(self.agent.agent, "run_sync") as mock:
+        with patch.object(self.agent.agent, "run") as mock:
             mock.return_value.output = SelectedArticlesList(articles=[])
-            result = self.agent.run_prompt(test_prompt)
+            result = await self.agent.run_prompt(test_prompt)
 
         assert mock.call_count == 1
         assert isinstance(result, SelectedArticlesList)
 
-    def test_gemini_exception(self) -> None:
+    async def test_gemini_exception(self) -> None:
         with pytest.raises(GeminiError), patch_agent_raise_exception():
-            self.agent.run_prompt("")
+            await self.agent.run_prompt("")

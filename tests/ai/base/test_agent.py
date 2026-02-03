@@ -11,18 +11,18 @@ class FakeAgent(BaseAgent):
     _AGENT_NAME = "Fake"
 
     @override
-    def run_prompt(self, prompt: str) -> SelectedArticlesList:
+    async def run_prompt(self, prompt: str) -> SelectedArticlesList:
         return SelectedArticlesList(articles=[])
 
 
 class TestBaseAgent:
     @patch("lightman_ai.ai.base.agent.Agent")
-    def test__get_prompt_result(self, m_agent: Mock, test_prompt: str, thn_news: ArticlesList) -> None:
+    async def test__get_prompt_result(self, m_agent: Mock, test_prompt: str, thn_news: ArticlesList) -> None:
         """Check that we receive an instance of `SelectedArticlesList` when running the method."""
         agent = FakeAgent(test_prompt)
 
         with patch("tests.ai.base.test_agent.FakeAgent.run_prompt") as m_run_prompt:
-            agent.run_prompt(str(thn_news))
+            await agent.run_prompt(str(thn_news))
 
         assert m_run_prompt.call_count == 1
         assert m_run_prompt.call_args[0][0] == str(thn_news)
@@ -31,9 +31,9 @@ class TestBaseAgent:
         assert agent._AGENT_CLASS.call_args[0][0] == FakeAgent._DEFAULT_MODEL_NAME
 
     @patch("lightman_ai.ai.base.agent.Agent")
-    def test_agent_is_intantiated_with_model_when_set(self, m_agent: Mock, test_prompt: str) -> None:
+    async def test_agent_is_intantiated_with_model_when_set(self, m_agent: Mock, test_prompt: str) -> None:
         agent = FakeAgent(test_prompt, model="my model")
-        agent.run_prompt("")
+        await agent.run_prompt("")
 
         assert m_agent.call_count == 1
         assert agent._AGENT_CLASS.call_args[0][0] == "my model"

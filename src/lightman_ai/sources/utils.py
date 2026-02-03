@@ -1,10 +1,9 @@
 from lightman_ai.sources.base import BaseSource
+from lightman_ai.sources.bleeping_computer import BleepingComputerSource
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 
 # Mapping of source names to their corresponding classes
-SOURCE_REGISTRY = {
-    "the_hacker_news": TheHackerNewsSource,
-}
+SOURCE_REGISTRY = {"the_hacker_news": TheHackerNewsSource, "bleeping_computer": BleepingComputerSource}
 
 SOURCE_CHOICES = list(SOURCE_REGISTRY.keys())
 

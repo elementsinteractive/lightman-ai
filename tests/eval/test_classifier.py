@@ -62,8 +62,7 @@ class TestClassifier:
         }
 
     @patch("eval.classifier._classify_articles")
-    @patch("eval.classifier.Classifier._can_run_in_parallel")
-    def test__classify(self, mock_parallel: Mock, mock_classify: Mock) -> None:
+    async def test__classify(self, mock_classify: Mock) -> None:
         now = datetime.now(UTC)
         relevant_articles = [
             Article(title="a", link=f"relevant {i}", description="b", published_at=now) for i in range(2)
@@ -79,11 +78,10 @@ class TestClassifier:
             non_relevant_articles[:1] + [relevant_articles[1]], score=1
         )
 
-        mock_parallel.return_value = True
         mock_classify.return_value = SelectedArticlesList(
             articles=selected_articles_above_threshold + selected_articles_below_threshold
         )
-        classified_articles = Classifier(
+        classified_articles = await Classifier(
             agent=Mock(),
             score=7,
             relevant_articles=set(relevant_articles),
