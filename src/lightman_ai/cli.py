@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 from datetime import date
@@ -85,6 +86,7 @@ def entry_point() -> None:
 @click.option("--start-date", type=click.DateTime(formats=["%Y-%m-%d"]), help="Start date to retrieve articles")
 @click.option("--today", is_flag=True, help="Retrieve articles from today.")
 @click.option("--yesterday", is_flag=True, help="Retrieve articles from yesterday.")
+@click.option("--json", "output_json", is_flag=True, help="Output results in JSON format.")
 @click.option("-v", is_flag=True, help="Be more verbose on output.")
 def run(
     agent: str,
@@ -99,6 +101,7 @@ def run(
     start_date: date | None,
     today: bool,
     yesterday: bool,
+    output_json: bool,
     v: bool,
 ) -> int:
     """
@@ -151,12 +154,19 @@ def run(
         model=final_config.model,
         start_date=start_datetime,
     )
-    relevant_articles_metadata = [f"{article.title} ({article.link})" for article in relevant_articles]
 
-    if relevant_articles_metadata:
-        articles = f"Found these articles:\n* {'\n* '.join(relevant_articles_metadata)} "
-        click.echo(click.style(articles))
+    if output_json:
+        if relevant_articles:
+            articles_data = [article.model_dump() for article in relevant_articles]
+            click.echo(json.dumps({"articles": articles_data}, indent=2, default=str))
+        else:
+            click.echo(json.dumps({"articles": []}))
     else:
-        click.echo(click.style("No relevant articles found."))
+        relevant_articles_metadata = [f"{article.title} ({article.link})" for article in relevant_articles]
+        if relevant_articles_metadata:
+            articles = f"Found these articles:\n* {'\n* '.join(relevant_articles_metadata)} "
+            click.echo(click.style(articles))
+        else:
+            click.echo(click.style("No relevant articles found."))
 
     return 0
