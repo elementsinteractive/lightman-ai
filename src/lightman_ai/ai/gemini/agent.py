@@ -14,7 +14,7 @@ class GeminiAgent(BaseAgent):
     _AGENT_NAME = "Gemini"
 
     @override
-    def run_prompt(self, prompt: str) -> SelectedArticlesList:
+    async def run_prompt(self, prompt: str) -> SelectedArticlesList:
         with map_gemini_exceptions():
-            result = self.agent.run_sync(prompt)
+            result = await self.agent.run(prompt)
         return result.output

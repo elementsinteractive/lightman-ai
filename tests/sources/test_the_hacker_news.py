@@ -1,10 +1,10 @@
 from datetime import UTC, datetime
-from unittest.mock import patch
 
 import pytest
 from lightman_ai.article.models import ArticlesList
-from lightman_ai.sources.exceptions import IncompleteArticleFromSourceError, MalformedSourceResponseError
+from lightman_ai.sources.exceptions import MalformedSourceResponseError
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
+from tests.conftest import patch_httpx_client_get
 
 
 class TestTheHackerNewsSource:
@@ -14,9 +14,8 @@ class TestTheHackerNewsSource:
         assert result == "a"
 
     async def test_get_articles(self, thn_xml: str) -> None:
-        with patch("httpx.get") as mock:
-            mock.return_value = thn_xml
-            articles = TheHackerNewsSource().get_articles()
+        with patch_httpx_client_get(thn_xml):
+            articles = await TheHackerNewsSource().get_articles()
 
         assert isinstance(articles, ArticlesList)
         assert len(articles.articles) == 50
@@ -79,8 +78,7 @@ class TestTheHackerNewsSource:
             </channel>
         </rss>"""
 
-        with pytest.raises(IncompleteArticleFromSourceError):
-            TheHackerNewsSource()._xml_to_list_of_articles(xml)
+        assert not TheHackerNewsSource()._xml_to_list_of_articles(xml)
 
     def test_xml_to_list_of_articles_empty_pub_date(self) -> None:
         xml = """<?xml version="1.0" encoding="UTF-8"?>
@@ -95,8 +93,7 @@ class TestTheHackerNewsSource:
             </channel>
         </rss>"""
 
-        with pytest.raises(IncompleteArticleFromSourceError):
-            TheHackerNewsSource()._xml_to_list_of_articles(xml)
+        assert not TheHackerNewsSource()._xml_to_list_of_articles(xml)
 
     def test_xml_to_list_of_articles_validation_error(self) -> None:
         xml = """<?xml version="1.0" encoding="UTF-8"?>
@@ -110,8 +107,7 @@ class TestTheHackerNewsSource:
             </channel>
         </rss>"""  # no title
 
-        with pytest.raises(IncompleteArticleFromSourceError):
-            TheHackerNewsSource()._xml_to_list_of_articles(xml)
+        assert not TheHackerNewsSource()._xml_to_list_of_articles(xml)
 
     def test_xml_to_list_of_articles_cleans_description(self) -> None:
         xml = """<?xml version="1.0" encoding="UTF-8"?>

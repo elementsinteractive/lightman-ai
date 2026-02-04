@@ -1,10 +1,8 @@
+import asyncio
 import logging
 import time
-from concurrent.futures import ThreadPoolExecutor
 
 from lightman_ai.ai.base.agent import BaseAgent
-from lightman_ai.ai.gemini.agent import GeminiAgent
-from lightman_ai.ai.openai.agent import OpenAIAgent
 from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
 from lightman_ai.main import _classify_articles
 
@@ -34,17 +32,26 @@ class Classifier:
         if overlapping_articles := self.relevant_articles & self.non_relevant_articles:
             raise RuntimeError("These articles are in both relevant and non-relevant sets! %s" % overlapping_articles)
 
-    def run(self) -> list[ClassifiedArticleResults]:
-        if self._can_run_in_parallel(self.agent):
-            return self._parallel_run()
-        else:
-            return self._sync_run()
+    async def run(self) -> list[ClassifiedArticleResults]:
+        if self.workers > MAX_WORKERS:
+            raise RuntimeError("Too many workers specified while running `eval`.")
 
-    def _classify(self) -> ClassifiedArticleResults:
+        # Use asyncio.Semaphore to limit concurrent requests
+        semaphore = asyncio.Semaphore(self.workers)
+
+        async def _classify_with_semaphore() -> ClassifiedArticleResults:
+            async with semaphore:
+                return await self._classify()
+
+        # Use asyncio.gather for concurrent execution of async tasks
+        tasks = [_classify_with_semaphore() for _ in range(self.samples)]
+        return await asyncio.gather(*tasks)
+
+    async def _classify(self) -> ClassifiedArticleResults:
         articles = ArticlesList(articles=list(self.relevant_articles) + list(self.non_relevant_articles))
 
         time_before = time.perf_counter()
-        results = _classify_articles(
+        results = await _classify_articles(
             articles=articles,
             agent=self.agent,
         )
@@ -122,27 +129,3 @@ class Classifier:
                     )
                 )
         return false_negatives
-
-    @staticmethod
-    def _can_run_in_parallel(agent: BaseAgent) -> bool:
-        """Determine whether the agent can run in parallel or not.
-
-        It is defined here instead of being a property on each agent,
-        because this only makes sense during the eval, and the agents should not know about it.
-        """
-        if isinstance(agent, OpenAIAgent):
-            return False
-        if isinstance(agent, GeminiAgent):
-            return True
-        raise RuntimeError(f"No information about if it is possible to run `{agent}` in parallel.")
-
-    def _parallel_run(self) -> list[ClassifiedArticleResults]:
-        if self.workers > MAX_WORKERS:  # noqa: F821
-            raise RuntimeError("Too many workers specified while running `eval`.")
-
-        with ThreadPoolExecutor(max_workers=self.workers) as executor:
-            futures = [executor.submit(self._classify) for _ in range(self.samples)]
-            return [f.result() for f in futures]
-
-    def _sync_run(self) -> list[ClassifiedArticleResults]:
-        return [self._classify() for _ in range(self.samples)]

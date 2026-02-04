@@ -15,17 +15,17 @@ logger = logging.getLogger("lightman")
 logger.addHandler(logging.NullHandler())
 
 
-def _get_articles_from_source(source_name: str, start_date: datetime | None = None) -> ArticlesList:
+async def _get_articles_from_source(source_name: str, start_date: datetime | None = None) -> ArticlesList:
     source_class = get_source_class_from_source_name(source_name)
     source_instance = source_class()
-    return source_instance.get_articles(start_date)
+    return await source_instance.get_articles(start_date)
 
 
-def _classify_articles(articles: ArticlesList, agent: BaseAgent) -> SelectedArticlesList:
-    return agent.run_prompt(prompt=str(articles))
+async def _classify_articles(articles: ArticlesList, agent: BaseAgent) -> SelectedArticlesList:
+    return await agent.run_prompt(prompt=str(articles))
 
 
-def _create_service_desk_issues(
+async def _create_service_desk_issues(
     selected_articles: list[SelectedArticle],
     service_desk_client: ServiceDeskIntegration,
     service_desk_project_key: str,
@@ -45,19 +45,16 @@ def _create_service_desk_issues(
             logger.exception("Could not create ServiceDesk issue: %s, %s", article.title, article.link)
             raise
 
-    async def create_all() -> None:
-        tasks = []
-        for article in selected_articles:
-            tasks.append(schedule_task(article))
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        errors = [result for result in results if isinstance(result, Exception)]
-        if errors:
-            raise ExceptionGroup("Could not create all ServiceDesk issues", errors)
-
-    asyncio.run(create_all())
+    tasks = []
+    for article in selected_articles:
+        tasks.append(schedule_task(article))
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    errors = [result for result in results if isinstance(result, Exception)]
+    if errors:
+        raise ExceptionGroup("Could not create all ServiceDesk issues", errors)
 
 
-def lightman(
+async def lightman(
     agent: str,
     prompt: str,
     score_threshold: int,
@@ -73,12 +70,12 @@ def lightman(
 
     articles = ArticlesList()
     for source in sources:
-        articles += _get_articles_from_source(source, start_date)
+        articles += await _get_articles_from_source(source, start_date)
 
     agent_class = get_agent_class_from_agent_name(agent)
     agent_instance = agent_class(prompt, model, logger=logger)
 
-    classified_articles = _classify_articles(
+    classified_articles = await _classify_articles(
         articles=articles,
         agent=agent_instance,
     )
@@ -92,7 +89,7 @@ def lightman(
             raise ValueError("Missing Service Desk's project key or request id type")
 
         service_desk_client = ServiceDeskIntegration.from_env()
-        _create_service_desk_issues(
+        await _create_service_desk_issues(
             selected_articles=selected_articles,
             service_desk_client=service_desk_client,
             service_desk_project_key=service_desk_project_key,

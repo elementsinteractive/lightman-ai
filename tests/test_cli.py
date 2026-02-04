@@ -147,14 +147,13 @@ class TestCli:
                     "picked up",
                 ],
             )
-
         assert result.exit_code == 0
         assert m_lightman.call_count == 1
         assert m_lightman.call_args == call(
             agent="gemini",
             prompt="eval prompt",
             score_threshold=1,
-            sources=["the_hacker_news"],
+            sources=["the_hacker_news", "bleeping_computer"],
             dry_run=False,
             service_desk_project_key=None,
             service_desk_request_id_type=None,

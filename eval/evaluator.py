@@ -10,7 +10,7 @@ from eval.utils import ResultsMetrics
 logger = logging.getLogger("eval")
 
 
-def eval(
+async def eval(
     *,
     prompt: str,
     score_threshold: int,
@@ -24,7 +24,7 @@ def eval(
     sources: list[str] | None = None,
 ) -> None:
     agent_class = get_agent_class_from_agent_name(agent)
-    classified_articles = Classifier(
+    classified_articles = await Classifier(
         agent=agent_class(prompt, model=model),
         score=score_threshold,
         relevant_articles=relevant_articles,

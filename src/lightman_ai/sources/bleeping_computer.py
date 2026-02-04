@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import override
 from xml.etree import ElementTree
 
@@ -8,7 +8,7 @@ import stamina
 from httpx import AsyncClient
 from lightman_ai.article.models import Article, ArticlesList
 from lightman_ai.sources.base import BaseSource
-from lightman_ai.sources.exceptions import MalformedSourceResponseError
+from lightman_ai.sources.exceptions import IncompleteArticleFromSourceError, MalformedSourceResponseError
 from pydantic import ValidationError
 
 logger = logging.getLogger("lightman")
@@ -17,15 +17,14 @@ _RETRY_ON = httpx.TransportError
 _ATTEMPTS = 5
 _TIMEOUT = 5
 
+BLEEPING_COMPUTER_URL = "https://news.google.com/rss/search?q=site:bleepingcomputer.com&hl=en-US&gl=US&ceid=US:en"
 
-THN_URL = "https://feeds.feedburner.com/TheHackersNews"
 
-
-class TheHackerNewsSource(BaseSource):
+class BleepingComputerSource(BaseSource):
     @override
     async def get_articles(self, date: datetime | None = None) -> ArticlesList:
-        """Return the articles that are present in THN feed."""
-        logger.info("Downloading articles from %s", THN_URL)
+        """Return the articles that are present in BleepingComputer feed."""
+        logger.info("Downloading articles from %s", BLEEPING_COMPUTER_URL)
         feed = await self.get_feed()
         articles = self._xml_to_list_of_articles(feed)
         logger.info("Articles properly downloaded and parsed.")
@@ -35,30 +34,29 @@ class TheHackerNewsSource(BaseSource):
             return ArticlesList(articles=articles)
 
     async def get_feed(self) -> str:
-        """Retrieve the TheHackerNews' RSS Feed."""
-        async with AsyncClient() as http_aclient:
+        """Retrieve the BleepingComputer RSS Feed."""
+        async with AsyncClient() as http_client:
             for attempt in stamina.retry_context(
                 on=_RETRY_ON,
                 attempts=_ATTEMPTS,
                 timeout=_TIMEOUT,
             ):
                 with attempt:
-                    hacker_news_feed = await http_aclient.get(THN_URL)
-                    hacker_news_feed.raise_for_status()
-        return hacker_news_feed.text
+                    bleeping_computer_feed = await http_client.get(BLEEPING_COMPUTER_URL)
+                    bleeping_computer_feed.raise_for_status()
+        return bleeping_computer_feed.text
 
     def _xml_to_list_of_articles(self, xml: str) -> list[Article]:
-        """Parse the XML and return in as a list of Articles."""
         try:
             root = ElementTree.fromstring(xml)
         except ElementTree.ParseError as e:
             raise MalformedSourceResponseError(f"Invalid XML format: {e}") from e
-        channel = root.find("channel")
 
+        channel = root.find("channel")
         if channel is None:
             raise MalformedSourceResponseError("No channel element found in RSS feed")
-        items = channel.findall("item")
 
+        items = channel.findall("item")
         parsed = []
 
         for item in items:
@@ -69,17 +67,26 @@ class TheHackerNewsSource(BaseSource):
                 published_at_str = item.findtext("pubDate", default="").strip()
 
                 if not published_at_str:
-                    logger.error("Missing publication date. link: `%s`", link)
-                    raise ValueError
-                published_at = datetime.strptime(published_at_str, "%a, %d %b %Y %H:%M:%S %z")
+                    logger.exception("Missing publication date. link: `%s`", link)
+                    raise IncompleteArticleFromSourceError()
+
+                published_at = datetime.strptime(published_at_str, "%a, %d %b %Y %H:%M:%S %Z")
+                if published_at.tzinfo is None:
+                    published_at = published_at.replace(tzinfo=UTC)
 
                 parsed.append(Article(title=title, description=description, link=link, published_at=published_at))
-            except (ValidationError, ValueError):
-                logger.warning("Could not parse article %s", link)
+
+            except (ValidationError, ValueError, IncompleteArticleFromSourceError) as e:
+                logger.warning("Failed to parse article. title: `%s`, link: `%s`, error: %s", title, link, str(e))
 
         return parsed
 
     @staticmethod
     def _clean(text: str) -> str:
-        """Remove non-useful characters. Helps cleaning the fields that will be sent to the Agent."""
-        return text.replace("\\n", "").replace("       ", "")
+        """Remove CDATA wrappers and non-useful characters."""
+        # Remove CDATA wrapper if present
+        if text.startswith("<![CDATA[") and text.endswith("]]>"):
+            text = text[9:-3]  # Remove <![CDATA[ and ]]>
+
+        # Clean up formatting
+        return text.replace("\\n", "").replace("       ", "").strip()

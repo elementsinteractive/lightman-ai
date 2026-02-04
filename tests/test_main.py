@@ -7,11 +7,12 @@ from lightman_ai.core.sentry import configure_sentry
 from lightman_ai.exceptions import NoSourcesError
 from lightman_ai.main import _create_service_desk_issues, _get_articles_from_source, lightman
 from lightman_ai.sources.utils import SOURCE_CHOICES
+from tests.conftest import patch_httpx_client_get
 from tests.utils import patch_agent, patch_get_articles_from_xml
 
 
 class TestLightman:
-    def test_lightman_retrieve_from_date_onwards(
+    async def test_lightman_retrieve_from_date_onwards(
         self,
     ) -> None:
         now = datetime.now(UTC)
@@ -26,17 +27,17 @@ class TestLightman:
         feed_articles = [new_article, old_article]
 
         with (
-            patch("httpx.get"),
+            patch_httpx_client_get(),
             patch_get_articles_from_xml(feed_articles),
         ):
-            result = _get_articles_from_source(SOURCE_CHOICES[0], start_date=now)
+            result = await _get_articles_from_source(SOURCE_CHOICES[0], start_date=now)
 
         assert isinstance(result, ArticlesList)
         assert len(result) == 1
         assert new_article in result.articles
         assert old_article not in result.articles
 
-    def test_lightman_no_date_specified(self) -> None:
+    async def test_lightman_no_date_specified(self) -> None:
         now = datetime.now(UTC)
         new_article = Article(title="article 2", link="https://article2.com", description="d", published_at=now)
         old_article = Article(
@@ -48,15 +49,15 @@ class TestLightman:
 
         feed_articles = [new_article, old_article]
         with (
-            patch("httpx.get"),
+            patch_httpx_client_get(),
             patch_get_articles_from_xml(feed_articles),
         ):
-            result = _get_articles_from_source(SOURCE_CHOICES[0])
+            result = await _get_articles_from_source(SOURCE_CHOICES[0])
 
         assert isinstance(result, ArticlesList)
         assert result.articles == feed_articles
 
-    def test_lightman_and_service_desk_publish(self, test_prompt: str, thn_xml: str) -> None:
+    async def test_lightman_and_service_desk_publish(self, test_prompt: str, thn_xml: str) -> None:
         now = datetime.now(UTC)
         relevant_article_1 = SelectedArticle(
             title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8, published_at=now
@@ -69,14 +70,13 @@ class TestLightman:
         )
         agent_response = SelectedArticlesList(articles=[relevant_article_1, relevant_article_2, not_relevant_article])
         with (
-            patch("httpx.get") as m_thn,
+            patch_httpx_client_get(thn_xml),
             patch_agent(agent_response),
             patch("lightman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
         ):
-            m_thn.return_value = thn_xml
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
-            result = lightman(
+            result = await lightman(
                 "openai",
                 test_prompt,
                 sources=SOURCE_CHOICES,
@@ -97,7 +97,7 @@ class TestLightman:
         assert relevant_article_1.title in called_titles
         assert relevant_article_2.title in called_titles
 
-    def test_lightman_no_publish_if_dry_run(self, test_prompt: str, thn_xml: str) -> None:
+    async def test_lightman_no_publish_if_dry_run(self, test_prompt: str, thn_xml: str) -> None:
         now = datetime.now(UTC)
         relevant_article_1 = SelectedArticle(
             title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8, published_at=now
@@ -110,22 +110,21 @@ class TestLightman:
         )
         agent_response = SelectedArticlesList(articles=[relevant_article_1, relevant_article_2, not_relevant_article])
         with (
-            patch("httpx.get") as m_thn,
+            patch_httpx_client_get(thn_xml),
             patch_agent(agent_response),
             patch("lightman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
         ):
-            m_thn.return_value = thn_xml
             mock_service_desk = mock_service_desk_env.return_value
             mock_service_desk.create_request_of_type = AsyncMock(return_value="PROJ-123")
-            lightman("openai", test_prompt, sources=SOURCE_CHOICES, score_threshold=8, dry_run=True)
+            await lightman("openai", test_prompt, sources=SOURCE_CHOICES, score_threshold=8, dry_run=True)
 
         mock_service_desk_env.assert_not_called()
         assert mock_service_desk.create_request_of_type.call_count == 0
 
-    def test_lightman_raises_error_when_no_sources_provided(self) -> None:
+    async def test_lightman_raises_error_when_no_sources_provided(self) -> None:
         """Test that lightman raises NoSourcesError when no sources are provided."""
         with pytest.raises(NoSourcesError):
-            lightman(
+            await lightman(
                 agent="openai",
                 prompt="test prompt",
                 score_threshold=5,
@@ -133,10 +132,10 @@ class TestLightman:
                 dry_run=True,
             )
 
-    def test_lightman_raises_error_when_sources_is_none(self) -> None:
+    async def test_lightman_raises_error_when_sources_is_none(self) -> None:
         """Test that lightman raises NoSourcesError when sources is None."""
         with pytest.raises(NoSourcesError):
-            lightman(
+            await lightman(
                 agent="openai",
                 prompt="test prompt",
                 score_threshold=5,
@@ -148,13 +147,13 @@ class TestLightman:
 class TestCreateServiceDeskIssues:
     """Tests for the _create_service_desk_issues function."""
 
-    def test_create_service_desk_issues_success(
+    async def test_create_service_desk_issues_success(
         self,
         selected_articles: list[SelectedArticle],
         mock_service_desk: Mock,
     ) -> None:
         """Test successful creation of service desk issues for all articles."""
-        _create_service_desk_issues(
+        await _create_service_desk_issues(
             selected_articles=selected_articles,
             service_desk_client=mock_service_desk,
             service_desk_project_key="TEST",
@@ -179,7 +178,7 @@ class TestCreateServiceDeskIssues:
         expected_desc_2 = "*Why is relevant:*\nCould impact our infrastructure\n\n*Source:* https://example.com/article2\n\n*Score:* 8/10"
         assert second_call.kwargs["description"] == expected_desc_2
 
-    def test_create_service_desk_issues_single_failure(
+    async def test_create_service_desk_issues_single_failure(
         self,
         selected_articles: list[SelectedArticle],
         mock_service_desk: Mock,
@@ -191,7 +190,7 @@ class TestCreateServiceDeskIssues:
         ]
 
         with pytest.raises(ExceptionGroup) as exc_info:
-            _create_service_desk_issues(
+            await _create_service_desk_issues(
                 selected_articles=selected_articles,
                 service_desk_client=mock_service_desk,
                 service_desk_project_key="TEST",
@@ -204,7 +203,7 @@ class TestCreateServiceDeskIssues:
         assert len(exc_info.value.exceptions) == 1
         assert "Service desk unavailable" in str(exc_info.value.exceptions[0])
 
-    def test_create_service_desk_issues_all_failures(
+    async def test_create_service_desk_issues_all_failures(
         self,
         selected_articles: list[SelectedArticle],
         mock_service_desk: Mock,
@@ -213,7 +212,7 @@ class TestCreateServiceDeskIssues:
         mock_service_desk.create_request_of_type.side_effect = Exception("Service desk down")
 
         with pytest.raises(ExceptionGroup) as exc_info:
-            _create_service_desk_issues(
+            await _create_service_desk_issues(
                 selected_articles=selected_articles,
                 service_desk_client=mock_service_desk,
                 service_desk_project_key="TEST",

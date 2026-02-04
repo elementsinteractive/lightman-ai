@@ -3,6 +3,7 @@ from collections.abc import Generator, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from typing import Any
+from unittest import mock
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
@@ -560,6 +561,61 @@ def thn_news(thn_xml: str) -> ArticlesList:
 
 
 @pytest.fixture
+def bc_xml() -> str:
+    return """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <generator>NFE/5.0</generator>
+    <title>"site:bleepingcomputer.com" - Google News</title>
+    <link>https://news.google.com/search?q=site:bleepingcomputer.com</link>
+    <language>en-US</language>
+    <lastBuildDate>Wed, 04 Feb 2026 09:42:29 GMT</lastBuildDate>
+    <description>Google News</description>
+    <item>
+      <title>Coinbase confirms insider breach linked to leaked support tool screenshots - BleepingComputer</title>
+      <link>https://news.google.com/rss/articles/coinbase-insider-breach</link>
+      <guid isPermaLink="false">coinbase-breach-2026</guid>
+      <pubDate>Wed, 04 Feb 2026 02:04:23 GMT</pubDate>
+      <description>Coinbase confirms insider breach linked to leaked support tool screenshots</description>
+      <source url="https://www.bleepingcomputer.com">BleepingComputer</source>
+    </item>
+    <item>
+      <title>Notepad++ update feature hijacked by Chinese state hackers for months - BleepingComputer</title>
+      <link>https://news.google.com/rss/articles/notepad-hijacked-hackers</link>
+      <guid isPermaLink="false">notepad-hack-2026</guid>
+      <pubDate>Mon, 02 Feb 2026 14:53:52 GMT</pubDate>
+      <description>Notepad++ update feature hijacked by Chinese state hackers for months</description>
+      <source url="https://www.bleepingcomputer.com">BleepingComputer</source>
+    </item>
+    <item>
+      <title>Microsoft: January update shutdown bug affects more Windows PCs - BleepingComputer</title>
+      <link>https://news.google.com/rss/articles/windows-jan-update-bug</link>
+      <guid isPermaLink="false">windows-shutdown-bug-2026</guid>
+      <pubDate>Mon, 02 Feb 2026 17:17:30 GMT</pubDate>
+      <description>Microsoft: January update shutdown bug affects more Windows PCs</description>
+      <source url="https://www.bleepingcomputer.com">BleepingComputer</source>
+    </item>
+    <item>
+      <title>Mozilla announces switch to disable all Firefox AI features - BleepingComputer</title>
+      <link>https://news.google.com/rss/articles/firefox-disable-ai</link>
+      <guid isPermaLink="false">firefox-ai-switch-2026</guid>
+      <pubDate>Mon, 02 Feb 2026 18:09:13 GMT</pubDate>
+      <description>Mozilla announces switch to disable all Firefox AI features</description>
+      <source url="https://www.bleepingcomputer.com">BleepingComputer</source>
+    </item>
+    <item>
+      <title>Russian hackers exploit recently patched Microsoft Office bug in attacks - BleepingComputer</title>
+      <link>https://news.google.com/rss/articles/russian-hackers-office-bug</link>
+      <guid isPermaLink="false">office-zero-day-2026</guid>
+      <pubDate>Mon, 02 Feb 2026 21:00:07 GMT</pubDate>
+      <description>Russian hackers exploit recently patched Microsoft Office bug in attacks</description>
+      <source url="https://www.bleepingcomputer.com">BleepingComputer</source>
+    </item>
+    </channel>
+</rss>"""
+
+
+@pytest.fixture
 def test_prompt() -> str:
     prompt = """
                     I'm in software development. Given text with cybersecurity news,
@@ -600,3 +656,20 @@ def patch_env_variables(data: dict[str, Any]) -> Iterator[Any]:
             os.environ[key] = value
         else:
             del os.environ[key]
+
+
+@pytest.fixture(autouse=True)
+def fail_on_http_requests() -> Generator[None, Any, None]:
+    with mock.patch("httpx._client.BaseClient.build_request") as m_request:
+        m_request.side_effect = RuntimeError("An HTTP request was attempted!")
+        yield
+
+
+@contextmanager
+def patch_httpx_client_get(response: str | None = None) -> Iterator[Mock]:
+    with patch("httpx.AsyncClient.get") as mock:
+        mock_response = Mock()
+        mock_response.text = response
+        mock_response.raise_for_status.return_value = None
+        mock.return_value = mock_response
+        yield mock

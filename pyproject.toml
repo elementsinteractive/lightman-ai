@@ -89,6 +89,7 @@ select = [
 ignore = [
   "E501",    # line-length (enforced by black instead)
   'D1',      # pydocstyle enforces docstrings everywhere
+  'TRY301',  # tryceratops rule not useful
   'TRY003',  # tryceratops rule not useful
   "PLR0913", # pylint rule not useful
   "B008",    # checks for function calls in default function arguments.
