@@ -22,6 +22,7 @@ from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError,
 from lightman_ai.core.sentry import configure_sentry
 from lightman_ai.exceptions import MultipleDateSourcesError
 from lightman_ai.main import lightman
+from lightman_ai.sources.utils import SOURCE_CHOICES
 from lightman_ai.utils import get_start_date
 
 logger = logging.getLogger("lightman")
@@ -52,6 +53,13 @@ def entry_point() -> None:
 )
 @click.option("--prompt", type=str, help=("Which prompt to use"))
 @click.option("--model", type=str, default=None, help=("Which model to use. Must be set in conjunction with --agent."))
+@click.option(
+    "--source",
+    "sources",
+    type=click.Choice(SOURCE_CHOICES),
+    multiple=True,
+    help=("Which news sources to use (can specify multiple)"),
+)
 @click.option(
     "--score",
     type=int,
@@ -93,6 +101,7 @@ def run(
     prompt: str,
     prompt_file: str,
     model: str | None,
+    sources: tuple[str, ...],
     score: int | None,
     config_file: str,
     config: str,
@@ -138,6 +147,7 @@ def run(
                 "prompt": prompt or config_from_file.prompt,
                 "score_threshold": score or config_from_file.score_threshold or DEFAULT_SCORE,
                 "model": model or config_from_file.model,
+                "sources": list(sources) or config_from_file.sources or SOURCE_CHOICES,
             }
         )
         prompt_text = prompt_config.get_prompt(final_config.prompt)
@@ -148,6 +158,7 @@ def run(
         agent=final_config.agent,
         prompt=prompt_text,
         score_threshold=final_config.score_threshold,
+        sources=final_config.sources,
         dry_run=dry_run,
         service_desk_project_key=config_from_file.service_desk_project_key,
         service_desk_request_id_type=config_from_file.service_desk_request_id_type,

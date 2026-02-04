@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from unittest.mock import ANY, Mock, call, patch
+from unittest.mock import Mock, call, patch
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -39,6 +39,8 @@ class TestCli:
                     "--config",
                     "my-config",
                     "--today",
+                    "--source",
+                    "the_hacker_news",
                 ],
             )
 
@@ -48,6 +50,7 @@ class TestCli:
             agent="gemini",
             prompt="eval prompt",
             score_threshold=1,
+            sources=["the_hacker_news"],
             dry_run=False,
             service_desk_project_key=None,
             service_desk_request_id_type=None,
@@ -151,9 +154,10 @@ class TestCli:
             agent="gemini",
             prompt="eval prompt",
             score_threshold=1,
+            sources=["the_hacker_news"],
             dry_run=False,
-            service_desk_project_key=ANY,
-            service_desk_request_id_type=ANY,
+            service_desk_project_key=None,
+            service_desk_request_id_type=None,
             model="picked up",
             start_date=None,
         )
@@ -205,6 +209,8 @@ class TestCli:
         agent = 'openai'
         score_threshold = 8
         prompt = 'classify'
+        sources = ['the_hacker_news']
+
         [prompts]
         classify = 'Analyze security threats'
         """
@@ -229,6 +235,7 @@ class TestCli:
             service_desk_request_id_type=None,
             model=None,
             start_date=None,
+            sources=["the_hacker_news"],
         )
         assert m_config.call_count == 2
 

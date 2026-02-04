@@ -4,6 +4,7 @@ import pytest
 from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
 from lightman_ai.core.config import FileConfig, FinalConfig, PromptConfig
 from lightman_ai.core.exceptions import ConfigNotFoundError, InvalidConfigError, PromptNotFoundError
+from lightman_ai.sources.utils import SOURCE_CHOICES
 from pydantic import ValidationError
 from tests.conftest import patch_config_file
 
@@ -149,9 +150,11 @@ class TestFinalConfig:
         with pytest.raises(InvalidConfigError) as exc:
             FinalConfig.init_from_dict({})
         assert (
-            exc.value.args[0] == "Invalid configuration provided: [`prompt`: Field required,"
+            exc.value.args[0] == "Invalid configuration provided: "
+            "[`prompt`: Field required,"
             "`agent`: Field required,"
-            "`score_threshold`: Field required]"
+            "`score_threshold`: Field required,"
+            "`sources`: Field required]"
         )
 
     def test_score_must_be_positive_int(self) -> None:
@@ -163,10 +166,16 @@ class TestFinalConfig:
             )
         assert "`score_threshold`: Input should be greater than 0" in exc.value.args[0]
 
-    def test_final_config_accepts_model_parameter(self) -> None:
-        """Test that FinalConfig now accepts a model parameter."""
+    def test_final_config(self) -> None:
+        """Test FinalConfig."""
         config = FinalConfig.init_from_dict(
-            {"prompt": "test prompt", "agent": "openai", "score_threshold": 5, "model": "gpt-4o-custom"}
+            {
+                "prompt": "test prompt",
+                "agent": "openai",
+                "score_threshold": 5,
+                "model": "gpt-4o-custom",
+                "sources": SOURCE_CHOICES,
+            }
         )
 
         assert config.prompt == "test prompt"
@@ -176,7 +185,9 @@ class TestFinalConfig:
 
     def test_final_config_model_parameter_is_optional(self) -> None:
         """Test that the model parameter is optional and defaults to None."""
-        config = FinalConfig.init_from_dict({"prompt": "test prompt", "agent": "openai", "score_threshold": 5})
+        config = FinalConfig.init_from_dict(
+            {"prompt": "test prompt", "agent": "openai", "score_threshold": 5, "sources": SOURCE_CHOICES}
+        )
 
         assert config.model is None
 

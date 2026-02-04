@@ -1,8 +1,8 @@
 from datetime import UTC, datetime, timedelta
 
 import pytest
-from lightman_ai.article.exceptions import NoTimeZoneError
-from lightman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
+from lightman_ai.article.exceptions import DifferentArticleClassesError, NoTimeZoneError
+from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
 from pydantic import ValidationError
 
 
@@ -79,3 +79,105 @@ class TestSelectedArticlesList:
         result = SelectedArticlesList.get_articles_from_date_onwards([article_match, article_no_match], start_date)
 
         assert result.articles == [article_match]
+
+
+class TestBaseArticlesList:
+    def test_iadd_operator_combines_articles_lists(self) -> None:
+        """Test that += operator combines two BaseArticlesList objects."""
+        now = datetime.now(UTC)
+
+        # Create articles for first list
+        article1 = Article(
+            title="Article 1", description="Description 1", link="https://example.com/1", published_at=now
+        )
+
+        # Create articles for second list
+        article2 = Article(
+            title="Article 3", description="Description 3", link="https://example.com/3", published_at=now
+        )
+
+        # Create two separate ArticlesList objects
+        list1 = ArticlesList(articles=[article1])
+        list2 = ArticlesList(articles=[article2])
+
+        # Use += operator to combine lists
+        list1 += list2
+
+        # Verify the combination worked
+        assert list1.articles == [article1, article2]
+
+        # Verify list2 is unchanged
+        assert list2.articles == [article2]
+
+    def test_iadd_operator_with_selected_articles_list(self) -> None:
+        """Test that += operator works with SelectedArticlesList objects."""
+        now = datetime.now(UTC)
+
+        # Create SelectedArticle objects
+        selected1 = SelectedArticle(
+            title="Selected 1",
+            link="https://example.com/selected1",
+            published_at=now,
+            why_is_relevant="Reason 1",
+            relevance_score=8,
+        )
+        selected2 = SelectedArticle(
+            title="Selected 2",
+            link="https://example.com/selected2",
+            published_at=now,
+            why_is_relevant="Reason 2",
+            relevance_score=9,
+        )
+
+        # Create two SelectedArticlesList objects
+        list1 = SelectedArticlesList(articles=[selected1])
+        list2 = SelectedArticlesList(articles=[selected2])
+
+        # Use += operator
+        list1 += list2
+
+        # Verify the combination
+        assert len(list1) == 2
+        assert list1.articles == [selected1, selected2]
+
+    def test_iadd_operator_cannot_merge_different_classes(self) -> None:
+        """Test that += operator fails if attempting to merge different BaseArticleList subclasses."""
+        now = datetime.now(UTC)
+
+        # Create SelectedArticle objects
+        selected_article = SelectedArticle(
+            title="Selected 1",
+            link="https://example.com/selected1",
+            published_at=now,
+            why_is_relevant="Reason 1",
+            relevance_score=8,
+        )
+
+        selected_article_list = SelectedArticlesList(articles=[selected_article])
+
+        article = Article(
+            title="Article 3", description="Description 3", link="https://example.com/3", published_at=now
+        )
+
+        article_list = ArticlesList(articles=[article])
+        with pytest.raises(DifferentArticleClassesError):
+            selected_article_list += article_list  # type: ignore[arg-type]
+
+    def test_iadd_operator_raises_error_for_incompatible_type(self) -> None:
+        """Test that += operator raises TypeError for incompatible types."""
+        now = datetime.now(UTC)
+        article = Article(
+            title="Article", description="Description", link="https://example.com/article", published_at=now
+        )
+
+        articles_list = ArticlesList(articles=[article])
+
+        # Try to add incompatible types
+        with pytest.raises(DifferentArticleClassesError):
+            articles_list += "invalid_type"  # type: ignore[arg-type]
+
+        with pytest.raises(DifferentArticleClassesError):
+            articles_list += [article]  # type: ignore[arg-type]
+
+        with pytest.raises(DifferentArticleClassesError):
+            articles_list += 123  # type: ignore[arg-type]

@@ -4,3 +4,7 @@ class ArticleBaseError(Exception):
 
 class NoTimeZoneError(ArticleBaseError):
     """Exception class for when there is no timezone associated to a date."""
+
+
+class DifferentArticleClassesError(ArticleBaseError):
+    """Exception for when we try to merge two Article Classes."""
