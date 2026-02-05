@@ -1,5 +1,5 @@
 [default]
-agent = 'openai'
+agent = 'gemini'
 score_threshold = 8
 prompt = 'classify'
 service_desk_project_key=''

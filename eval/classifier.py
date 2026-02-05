@@ -3,7 +3,12 @@ import logging
 import time
 
 from lightman_ai.ai.base.agent import BaseAgent
-from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
+from lightman_ai.article.models import (
+    Article,
+    ArticlesList,
+    PrimarySelectedArticle,
+    SelectedArticlesList,
+)
 from lightman_ai.main import _classify_articles
 
 from eval.constants import MAX_WORKERS, MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
@@ -99,8 +104,8 @@ class Classifier:
             logger.error("Got less articles than expected! Total: %s. articles: %s", diff_count, missing_articles)
 
     def _get_false_negatives(
-        self, correctly_found_articles: set[SelectedArticle], results: SelectedArticlesList
-    ) -> set[SelectedArticle]:
+        self, correctly_found_articles: set[PrimarySelectedArticle], results: SelectedArticlesList
+    ) -> set[PrimarySelectedArticle]:
         false_negatives_no_score = set(self.relevant_articles).difference(correctly_found_articles)
 
         # We cannot use here `set(results.articles).insterection(false_negatives_no_score)` to retrieve
@@ -111,7 +116,7 @@ class Classifier:
         # as per Python implementation it will pick up the one that's optimum to select,
         # wich can be an instance of `Article` instead.
         # Because of this, we have to manually craft the set
-        false_negatives: set[SelectedArticle] = {
+        false_negatives: set[PrimarySelectedArticle] = {
             article for article in results.articles if article in false_negatives_no_score
         }
         if false_negatives_diff := false_negatives_no_score.difference(false_negatives):
@@ -120,7 +125,7 @@ class Classifier:
             # even if we don't have the computed values
             for article in false_negatives_diff:
                 false_negatives.add(
-                    SelectedArticle(
+                    PrimarySelectedArticle(
                         title=article.title,
                         link=article.link,
                         why_is_relevant=MISSED_ARTICLE_REASON,

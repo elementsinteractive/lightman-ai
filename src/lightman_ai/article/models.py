@@ -32,9 +32,14 @@ class BaseArticle(BaseModel, ABC):
         return hash(self.link.encode())
 
 
-class SelectedArticle(BaseArticle):
+class SelectedArticle(BaseArticle): ...
+
+
+class PrimarySelectedArticle(SelectedArticle):
     why_is_relevant: str
     relevance_score: int
+
+    related_articles: list[SelectedArticle] = Field(default_factory=list)
 
 
 class Article(BaseArticle):
@@ -70,14 +75,14 @@ class BaseArticlesList[TArticle: BaseArticle](BaseModel):
         return cls(articles=articles)
 
 
-class SelectedArticlesList(BaseArticlesList[SelectedArticle]):
+class SelectedArticlesList(BaseArticlesList[PrimarySelectedArticle]):
     """
     Model that holds all the articles that were selected by the AI model.
 
     It saves the minimum information so that they are identifiable.
     """
 
-    def get_articles_with_score_gte_threshold(self, score_threshold: int) -> list[SelectedArticle]:
+    def get_articles_with_score_gte_threshold(self, score_threshold: int) -> list[PrimarySelectedArticle]:
         if not score_threshold > 0:
             raise ValueError("score threshold must be > 0.")
         return [article for article in self.articles if article.relevance_score >= score_threshold]

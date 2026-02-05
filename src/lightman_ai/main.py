@@ -4,7 +4,7 @@ from datetime import datetime
 
 from lightman_ai.ai.base.agent import BaseAgent
 from lightman_ai.ai.utils import get_agent_class_from_agent_name
-from lightman_ai.article.models import ArticlesList, SelectedArticle, SelectedArticlesList
+from lightman_ai.article.models import ArticlesList, PrimarySelectedArticle, SelectedArticlesList
 from lightman_ai.exceptions import NoSourcesError
 from lightman_ai.integrations.service_desk.integration import (
     ServiceDeskIntegration,
@@ -18,6 +18,7 @@ logger.addHandler(logging.NullHandler())
 async def _get_articles_from_source(source_name: str, start_date: datetime | None = None) -> ArticlesList:
     source_class = get_source_class_from_source_name(source_name)
     source_instance = source_class()
+    logger.info("Retrieving articles from %s", source_class)
     return await source_instance.get_articles(start_date)
 
 
@@ -26,14 +27,22 @@ async def _classify_articles(articles: ArticlesList, agent: BaseAgent) -> Select
 
 
 async def _create_service_desk_issues(
-    selected_articles: list[SelectedArticle],
+    selected_articles: list[PrimarySelectedArticle],
     service_desk_client: ServiceDeskIntegration,
     service_desk_project_key: str,
     service_desk_request_id_type: str,
 ) -> None:
-    async def schedule_task(article: SelectedArticle) -> None:
+    async def schedule_task(article: PrimarySelectedArticle) -> None:
         try:
-            description = f"*Why is relevant:*\n{article.why_is_relevant}\n\n*Source:* {article.link}\n\n*Score:* {article.relevance_score}/10"
+            if article.related_articles:
+                related_articles_raw = "\n".join(
+                    [f"{related_article.title}: {related_article.link}" for related_article in article.related_articles]
+                )
+                related_articles = f"*Related Articles:*\n{related_articles_raw}\n\n"
+            else:
+                related_articles = ""
+
+            description = f"*Why is relevant:*\n{article.why_is_relevant}\n\n*Source:* {article.link}\n\n{related_articles}*Score:* {article.relevance_score}/10"
             await service_desk_client.create_request_of_type(
                 project_key=service_desk_project_key,
                 summary=article.title,
@@ -64,7 +73,7 @@ async def lightman(
     dry_run: bool = False,
     model: str | None = None,
     start_date: datetime | None = None,
-) -> list[SelectedArticle]:
+) -> list[PrimarySelectedArticle]:
     if not sources:
         raise NoSourcesError
 
@@ -72,15 +81,16 @@ async def lightman(
     for source in sources:
         articles += await _get_articles_from_source(source, start_date)
 
+    multiple_sources = len(sources) > 1
     agent_class = get_agent_class_from_agent_name(agent)
-    agent_instance = agent_class(prompt, model, logger=logger)
+    agent_instance = agent_class(multiple_sources, prompt, model, logger=logger)
 
     classified_articles = await _classify_articles(
         articles=articles,
         agent=agent_instance,
     )
 
-    selected_articles: list[SelectedArticle] = classified_articles.get_articles_with_score_gte_threshold(
+    selected_articles: list[PrimarySelectedArticle] = classified_articles.get_articles_with_score_gte_threshold(
         score_threshold
     )
 

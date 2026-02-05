@@ -7,7 +7,7 @@ import pytest
 from click.testing import CliRunner
 from freezegun import freeze_time
 from lightman_ai import cli
-from lightman_ai.article.models import SelectedArticle
+from lightman_ai.article.models import PrimarySelectedArticle
 from lightman_ai.core.config import FileConfig, PromptConfig
 from tests.conftest import patch_config_file
 
@@ -259,14 +259,14 @@ class TestCli:
 
         # Create test articles
         test_articles = [
-            SelectedArticle(
+            PrimarySelectedArticle(
                 title="Test Article 1",
                 link="https://example.com/article1",
                 published_at=datetime(2026, 2, 2, 10, 30, tzinfo=ZoneInfo("UTC")),
                 why_is_relevant="This is relevant because...",
                 relevance_score=8,
             ),
-            SelectedArticle(
+            PrimarySelectedArticle(
                 title="Test Article 2",
                 link="https://example.com/article2",
                 published_at=datetime(2026, 2, 2, 11, 15, tzinfo=ZoneInfo("UTC")),
@@ -355,7 +355,7 @@ class TestCli:
 
         # Create test articles
         test_articles = [
-            SelectedArticle(
+            PrimarySelectedArticle(
                 title="Test Article 1",
                 link="https://example.com/article1",
                 published_at=datetime(2026, 2, 2, 10, 30, tzinfo=ZoneInfo("UTC")),

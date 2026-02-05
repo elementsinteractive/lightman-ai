@@ -176,9 +176,16 @@ def run(
         else:
             click.echo(json.dumps({"articles": []}))
     else:
-        relevant_articles_metadata = [f"{article.title} ({article.link})" for article in relevant_articles]
+        relevant_articles_metadata = []
+        for article in relevant_articles:
+            related_articles_raw = "\n".join(
+                [f" - {related.title} ({related.link})" for related in article.related_articles]
+            )
+            related_articles = f"\n Related Articles:\n {related_articles_raw}" if related_articles_raw else ""
+            relevant_articles_metadata.append(f"{article.title} ({article.link}){related_articles}")
+
         if relevant_articles_metadata:
-            articles = f"Found these articles:\n* {'\n* '.join(relevant_articles_metadata)} "
+            articles = f"Found these articles:\n* {'\n\n* '.join(relevant_articles_metadata)} "
             click.echo(click.style(articles))
         else:
             click.echo(click.style("No relevant articles found."))

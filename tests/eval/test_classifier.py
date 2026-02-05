@@ -3,13 +3,15 @@ from unittest.mock import Mock, patch
 
 from eval.classifier import Classifier
 from eval.constants import MISSED_ARTICLE_REASON, MISSED_ARTICLE_RELEVANCE_SCORE
-from lightman_ai.article.models import Article, SelectedArticle, SelectedArticlesList
+from lightman_ai.article.models import Article, PrimarySelectedArticle, SelectedArticle, SelectedArticlesList
 
 
 class TestClassifier:
-    def transform_articles_to_selected_articles(self, articles: list[Article], score: int) -> list[SelectedArticle]:
+    def transform_articles_to_primary_selected_articles(
+        self, articles: list[Article], score: int
+    ) -> list[PrimarySelectedArticle]:
         return [
-            SelectedArticle(
+            PrimarySelectedArticle(
                 title=article.title,
                 link=article.link,
                 why_is_relevant="",
@@ -28,10 +30,12 @@ class TestClassifier:
             Article(title="a", link=f"non relevant {i}", description="b", published_at=now) for i in range(2)
         ]
 
-        selected_articles_above_threshold = self.transform_articles_to_selected_articles(
+        selected_articles_above_threshold = self.transform_articles_to_primary_selected_articles(
             [relevant_articles[0]], score=7
         )
-        selected_articles_below_threshold = self.transform_articles_to_selected_articles(non_relevant_articles, score=1)
+        selected_articles_below_threshold = self.transform_articles_to_primary_selected_articles(
+            non_relevant_articles, score=1
+        )
 
         correctly_classified_articles = {selected_articles_above_threshold[0]}
 
@@ -52,7 +56,7 @@ class TestClassifier:
 
         missed_article = relevant_articles[1]
         assert false_negatives == {
-            SelectedArticle(
+            PrimarySelectedArticle(
                 title=missed_article.title,
                 link=missed_article.link,
                 why_is_relevant=MISSED_ARTICLE_REASON,
@@ -71,10 +75,10 @@ class TestClassifier:
             Article(title="a", link=f"non relevant {i}", description="b", published_at=now) for i in range(2)
         ]
 
-        selected_articles_above_threshold = self.transform_articles_to_selected_articles(
+        selected_articles_above_threshold = self.transform_articles_to_primary_selected_articles(
             [relevant_articles[0], non_relevant_articles[0]], score=7
         )
-        selected_articles_below_threshold = self.transform_articles_to_selected_articles(
+        selected_articles_below_threshold = self.transform_articles_to_primary_selected_articles(
             non_relevant_articles[:1] + [relevant_articles[1]], score=1
         )
 

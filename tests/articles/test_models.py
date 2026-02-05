@@ -2,7 +2,12 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 from lightman_ai.article.exceptions import DifferentArticleClassesError, NoTimeZoneError
-from lightman_ai.article.models import Article, ArticlesList, SelectedArticle, SelectedArticlesList
+from lightman_ai.article.models import (
+    Article,
+    ArticlesList,
+    PrimarySelectedArticle,
+    SelectedArticlesList,
+)
 from pydantic import ValidationError
 
 
@@ -46,10 +51,10 @@ class TestBaseArticle:
 class TestSelectedArticlesList:
     def test__get_results_above_score(self) -> None:
         now = datetime.now(UTC)
-        article_match = SelectedArticle(
+        article_match = PrimarySelectedArticle(
             link="link1", relevance_score=5, title="Test", why_is_relevant="Reason", published_at=now
         )
-        article_no_match = SelectedArticle(
+        article_no_match = PrimarySelectedArticle(
             link="link2", relevance_score=4, title="Test", why_is_relevant="Reason", published_at=now
         )
 
@@ -65,10 +70,10 @@ class TestSelectedArticlesList:
 
     def test_get_articles_from_date_onwards(self) -> None:
         start_date = datetime.now(UTC)
-        article_match = SelectedArticle(
+        article_match = PrimarySelectedArticle(
             link="link1", relevance_score=5, title="Test", why_is_relevant="Reason", published_at=datetime.now(UTC)
         )
-        article_no_match = SelectedArticle(
+        article_no_match = PrimarySelectedArticle(
             link="link2",
             relevance_score=4,
             title="Test",
@@ -114,14 +119,14 @@ class TestBaseArticlesList:
         now = datetime.now(UTC)
 
         # Create SelectedArticle objects
-        selected1 = SelectedArticle(
+        selected1 = PrimarySelectedArticle(
             title="Selected 1",
             link="https://example.com/selected1",
             published_at=now,
             why_is_relevant="Reason 1",
             relevance_score=8,
         )
-        selected2 = SelectedArticle(
+        selected2 = PrimarySelectedArticle(
             title="Selected 2",
             link="https://example.com/selected2",
             published_at=now,
@@ -145,7 +150,7 @@ class TestBaseArticlesList:
         now = datetime.now(UTC)
 
         # Create SelectedArticle objects
-        selected_article = SelectedArticle(
+        selected_article = PrimarySelectedArticle(
             title="Selected 1",
             link="https://example.com/selected1",
             published_at=now,
