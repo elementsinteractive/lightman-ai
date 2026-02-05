@@ -8,7 +8,7 @@ from tests.utils import patch_agent_raise_exception
 
 
 class TestGeminiAgent:
-    agent = GeminiAgent(system_prompt="Test system prompt")
+    agent = GeminiAgent(False, system_prompt="Test system prompt")
 
     async def test__run_prompt(self, test_prompt: str) -> None:
         """Test that we can run a prompt and receive a SelectedArticlesList."""

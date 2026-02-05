@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 import stamina
-from lightman_ai.article.models import ArticlesList, SelectedArticle
+from lightman_ai.article.models import ArticlesList, PrimarySelectedArticle, SelectedArticle
 from lightman_ai.integrations.service_desk.integration import ServiceDeskIntegration
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 from stamina._core import _RetryContextIterator
@@ -36,14 +36,15 @@ def selected_articles() -> list[SelectedArticle]:
     """Create test articles for service desk issue creation."""
     now = datetime.now(UTC)
     return [
-        SelectedArticle(
+        PrimarySelectedArticle(
             title="Critical Security Vulnerability in Popular Library",
             link="https://example.com/article1",
             why_is_relevant="This affects our production systems",
             relevance_score=9,
             published_at=now,
+            related_articles=[SelectedArticle(title="This is the same new", link="http://a.com", published_at=now)],
         ),
-        SelectedArticle(
+        PrimarySelectedArticle(
             title="New Attack Vector Discovered",
             link="https://example.com/article2",
             why_is_relevant="Could impact our infrastructure",
@@ -672,4 +673,21 @@ def patch_httpx_client_get(response: str | None = None) -> Iterator[Mock]:
         mock_response.text = response
         mock_response.raise_for_status.return_value = None
         mock.return_value = mock_response
+        yield mock
+
+
+@contextmanager
+def patch_multiple_responses(responses: list[str]) -> Iterator[Mock]:
+    """Patch httpx.AsyncClient.get to return different responses for sequential calls."""
+    response_iter = iter(responses)
+
+    def get_responses_sequentially(*args: Any, **kwargs: Any) -> Mock:
+        response_text = next(response_iter)
+        mock_response = Mock()
+        mock_response.text = response_text
+        mock_response.raise_for_status.return_value = None
+        return mock_response
+
+    with patch("httpx.AsyncClient.get") as mock:
+        mock.side_effect = get_responses_sequentially
         yield mock

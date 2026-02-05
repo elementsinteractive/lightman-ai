@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from decimal import Decimal
 
-from lightman_ai.article.models import SelectedArticle
+from lightman_ai.article.models import PrimarySelectedArticle, SelectedArticle
 from lightman_ai.core.config import FileConfig, FinalConfig
 from pydantic import PositiveInt
 
@@ -20,10 +20,10 @@ class EvalFileConfig(FileConfig):
 
 @dataclass
 class ClassifiedArticleResults:
-    articles: list[SelectedArticle]
-    correctly_found_articles: set[SelectedArticle]
-    false_positives: set[SelectedArticle]
-    false_negatives: set[SelectedArticle]
+    articles: list[PrimarySelectedArticle]
+    correctly_found_articles: set[PrimarySelectedArticle]
+    false_positives: set[PrimarySelectedArticle]
+    false_negatives: set[PrimarySelectedArticle]
     total_relevant_articles: int
     time_delta: float
 
@@ -90,7 +90,7 @@ class ClassifiedArticleResults:
         return [article.title for article in articles]
 
     @staticmethod
-    def _get_articles_metadata(articles: set[SelectedArticle]) -> list[str]:
+    def _get_articles_metadata(articles: set[PrimarySelectedArticle]) -> list[str]:
         return [
             f"Title: {article.title}\n\t- Reason: {article.why_is_relevant}\n\t- Score: {article.relevance_score}"
             for article in articles
