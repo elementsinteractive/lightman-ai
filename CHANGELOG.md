@@ -1,3 +1,35 @@
+## v1.3.0 (2026-02-25)
+
+### Feat
+
+- Nest related articles from different sources (#195)
+- Add BleepingComputerSource and make implementation async (#191)
+- Add BleepingComputerSource
+- support multiple sources (#188)
+- get output in json format (#187)
+
+### Technical
+
+- bump dependencies (#204)
+- bump sentry-sdk from 2.52.0 to 2.53.0 (#203)
+- bump the patch-updates group with 3 updates (#202)
+- bump pydantic-settings from 2.12.0 to 2.13.0 (#201)
+- bump the patch-updates group with 2 updates (#200)
+- bump cryptography from 46.0.4 to 46.0.5 (#199)
+- bump astral-sh/setup-uv from 7.2.1 to 7.3.0 (#197)
+- bump commitizen from 4.13.5 to 4.13.6 in the patch-updates group (#198)
+- bump pydantic-ai-slim from 1.55.0 to 1.56.0 (#196)
+- bump pytest from 8.4.2 to 9.0.2 (#180)
+- bump the patch-updates group with 2 updates (#184)
+- bump docker/login-action from 3.6.0 to 3.7.0 (#185)
+- bump commitizen from 4.12.1 to 4.13.0 (#186)
+- bump ruff from 0.14.13 to 0.14.14 in the patch-updates group (#179)
+- bump sentry-sdk from 2.49.0 to 2.50.0 (#182)
+- bump pdbpp from 0.11.7 to 0.12.0.post1 (#181)
+- bump commitizen from 4.11.6 to 4.12.1 (#183)
+- bump actions/checkout from 6.0.1 to 6.0.2 in the patch-updates group (#178)
+- bump actions/checkout in the patch-updates group
+
 ## v1.2.3 (2026-01-20)
 
 ### Technical
