@@ -1,3 +1,12 @@
+## v1.3.1 (2026-03-17)
+
+### Technical
+
+- bump ruff from 0.15.5 to 0.15.6 in the patch-updates group (#209)
+- bump sentry-sdk from 2.53.0 to 2.54.0 (#208)
+- bump the patch-updates group with 2 updates (#207)
+- bump the patch-updates group with 3 updates (#206)
+
 ## v1.3.0 (2026-02-25)
 
 ### Feat
