@@ -10,7 +10,7 @@ from eval.utils import ResultsMetrics
 logger = logging.getLogger("eval")
 
 
-async def eval(
+async def evaluate(
     *,
     prompt: str,
     score_threshold: int,

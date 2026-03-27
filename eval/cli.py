@@ -8,7 +8,7 @@ from lightman_ai.core.config import PromptConfig
 
 from eval.classified_articles import NON_RELEVANT_ARTICLES, RELEVANT_ARTICLES
 from eval.constants import DEFAULT_EVAL_CONFIG_SECTION
-from eval.evaluator import eval
+from eval.evaluator import evaluate
 from eval.utils import PARALLEL_WORKERS, EvalConfig, EvalFileConfig
 
 
@@ -76,7 +76,7 @@ def run(
     )
 
     asyncio.run(
-        eval(
+        evaluate(
             score_threshold=eval_config.score_threshold,
             relevant_articles=RELEVANT_ARTICLES,
             non_relevant_articles=NON_RELEVANT_ARTICLES,
