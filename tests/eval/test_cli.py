@@ -8,7 +8,7 @@ from eval import cli
 
 
 class TestEvalCli:
-    @patch("eval.cli.eval")
+    @patch("eval.cli.evaluate")
     @patch("eval.cli.load_dotenv")
     @patch("eval.cli.EvalFileConfig.get_config_from_file")
     @patch("eval.cli.PromptConfig.get_config_from_file")
@@ -36,7 +36,7 @@ class TestEvalCli:
         assert result.exit_code == 0
         assert m_load_dotenv.call_args == call("custom.env")
 
-    @patch("eval.cli.eval")
+    @patch("eval.cli.evaluate")
     @patch("eval.cli.load_dotenv")
     @patch("eval.cli.EvalFileConfig.get_config_from_file")
     @patch("eval.cli.PromptConfig.get_config_from_file")
