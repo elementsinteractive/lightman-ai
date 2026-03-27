@@ -1,3 +1,22 @@
+## v1.3.2 (2026-03-27)
+
+### CI
+
+- remove osv scanner (#220)
+
+### Technical
+
+- bump dorny/paths-filter from 3.0.2 to 4.0.1 (#214)
+- bump ruff from 0.15.6 to 0.15.7 in the patch-updates group (#216)
+- bump docker/login-action from 3.7.0 to 4.0.0 (#215)
+- bump pytest-cov from 7.0.0 to 7.1.0 (#217)
+- bump sentry-sdk from 2.54.0 to 2.55.0 (#218)
+- bump requests from 2.32.5 to 2.33.0 (#219)
+- bump astral-sh/setup-uv from 7.3.0 to 7.6.0 (#213)
+- bump softprops/action-gh-release from 2.5.0 to 2.6.1 (#212)
+- bump actions/cache from 5.0.3 to 5.0.4 in the patch-updates group (#211)
+- bump pyasn1 from 0.6.2 to 0.6.3 (#210)
+
 ## v1.3.1 (2026-03-17)
 
 ### Technical
