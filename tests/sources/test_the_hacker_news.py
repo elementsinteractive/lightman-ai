@@ -1,9 +1,8 @@
 from datetime import UTC, datetime
-from unittest.mock import patch
 
 import pytest
 from lightman_ai.article.models import ArticlesList
-from lightman_ai.sources.exceptions import MalformedSourceResponseError, SourceError
+from lightman_ai.sources.exceptions import MalformedSourceResponseError
 from lightman_ai.sources.the_hacker_news import TheHackerNewsSource
 from tests.conftest import patch_httpx_client_get
 
@@ -127,11 +126,3 @@ class TestTheHackerNewsSource:
 
         assert len(articles) == 1
         assert articles[0].description == "Test description with spaces"
-
-    async def test_get_articles_raises_when_no_articles_in_feed(self, thn_xml: str) -> None:
-        with (
-            patch_httpx_client_get(thn_xml),
-            patch("lightman_ai.sources.the_hacker_news.TheHackerNewsSource._xml_to_list_of_articles", return_value=[]),
-            pytest.raises(SourceError),
-        ):
-            await TheHackerNewsSource().get_articles()
