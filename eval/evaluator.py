@@ -25,7 +25,7 @@ async def evaluate(
 ) -> None:
     agent_class = get_agent_class_from_agent_name(agent)
     classified_articles = await Classifier(
-        agent=agent_class(len(sources) > 1 if sources else False, prompt, model=model),
+        agent=agent_class(prompt, model=model),
         score=score_threshold,
         relevant_articles=relevant_articles,
         non_relevant_articles=non_relevant_articles,

@@ -16,7 +16,6 @@ class BaseAgent(ABC):
 
     def __init__(
         self,
-        multiple_sources: bool,
         system_prompt: str,
         model: str | None = None,
         logger: logging.Logger | None = None,
@@ -27,7 +26,7 @@ class BaseAgent(ABC):
             model=agent_model,
             output_type=SelectedArticlesList,
             system_prompt=system_prompt,
-            instructions=MERGE_ARTICLES_FROM_DIFFERENT_SOURCES if multiple_sources else None,
+            instructions=MERGE_ARTICLES_FROM_DIFFERENT_SOURCES,
         )
         self.logger = logger or logging.getLogger("lightman")
         self.logger.info("Selected %s's %s model", self, selected_model)

@@ -19,7 +19,7 @@ class TestBaseAgent:
     @patch("lightman_ai.ai.base.agent.Agent")
     async def test__get_prompt_result(self, m_agent: Mock, test_prompt: str, thn_news: ArticlesList) -> None:
         """Check that we receive an instance of `SelectedArticlesList` when running the method."""
-        agent = FakeAgent(False, test_prompt)
+        agent = FakeAgent(test_prompt)
 
         with patch("tests.ai.base.test_agent.FakeAgent.run_prompt") as m_run_prompt:
             await agent.run_prompt(str(thn_news))
@@ -32,7 +32,7 @@ class TestBaseAgent:
 
     @patch("lightman_ai.ai.base.agent.Agent")
     async def test_agent_is_intantiated_with_model_when_set(self, m_agent: Mock, test_prompt: str) -> None:
-        agent = FakeAgent(False, test_prompt, model="my model")
+        agent = FakeAgent(test_prompt, model="my model")
         await agent.run_prompt("")
 
         assert m_agent.call_count == 1

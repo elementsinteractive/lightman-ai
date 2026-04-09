@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from unittest.mock import Mock, call, patch
+from unittest.mock import AsyncMock, Mock, call, patch
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -9,6 +9,7 @@ from freezegun import freeze_time
 from lightman_ai import cli
 from lightman_ai.article.models import PrimarySelectedArticle
 from lightman_ai.core.config import FileConfig, PromptConfig
+from lightman_ai.sources.utils import SOURCE_CHOICES
 from tests.conftest import patch_config_file
 
 
@@ -408,3 +409,38 @@ class TestCli:
 
         assert result.exit_code == 0
         assert "No relevant articles found." in result.output
+
+    @patch("lightman_ai.cli.load_dotenv")
+    @patch("lightman_ai.cli.FileConfig.get_config_from_file")
+    @patch("lightman_ai.cli.PromptConfig.get_config_from_file")
+    def test_exit_code_is_not_zero_if_a_source_fails(self, m_prompt: Mock, m_config: Mock, m_load_dotenv: Mock) -> None:
+        """Test that exit code is 0 when all sources fail and no articles are found.
+
+        Proves that:
+        - Sources attempted to retrieve news (httpx was called for each source)
+        - The AI agent was never invoked (no point classifying zero articles)
+        """
+        runner = CliRunner()
+        m_prompt.return_value = PromptConfig({"eval": "eval prompt"})
+        m_config.return_value = FileConfig()
+
+        with (
+            patch("httpx.AsyncClient.get") as mock_get,
+            patch("pydantic_ai.Agent.run", new_callable=AsyncMock) as mock_agent_run,
+            patch_config_file(),
+        ):
+            mock_get.side_effect = Exception("Network error")
+            result = runner.invoke(
+                cli.run,
+                [
+                    "--agent",
+                    "openai",
+                    "--prompt",
+                    "eval",
+                    "--dry-run",
+                ],
+            )
+
+        assert result.exit_code != 0
+        assert mock_get.call_count == len(SOURCE_CHOICES)
+        assert mock_agent_run.call_count == 0

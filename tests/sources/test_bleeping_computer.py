@@ -1,9 +1,10 @@
 from datetime import UTC, datetime
+from unittest.mock import patch
 
 import pytest
 from lightman_ai.article.models import ArticlesList
 from lightman_ai.sources.bleeping_computer import BleepingComputerSource
-from lightman_ai.sources.exceptions import MalformedSourceResponseError
+from lightman_ai.sources.exceptions import MalformedSourceResponseError, SourceError
 from tests.conftest import patch_httpx_client_get
 
 
@@ -100,3 +101,13 @@ class TestBleepingComputerSource:
         </rss>"""  # no title
 
         assert not BleepingComputerSource()._xml_to_list_of_articles(xml)
+
+    async def test_get_articles_raises_when_no_articles_in_feed(self, bc_xml: str) -> None:
+        with (
+            patch_httpx_client_get(bc_xml),
+            patch(
+                "lightman_ai.sources.bleeping_computer.BleepingComputerSource._xml_to_list_of_articles", return_value=[]
+            ),
+            pytest.raises(SourceError),
+        ):
+            await BleepingComputerSource().get_articles()
