@@ -8,7 +8,12 @@ import stamina
 from httpx import AsyncClient
 from lightman_ai.article.models import Article, ArticlesList
 from lightman_ai.sources.base import BaseSource
-from lightman_ai.sources.exceptions import IncompleteArticleFromSourceError, MalformedSourceResponseError
+from lightman_ai.sources.exceptions import (
+    IncompleteArticleFromSourceError,
+    MalformedSourceResponseError,
+    NoArticlesError,
+    SourceError,
+)
 from pydantic import ValidationError
 
 logger = logging.getLogger("lightman")
@@ -24,14 +29,19 @@ class BleepingComputerSource(BaseSource):
     @override
     async def get_articles(self, date: datetime | None = None) -> ArticlesList:
         """Return the articles that are present in BleepingComputer feed."""
-        logger.info("Downloading articles from %s", BLEEPING_COMPUTER_URL)
-        feed = await self.get_feed()
-        articles = self._xml_to_list_of_articles(feed)
-        logger.info("Articles properly downloaded and parsed.")
-        if date:
-            return ArticlesList.get_articles_from_date_onwards(articles=articles, start_date=date)
-        else:
-            return ArticlesList(articles=articles)
+        try:
+            logger.info("Downloading articles from %s", BLEEPING_COMPUTER_URL)
+            feed = await self.get_feed()
+            articles = self._xml_to_list_of_articles(feed)
+            logger.info("Articles properly downloaded and parsed.")
+            if not articles:
+                raise NoArticlesError
+            if date:
+                return ArticlesList.get_articles_from_date_onwards(articles=articles, start_date=date)
+            else:
+                return ArticlesList(articles=articles)
+        except Exception as e:
+            raise SourceError("Could not download articles from BleepingComputer") from e
 
     async def get_feed(self) -> str:
         """Retrieve the BleepingComputer RSS Feed."""

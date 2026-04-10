@@ -77,13 +77,15 @@ async def lightman(
     if not sources:
         raise NoSourcesError
 
-    articles = ArticlesList()
-    for source in sources:
-        articles += await _get_articles_from_source(source, start_date)
+    tasks = [_get_articles_from_source(source, start_date) for source in sources]
+    articles_lists = await asyncio.gather(*tasks)
 
-    multiple_sources = len(sources) > 1
+    articles = ArticlesList()
+    for articles_list in articles_lists:
+        articles += articles_list
+
     agent_class = get_agent_class_from_agent_name(agent)
-    agent_instance = agent_class(multiple_sources, prompt, model, logger=logger)
+    agent_instance = agent_class(prompt, model, logger=logger)
 
     classified_articles = await _classify_articles(
         articles=articles,

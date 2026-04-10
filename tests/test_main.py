@@ -12,6 +12,7 @@ from lightman_ai.article.models import (
 from lightman_ai.core.sentry import configure_sentry
 from lightman_ai.exceptions import NoSourcesError
 from lightman_ai.main import _create_service_desk_issues, _get_articles_from_source, lightman
+from lightman_ai.sources.exceptions import SourceError
 from lightman_ai.sources.utils import SOURCE_CHOICES
 from tests.conftest import patch_httpx_client_get, patch_multiple_responses
 from tests.utils import patch_agent, patch_get_articles_from_xml
@@ -116,7 +117,7 @@ class TestLightman:
         assert relevant_article_1.title in called_titles
         assert relevant_article_2.title in called_titles
 
-    async def test_lightman_no_publish_if_dry_run(self, test_prompt: str, thn_xml: str) -> None:
+    async def test_lightman_no_publish_if_dry_run(self, test_prompt: str, thn_xml: str, bc_xml: str) -> None:
         now = datetime.now(UTC)
         relevant_article_1 = PrimarySelectedArticle(
             title="article 2", link="https://article2.com", why_is_relevant="a", relevance_score=8, published_at=now
@@ -129,7 +130,7 @@ class TestLightman:
         )
         agent_response = SelectedArticlesList(articles=[relevant_article_1, relevant_article_2, not_relevant_article])
         with (
-            patch_httpx_client_get(thn_xml),
+            patch_multiple_responses([thn_xml, bc_xml]),
             patch_agent(agent_response),
             patch("lightman_ai.main.ServiceDeskIntegration.from_env") as mock_service_desk_env,
         ):
@@ -161,6 +162,29 @@ class TestLightman:
                 sources=None,  # None sources
                 dry_run=True,
             )
+
+    async def test_lightman_fails_when_one_source_raises_exception(self, test_prompt: str, thn_xml: str) -> None:
+        """Test that execution fails when one source raises an exception during download."""
+        with (
+            patch("httpx.AsyncClient.get") as mock_get,
+            patch("pydantic_ai.Agent.run", new_callable=AsyncMock) as mock_agent_run,
+        ):
+            mock_get.side_effect = [
+                Mock(text=thn_xml, **{"raise_for_status.return_value": None}),
+                Exception("Network error: Connection timeout"),
+            ]
+
+            with pytest.raises(SourceError):
+                await lightman(
+                    agent="openai",
+                    prompt=test_prompt,
+                    sources=SOURCE_CHOICES,
+                    score_threshold=8,
+                    dry_run=True,
+                )
+
+        assert mock_get.call_count == len(SOURCE_CHOICES)
+        mock_agent_run.assert_not_called()
 
 
 class TestCreateServiceDeskIssues:
