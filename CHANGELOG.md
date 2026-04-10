@@ -1,3 +1,22 @@
+## v1.4.0 (2026-04-10)
+
+### Feat
+
+- stop execution if articles fail to download (#232)
+
+### Technical
+
+- bump actions/create-github-app-token from 2.2.1 to 3.0.0 (#223)
+- bump dependabot/fetch-metadata from 2.5.0 to 3.0.0 (#222)
+- bump astral-sh/setup-uv from 7.6.0 to 8.0.0 (#224)
+- bump cryptography from 46.0.6 to 46.0.7 (#231)
+- bump docker/login-action from 4.0.0 to 4.1.0 (#227)
+- bump sentry-sdk from 2.56.0 to 2.57.0 (#229)
+- bump the patch-updates group with 2 updates (#228)
+- bump aiohttp from 3.13.3 to 3.13.4 (#226)
+- bump pygments from 2.19.2 to 2.20.0 (#225)
+- bump cryptography from 46.0.5 to 46.0.6 (#221)
+
 ## v1.3.2 (2026-03-27)
 
 ### CI
