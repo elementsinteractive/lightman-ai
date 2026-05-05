@@ -92,14 +92,14 @@ class Classifier:
             # even if explicitly told so
             diff_count = len(results.articles) - len(self.relevant_articles) - len(self.non_relevant_articles)
             extra_articles = set(results.articles) - set(
-                list(self.relevant_articles) + list(self.non_relevant_articles)  # type: ignore[arg-type]
+                list(self.relevant_articles) + list(self.non_relevant_articles)
             )
             logger.error("Got more articles than expected! Total: %s. articles: %s", diff_count, extra_articles)
 
         if len(results.articles) < len(self.relevant_articles) + len(self.non_relevant_articles):
             diff_count = len(self.relevant_articles) + len(self.non_relevant_articles) - len(results.articles)
             missing_articles = set(list(self.relevant_articles) + list(self.non_relevant_articles)) - set(
-                results.articles  # type: ignore[arg-type]
+                results.articles
             )
             logger.error("Got less articles than expected! Total: %s. articles: %s", diff_count, missing_articles)
 
