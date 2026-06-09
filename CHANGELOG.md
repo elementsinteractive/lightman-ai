@@ -1,3 +1,43 @@
+## v1.4.1 (2026-06-09)
+
+### Technical
+
+- bump actions/checkout from 6.0.2 to 6.0.3 in the patch-updates group (#264)
+- bump actions/checkout in the patch-updates group
+- bump astral-sh/setup-uv from 8.1.0 to 8.2.0 in the minor-updates group (#265)
+- bump astral-sh/setup-uv in the minor-updates group
+- bump the patch-updates group across 1 directory with 2 updates (#262)
+- bump the minor-updates group across 1 directory with 2 updates (#263)
+- bump docker/login-action from 4.1.0 to 4.2.0 in the minor-updates group across 1 directory (#260)
+- bump docker/login-action
+- bump the patch-updates group with 2 updates (#261)
+- bump pydantic-ai-slim from 1.63.0 to 1.99.0 (#259)
+- bump commitizen from 4.15.1 to 4.16.2 (#256)
+- bump ruff from 0.15.12 to 0.15.13 in the patch-updates group across 1 directory (#253)
+- bump ruff in the patch-updates group across 1 directory
+- bump sentry-sdk from 2.59.0 to 2.60.0 (#257)
+- bump click from 8.3.3 to 8.4.0 (#254)
+- bump mypy from 2.0.0 to 2.1.0 (#255)
+- bump idna from 3.11 to 3.15 (#258)
+- bump actions/create-github-app-token from 3.1.1 to 3.2.0 (#252)
+- bump mypy from 1.20.2 to 2.0.0 (#247)
+- bump urllib3 from 2.6.3 to 2.7.0 (#251)
+- bump tomlkit from 0.14.0 to 0.15.0 (#248)
+- bump pre-commit from 4.5.1 to 4.6.0 (#250)
+- bump pydantic-settings from 2.13.1 to 2.14.1 (#249)
+- bump commitizen from 4.13.10 to 4.15.1 (#246)
+- bump mypy from 1.19.1 to 1.20.2 (#242)
+- bump sentry-sdk from 2.57.0 to 2.59.0 (#243)
+- bump softprops/action-gh-release from 2.6.1 to 3.0.0 (#233)
+- bump the patch-updates group across 1 directory with 2 updates (#245)
+- bump stamina from 25.2.0 to 26.1.0 (#241)
+- bump dependabot/fetch-metadata from 3.0.0 to 3.1.0 (#244)
+- bump astral-sh/setup-uv from 8.0.0 to 8.1.0 (#239)
+- bump actions/cache from 5.0.4 to 5.0.5 in the patch-updates group (#238)
+- bump the patch-updates group across 1 directory with 2 updates (#237)
+- bump pytest from 9.0.2 to 9.0.3 (#236)
+- bump actions/create-github-app-token from 3.0.0 to 3.1.1 (#234)
+
 ## v1.4.0 (2026-04-10)
 
 ### Feat
