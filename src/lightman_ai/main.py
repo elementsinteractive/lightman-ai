@@ -32,21 +32,25 @@ async def _create_service_desk_issues(
     service_desk_project_key: str,
     service_desk_request_id_type: str,
 ) -> None:
+
+    def get_article_text(article: PrimarySelectedArticle) -> str:
+        if article.related_articles:
+            related_articles_raw = "\n".join(
+                [f"{related_article.title}: {related_article.link}" for related_article in article.related_articles]
+            )
+            related_articles = f"*Related Articles:*\n{related_articles_raw}\n\n"
+        else:
+            related_articles = ""
+
+        description = f"*Why is relevant:*\n{article.why_is_relevant}\n\n*Source:* {article.link}\n\n{related_articles}*Score:* {article.relevance_score}/10"
+        return description
+
     async def schedule_task(article: PrimarySelectedArticle) -> None:
         try:
-            if article.related_articles:
-                related_articles_raw = "\n".join(
-                    [f"{related_article.title}: {related_article.link}" for related_article in article.related_articles]
-                )
-                related_articles = f"*Related Articles:*\n{related_articles_raw}\n\n"
-            else:
-                related_articles = ""
-
-            description = f"*Why is relevant:*\n{article.why_is_relevant}\n\n*Source:* {article.link}\n\n{related_articles}*Score:* {article.relevance_score}/10"
             await service_desk_client.create_request_of_type(
                 project_key=service_desk_project_key,
                 summary=article.title,
-                description=description,
+                description=get_article_text(article),
                 request_id_type=service_desk_request_id_type,
             )
             logger.info("Created issue for article %s", article.link)
