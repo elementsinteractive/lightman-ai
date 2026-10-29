@@ -1,4 +1,5 @@
 import pathlib
+from unittest.mock import patch
 
 import pytest
 from lightman_ai.constants import DEFAULT_CONFIG_FILE, DEFAULT_CONFIG_SECTION
@@ -209,6 +210,24 @@ class TestPromptConfig:
         config = PromptConfig.get_config_from_file(path=str(fpath))
 
         assert config.prompts == {"eval": "my eval prompt"}
+
+    def test_prompt_is_read_as_utf8_with_a_non_utf8_locale(self, tmp_path: pathlib.Path) -> None:
+        prompt = "Flag CVEs — skip vendor ‘marketing’ posts, café über alles"
+        fpath = tmp_path / "my_path.toml"
+        fpath.write_bytes(f'[prompts]\neval = "{prompt}"\n'.encode())
+
+        read_text = pathlib.Path.read_text
+
+        def read_text_with_cp1252_locale(
+            self: pathlib.Path, encoding: str | None = None, errors: str | None = None, newline: str | None = None
+        ) -> str:
+            # Without an explicit encoding, Windows falls back to the locale's code page, e.g. cp1252
+            return read_text(self, encoding=encoding or "cp1252", errors=errors, newline=newline)
+
+        with patch.object(pathlib.Path, "read_text", read_text_with_cp1252_locale):
+            config = PromptConfig.get_config_from_file(path=str(fpath))
+
+        assert config.prompts == {"eval": prompt}
 
     def test_raises_error_if_file_not_found(self) -> None:
         with patch_config_file(exists=False), pytest.raises(ConfigNotFoundError):
