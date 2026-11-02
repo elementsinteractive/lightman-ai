@@ -92,6 +92,7 @@ ignore = [
   'TRY301',  # tryceratops rule not useful
   'TRY003',  # tryceratops rule not useful
   "PLR0913", # pylint rule not useful
+  "PLR0917", # too many positional args; click commands need one param per option
   "B008",    # checks for function calls in default function arguments.
   'D206',    # conflicts with formatter
   'W191',    # conflicts with formatter
