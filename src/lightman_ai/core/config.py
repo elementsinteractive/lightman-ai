@@ -17,7 +17,7 @@ def read_config_from_file(*, config_section: str, path: str) -> dict[str, Any]:
     if not fpath.exists():
         raise ConfigNotFoundError(f"`{path}` not found!")
 
-    content = fpath.read_text()
+    content = fpath.read_text(encoding="utf-8")  # TOML files are UTF-8, whatever the platform's locale
     parsed_content = tomlkit.parse(content)
 
     return cast("dict[str, Any]", parsed_content.get(config_section, {}))
