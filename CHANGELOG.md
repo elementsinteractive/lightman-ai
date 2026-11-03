@@ -1,3 +1,57 @@
+## v1.4.2 (2026-11-03)
+
+### Fix
+
+- read the config file as UTF-8 (#304)
+
+### Refactor
+
+- make more readable the logic for retrieving article text (#274)
+
+### Technical
+
+- bump the minor-updates group across 1 directory with 7 updates (#309)
+- bump filelock from 3.24.3 to 4.2.1 (#307)
+- bump astral-sh/setup-uv from 8.2.0 to 10.3.2 (#311)
+- bump pyasn1 from 0.6.4 to 0.6.5 (#312)
+- bump docker/login-action from 4.6.0 to 4.7.0 in the minor-updates group (#310)
+- bump docker/login-action
+- bump certifi from 2026.1.4 to 2026.10.19 (#308)
+- bump opentelemetry-api from 1.39.1 to 1.45.1 (#306)
+- bump virtualenv from 21.7.13 to 21.14.13 (#305)
+- bump actions/create-github-app-token from 3.2.0 to 3.3.0 in the minor-updates group (#302)
+- bump actions/create-github-app-token
+- bump pydantic-ai-slim from 2.0.0 to 2.53.0 (#301)
+- bump actions/checkout from 7.0.0 to 7.0.1 in the patch-updates group (#299)
+- bump actions/checkout
+- bump pyasn1 from 0.6.3 to 0.6.4 (#284)
+- bump actions/cache from 5.0.5 to 6.1.0 (#275)
+- bump actions/checkout from 6.0.3 to 7.0.0 (#271)
+- bump cryptography from 48.0.1 to 50.0.0 (#288)
+- bump virtualenv from 21.7.12 to 21.7.13 (#298)
+- bump the patch-updates group across 1 directory with 2 updates (#283)
+- bump docker/login-action from 4.2.0 to 4.6.0 in the minor-updates group across 1 directory (#285)
+- bump docker/login-action
+- bump httpx2 from 2.10.0 to 2.12.0 (#292)
+- bump anyio from 4.12.1 to 4.14.2 (#293)
+- bump virtualenv from 20.39.0 to 21.7.12 (#297)
+- bump httpcore2 from 2.3.0 to 2.10.0 (#291)
+- bump urllib3 from 2.7.0 to 2.8.0 (#296)
+- pin twyn-action to commit SHA (#295)
+- update pydantic-ai-slim[google,openai] requirement from <2.0.0,>=1.0.0 to >=1.0.0,<3.0.0 (#277)
+- update pydantic-ai-slim[google,openai] requirement
+- bump pydantic-ai-slim from 1.99.0 to 1.102.0 (#278)
+- bump the patch-updates group with 3 updates (#276)
+- bump sentry-sdk from 2.62.0 to 2.63.0 in the minor-updates group across 1 directory (#273)
+- bump sentry-sdk in the minor-updates group across 1 directory
+- bump the patch-updates group across 1 directory with 2 updates (#272)
+- bump cryptography from 46.0.7 to 48.0.1 (#268)
+- bump softprops/action-gh-release from 3.0.0 to 3.0.1 in the patch-updates group (#270)
+- bump softprops/action-gh-release in the patch-updates group
+- bump pydantic-settings from 2.14.1 to 2.14.2 (#269)
+- bump the minor-updates group with 2 updates (#267)
+- bump ruff from 0.15.16 to 0.15.17 in the patch-updates group (#266)
+
 ## v1.4.1 (2026-06-09)
 
 ### Technical
